@@ -1,0 +1,25 @@
+# dependencies
+node_modules
+
+# logs
+npm-debug.log
+
+# Nuxt build
+.nuxt
+
+# Nuxt generate
+dist
+
+npm-debug.log*
+debug.log
+.DS_Store
+.idea
+.vscode
+package-lock.json
+yarn.lock
+*.log
+config/test.js
+/package-lock.json
+/build/main.js
+/build/main.map
+*.bat
