@@ -1,0 +1,55 @@
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+input,
+a,
+p,
+textarea {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+input {
+  outline: 0;
+}
+ul,
+ol,
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: #000;
+}
+
+img {
+  border: none;
+  display: inline-block;
+}
+
+body {
+  background: #fff !important;
+  /* font-family: "Microsoft Yahei UI", "Microsoft Yahei", "Gotham SSm A",
+    "Gotham SSm B", Helvetica, Arial, sans-serif; */
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+}
+
+.ft16 {
+  font-size: 16px;
+}
+.ft14 {
+  font-size: 14px;
+}

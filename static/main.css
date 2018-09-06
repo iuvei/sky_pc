@@ -1,0 +1,29 @@
+.w140 {
+  width: 140px !important;
+}
+.w120 {
+  width: 120px !important;
+}
+.w110 {
+  width: 110px !important;
+}
+
+.wrap {
+  cursor: default;
+  width: 1000px;
+  margin: 20px auto;
+  box-sizing: border-box;
+  background: #fff;
+}
+.wrap .title {
+  width: 100%;
+  box-sizing: border-box;
+  background: #f3f3f3;
+  height: 40px;
+  line-height: 40px;
+  color: #900;
+}
+.wrap .content {
+  width: 310px;
+  margin: 20px auto;
+}

@@ -1,0 +1,191 @@
+.common-cart {
+  margin: 20px 0;
+
+  .cart-total {
+    height: 72px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 30px;
+    background-color: #fff;
+    border-radius: 30px;
+    .left {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      padding: 10px 0;
+      font-size: 14px;
+    }
+    .right {
+      width: 180px;
+      display: flex;
+      align-items: center;
+      button {
+        // display: inline-block;
+        width: 144px;
+        height: 50px;
+        background: linear-gradient(to bottom, #e93248, #e93248);
+        border-radius: 25px;
+        outline: 0;
+        cursor: pointer;
+        font-size: 20px;
+        color: #fff;
+        box-shadow: 0px 0px 0px rgba(253, 67, 90, 0.97);
+      }
+    }
+  }
+  .cart-main {
+    margin-top: 20px;
+    height: 360px;
+    background-color: #fff;
+    border-radius: 30px;
+    overflow: hidden;
+    &-title {
+      height: 55px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 150px 0 30px;
+      background-color: #dadada;
+      .g-select {
+        display: flex;
+        height: 33px;
+        width: 280px;
+        padding: 0 6px;
+        justify-content: space-around;
+        align-items: center;
+        border-radius: 10px;
+        background-color: #fff;
+        > div {
+          height: 24px;
+          width: 40px;
+          line-height: 24px;
+          text-align: center;
+          border-radius: 10px;
+          cursor: pointer;
+          &:hover {
+            color: #ff586d;
+          }
+        }
+        .active {
+          background: linear-gradient(to bottom, #ff586d, #e93248);
+          color: #fff;
+          &:hover {
+            color: #fff;
+          }
+        }
+      }
+      .g-multiple,
+      .g-times {
+        display: flex;
+        line-height: 30px;
+      }
+      .senior-wrap {
+        width: 100px;
+      }
+      .senior:focus {
+        box-shadow: 0 0 0 0;
+      }
+    }
+    &-tabs {
+      padding: 0 50px;
+      position: relative;
+      .tab-title {
+        display: flex;
+        justify-content: space-between;
+        height: 50px;
+        border-bottom: 3px solid #e5e5e5;
+        .left {
+          display: flex;
+          width: 200px;
+          justify-content: space-around;
+          align-items: flex-end;
+          font-size: 16px;
+          > div {
+            width: 80px;
+            font-size: 16px;
+            text-align: center;
+            cursor: pointer;
+            &:hover {
+              color: #ff586d;
+            }
+          }
+          .active {
+            color: #ff586d;
+            position: relative;
+            &::after {
+              content: "";
+              width: 100%;
+              height: 3px;
+              position: absolute;
+              bottom: -3px;
+              left: 0;
+              background-color: #e93248;
+              z-index: 3;
+            }
+          }
+        }
+        .right {
+          display: flex;
+          justify-content: space-around;
+          width: 300px;
+          align-items: center;
+          // hei
+          > div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 35px;
+            width: 130px;
+            border-radius: 20px;
+            line-height: 40px;
+            text-align: right;
+            font-size: 16px;
+            background: linear-gradient(to bottom, #ffffff, #e2e2e2);
+            box-shadow: 2px 0px 3px rgba(7, 0, 2, 0.21);
+            cursor: pointer;
+            &:hover {
+              color: #ff586d;
+            }
+            .close {
+              font-size: 35px;
+              padding: 0 8px;
+              color: #8a8a8a;
+              line-height: 39px;
+            }
+          }
+        }
+      }
+      .tab-table {
+        margin-top: 10px;
+        height: 240px;
+        overflow-y: auto;
+      }
+      .clear-cart {
+        position: absolute;
+        top: 30%;
+        right: 10px;
+        width: 30px;
+        height: 148px;
+        padding: 10px 5px 20px;
+        border-radius: 15px;
+        background: linear-gradient(to bottom, #ffffff, #e2e2e2);
+        // back
+        box-shadow: 0px 0px 5px rgba(7, 0, 2, 0.43);
+        font-size: 14px;
+        text-align: center;
+        cursor: pointer;
+        span {
+          display: inline-block;
+          width: 20px;
+          height: 20px;
+          background: url("~/assets/img/game/bet-cart-clear.png") no-repeat
+            center;
+        }
+        transition: all 0.3s ease-in-out;
+        &:hover {
+          transform: scale(1.08);
+        }
+      }
+    }
+  }
+}
