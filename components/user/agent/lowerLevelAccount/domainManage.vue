@@ -7,11 +7,6 @@
         <div :class="['check_box',{active: lowerLevelAccount.domainType === 0}]" @click="changeDomainType(0)">我的域名</div>
         <div :class="['check_box',{active: lowerLevelAccount.domainType === 1}]" @click="changeDomainType(1)">下级域名</div>
       </div>
-      <!-- <Tabs v-model="domainType" style="width:240px">
-        <TabPane label="我的域名" name="0"></TabPane>
-        <TabPane label="下级域名" name="1"></TabPane>
-      </Tabs> -->
-
       </Col>
       <Col span="10">&nbsp; </Col>
       <Col span="6" style="text-align:right">
@@ -21,11 +16,6 @@
 
     <div class="two-block">
       <Table :data="tableData" :columns="tableColumns"></Table>
-      <!-- <div style="margin: 10px;overflow: hidden">
-        <div style="float: right;">
-          <Page :total="100" :current="1" @on-change="changePage"></Page>
-        </div>
-      </div> -->
     </div>
 
     <!-- 弹窗 -->
@@ -34,12 +24,12 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
-import addDomainModal from "~/components/user/agent/lowerLevelAccount/addDomainModal";
-const prefix = "lowerLevelAccount";
+import { mapState, mapActions } from 'vuex';
+import addDomainModal from '~/components/user/agent/lowerLevelAccount/addDomainModal';
+const prefix = 'lowerLevelAccount';
 
 export default {
-  name: "domainManage",
+  name: 'domainManage',
   components: {
     addDomainModal
   },
@@ -50,13 +40,13 @@ export default {
       tableData: [],
       tableColumns: [
         {
-          title: "用户名",
+          title: '用户名',
           width: 100,
-          key: "username"
+          key: 'username'
         },
         {
-          title: "域名",
-          key: "enom",
+          title: '域名',
+          key: 'enom',
           width: 150,
           render: (h, params) => {
             const text = params.row.enom;
@@ -65,12 +55,12 @@ export default {
           }
         },
         {
-          title: "解析IP",
-          key: "ip"
+          title: '解析IP',
+          key: 'ip'
         },
         {
-          title: "备注",
-          key: "remark",
+          title: '备注',
+          key: 'remark',
           render: (h, params) => {
             let row = params.row;
             const text = row.remark;
@@ -78,22 +68,22 @@ export default {
           }
         },
         {
-          title: "创建时间",
+          title: '创建时间',
           width: 160,
-          key: "time"
+          key: 'time'
         },
         {
-          title: "状态",
-          key: "status",
+          title: '状态',
+          key: 'status',
           render: (h, params) => {
-            let text = params.row.status === 4 ? "已审核" : "未审核";
+            let text = params.row.status === 4 ? '已审核' : '未审核';
             return <span>{text}</span>;
           }
         },
         {
-          title: "操作",
-          key: "action",
-          align: "center",
+          title: '操作',
+          key: 'action',
+          align: 'center',
           render: (h, { row }) => {
             let status = row.status;
             if (status === 1) {
@@ -122,7 +112,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("agent", ["lowerLevelAccount"])
+    ...mapState('agent', ['lowerLevelAccount'])
   },
   watch:{
     addDomainModalShow(addDomainModalShow){
@@ -132,7 +122,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions("agent", ["modifyField", "getUserEnomList", "verifyEnmo"]),
+    ...mapActions('agent', ['modifyField', 'getUserEnomList', 'verifyEnmo']),
     changeDomainType(v) {
       let obj = { prefix, params: { domainType: v } };
       this.modifyField(obj);
@@ -144,12 +134,10 @@ export default {
     async checkDomain({ accid }, status) {
       let data = await this.verifyEnmo({ id: accid, status });
       this.initData();
-      // console.error(data);
     },
     async initData() {
       let data = (await this.getUserEnomList()) || [];
       this.tableData = data;
-      // console.error(data);
     }
   },
   mounted() {

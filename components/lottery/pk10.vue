@@ -36,11 +36,10 @@
 
 <script>
 export default {
-  name: "lottery-pk10",
-  props: ["game"]
+  name: 'lottery-pk10',
+  props: ['game']
 };
 </script>
 
 <style>
-
 </style>

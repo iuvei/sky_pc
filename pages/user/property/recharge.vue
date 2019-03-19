@@ -1,9 +1,21 @@
 <template>
   <Row>
-    <Tabs v-model="currentId" @on-click="getPayBasicData">
-      <TabPane :label="item.name" :name="item.id+''" v-for="(item, index) in basicData" :key="index"></TabPane>
+    <Tabs v-model="currentId"
+          @on-click="getPayBasicData">
+      <TabPane :label="item.name"
+               :name="item.id+''"
+               v-for="(item, index) in basicData"
+               :key="index"></TabPane>
     </Tabs>
-    <component :is="currentView" :basicData="childrenData" :parentId="currentId" @defaultChoose="chooseFirst"></component>
+    <component :is="currentView"
+               :basicData="childrenData"
+               :parentId="currentId"
+               @defaultChoose="chooseFirst">
+    </component>
+
+    <Spin size="large"
+          fix
+          v-if="spinShow"></Spin>
   </Row>
 
 </template>
@@ -23,20 +35,10 @@ export default {
   },
   data() {
     return {
-      basicData: [
-        // {
-        //   code: "bank_app",
-        //   icon: "quick_bank.png",
-        //   id: 13,
-        //   name: "在线支付",
-        //   sort: 1,
-        //   status: 0,
-        //   type: 1
-        // }
-      ],
+      basicData: [],
       currentId: "",
-      // currentId: 12,
-      childrenData: []
+      childrenData: [],
+      spinShow: false
     };
   },
   methods: {
@@ -44,11 +46,20 @@ export default {
       "getRechargeType",
       "getPayTips",
       "getPayDataByUtype",
-      "getBankList"
+      "getBankList",
+      "getCashState"
     ]),
+    ...mapActions("user",["getUserBankCard"]),
     async getPayBasicData() {
-      let params = { type: this.currentId,https:window.location.protocol.indexOf('https')==0?'1':'0' };
+      this.spinShow = true;
+      let params = {
+        type: this.currentId,
+        https: window.location.protocol.indexOf("https") === 0 ? "1" : "0"
+      };
+      this.childrenData = [];
       this.childrenData = await this.getPayDataByUtype(params);
+      console.warn(this.childrenData);
+      this.spinShow = false;
     },
     chooseFirst() {
       this.currentId = this.basicData[0].id + "";
@@ -56,12 +67,19 @@ export default {
     }
   },
   async mounted() {
+    // let isHasCard = await this.getUserBankCard();
+    // console.log(isHasCard)
+    // if (!isHasCard.length) {
+    //   this.$Message.warning("您尚未绑定银行卡，请先绑定银行卡");
+    //   this.$router.push("/user/account/bank");
+    //   return false
+    // }
     await this.getPayTips();
     this.basicData = await this.getRechargeType();
     this.currentId = this.basicData[0] && this.basicData[0].id + "";
     this.childrenData = await this.getPayDataByUtype({
       type: this.currentId * 1,
-      https:window.location.protocol.indexOf('https')==0?'1':'0'
+      https: window.location.protocol.indexOf("https") === 0 ? "1" : "0"
     });
     // console.log(this.currentValue)
   },
@@ -79,7 +97,7 @@ export default {
         case 15:
           return "payBankOnline";
         case 6:
-          return 'quickPay'
+          return "quickPay";
       }
     }
     // currentId() {

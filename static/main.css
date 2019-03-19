@@ -27,3 +27,21 @@
   width: 310px;
   margin: 20px auto;
 }
+
+body.newyear #__layout > div > .main {
+  background: url(./pc_bg2.png) no-repeat top center;
+  background-size: 100% 100%;
+}
+body.newyear .index-header {
+  background: #f3ecda;
+}
+
+body.newyear .index-header nav {
+  width: 100%;
+  padding: 0 calc((100vw-1000px) / 2);
+  background: #edeeef;
+}
+
+body.newyear .nuxt-progress {
+  background: #eee;
+}

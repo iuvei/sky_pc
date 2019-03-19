@@ -3,42 +3,55 @@
     <div class="footer_main ">
       <div class="zhichi box_ft ">
         <div class="head ">
-          <h1 style="text-align: center;">技术支持
-            <span>Technical support</span>
-          </h1>
+          <h2>品质服务
+            <span>Quality service</span>
+          </h2>
         </div>
         <div class="zc ">
-          <div class="sprite-index_footer index_footer-ws" style="margin:20px 0px 0px 80px"></div>
+          <div class="sprite-index_footer index_footer-ws"></div>
           <p>
             最专业的平台<br> 最精诚的服务
           </p>
         </div>
       </div>
-      <div class="dongtai box_ft ">
+      <div class="dongtai box_ft "
+           style="flex-grow: 2;">
         <div class="head ">
-          <h1 style="text-align: center;">昨日动态
-            <span>Yesterday dynamics</span>
-          </h1>
+          <h2>服务体验
+            <span>Service experience</span>
+          </h2>
         </div>
-        <div class="zr " style="margin-top: 15px;">
-          <p>昨日中奖金额
-            <span class="index_win_price">{{(sysinfo.win_price || "2821750.00") | formatMoney}}</span>
-            <b>元</b>
-          </p>
-          <p style="margin-top: 10px;">昨日提现金额
-            <span class="index_get_price">{{(sysinfo.get_price || "1033353.00") | formatMoney}}</span>
-            <b>元</b>
-          </p>
+        <div class="zr">
+          <div class="average-time">
+            <span class="bottom_txt">昨日充值平均时间</span>
+            <Progress :percent="15"
+                      :stroke-width="16">
+              <span class="progress_txt"
+                    style="color: #333;">5'00</span>
+              <span style="font-size:'12px';color: #bbb;">秒</span>
+            </Progress>
+          </div>
+          <div class="average-time">
+            <span class="bottom_txt">昨日提现平均时间</span>
+            <Progress :percent="90"
+                      :stroke-width="16"
+                      status="success">
+              <span class="progress_txt"
+                    style="color: #333;">30'00</span>
+              <span style="font-size:'12px';color: #bbb;">秒</span>
+            </Progress>
+          </div>
         </div>
       </div>
 
-      <div class="chongzhi box_ft " style="margin-left: 40px;">
+      <div class="chongzhi box_ft ">
         <div class="head ">
-          <h1 style="text-align: center;">充值方式
+          <h2>充值方式
             <span>Recharge method</span>
-          </h1>
+          </h2>
         </div>
-        <div class="cz " style="margin-left: 20px;">
+        <div class="cz "
+             style="margin-left: 20px;">
           <div class="sprite-index_footer index_footer-weixin left_img_footer"></div>
           <div class="sprite-index_footer index_footer-zhifubao left_img_footer"></div>
           <div class="sprite-index_footer index_footer-qq left_img_footer"></div>
@@ -48,7 +61,8 @@
     </div>
     <div class="clear"></div>
     <!--认证-->
-    <div class="comp" style="width:675px;">
+    <div class="comp"
+         style="width:675px;">
       <div class="sprite-index_footer index_footer-jubao bottom_img_footer"></div>
       <div class="sprite-index_footer index_footer-baozhang bottom_img_footer"></div>
       <div class="sprite-index_footer index_footer-gonggong bottom_img_footer"></div>
@@ -56,20 +70,20 @@
       <div class="sprite-index_footer index_footer-renzheng bottom_img_footer"></div>
       <div style="clear: both"></div>
     </div>
-    <div class="footer_bottom " style="text-align: center;">
-      <p>2009-2018©公司版权所有 {{edition}}</p>
+    <div class="footer_bottom "
+         style="text-align: center;">
+      <p>2009-2019 © {{sysinfo && sysinfo.web_title}}版权所有 {{edition}}</p>
     </div>
-    <!-- <div class="version_number">{{edition}}</div> -->
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
-import version from '../../config/edition.json'
+import { mapGetters } from "vuex";
+import version from "../../config/edition.json";
 export default {
   name: "IndexFooter",
   serverCacheKey() {
-    return Math.floor(Date.now() / 1000 * 60 * 60 * 24);
+    return Math.floor((Date.now() / 1000) * 60 * 60 * 24);
   },
   filters: {
     formatMoney(num) {
@@ -91,9 +105,11 @@ export default {
     }
   },
   computed: {
-    ...mapState("sysinfo", ["sysinfo"]),
+    sysinfo() {
+      return this.$store.getters["sysinfo/sysInfo"];
+    },
     edition() {
-      return (version && version.edition) || ''
+      return (version && version.edition) || "";
     }
   }
 };
@@ -107,9 +123,6 @@ export default {
   width: 100%;
   min-width: 1000px;
   min-height: calc(100vh - 732px);
-  // .version_number {
-  //   text-align: center;
-  // }
 }
 .footer .footer_main {
   display: flex;
@@ -119,57 +132,64 @@ export default {
   margin-top: 20px;
 }
 .footer .footer_main .box_ft {
-  flex: 1;
+  flex-grow: 1;
 }
 .footer .footer_main .dongtai {
   border-right: 1px solid #ebebeb;
   border-left: 1px solid #ebebeb;
-  padding: 0 40px;
+  padding: 0 20px;
 }
-.footer .footer_main .box_ft .head h1 {
+.footer .footer_main .box_ft .head {
+  height: 30px;
+}
+.footer .footer_main .box_ft .head h2 {
   float: left;
   width: 300px;
   color: #666;
   // font-family: "å¾®è½¯é›…é»‘";
-  font-size: 16px;
-  font-weight: 400;
+  font-size: 18px;
+  font-weight: 600;
+  padding-left: 45px;
 }
 .footer .footer_main .box_ft .head span {
   color: #b8b8b8;
   font-size: 12px;
   margin-left: 6px;
 }
-.footer .footer_main .box_ft .zc img {
-  float: left;
-  margin-left: 80px;
+.footer .footer_main .box_ft .zc {
+  width: 100%;
+  display: flex;
+  justify-content: center;
   margin-top: 20px;
 }
 .footer .footer_main .box_ft .zc p {
-  float: left;
+  // float: left;
   text-align: left;
   color: #666;
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: 400;
   font-family: "å¾®è½¯é›…é»‘";
   margin-left: 45px;
-  margin-top: 15px;
+  margin-top: -6px;
   line-height: 25px;
 }
 .footer .footer_main .box_ft .zr {
-  float: left;
+  width: 100%;
+  margin-top: 10px;
 }
-.footer .footer_main .box_ft .zr p {
-  text-align: left;
-  line-height: 16px;
-  color: #666;
+.footer .footer_main .box_ft .zr .average-time {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.footer .footer_main .box_ft .zr .average-time .bottom_txt {
+  display: inline-block;
+  width: 174px;
+  height: 30px;
+  line-height: 30px;
   font-family: "å¾®è½¯é›…é»‘";
   font-size: 14px;
-  margin-left: 50px;
-}
-.footer .footer_main .box_ft .zr span {
-  color: #00a0e9;
-  font-family: "å¾®è½¯é›…é»‘";
-  font-size: 18px;
-  margin: 0 8px;
+  font-weight: 400;
 }
 .footer .footer_main .box_ft .cz img {
   margin: 0 11px;
@@ -338,6 +358,20 @@ export default {
 }
 .footer_bottom {
   padding: 6px 0;
+}
+</style>
+<style lang="scss">
+.footer {
+  .ivu-progress-outer {
+    width: 80%;
+  }
+  .ivu-progress-inner {
+    background-color: #ddd;
+  }
+  .progress_txt {
+    font-size: 20px !important;
+    font-weight: 400;
+  }
 }
 </style>
 

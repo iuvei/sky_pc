@@ -4,9 +4,9 @@
   </ul>
 </template>
 <script>
-import Transition from "./utils";
+import Transition from './utils';
 export default {
-  name: "AppCollapse",
+  name: 'AppCollapse',
   props: {
     open: { default: true },
   },
@@ -15,10 +15,10 @@ export default {
       bind(el, { value }) {
         if (!value) {
           el.style.height = 0;
-          el.style.overflow = "hidden";
+          el.style.overflow = 'hidden';
         }
       },
-      update(el, { value, oldValue }) {
+      componentUpdated(el, { value, oldValue }) {
         if (value === oldValue) return;
         let className = el.classList;
         let display;

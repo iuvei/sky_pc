@@ -14,11 +14,14 @@
       </div>
       <div class="item" v-for="(item,key) in userMessage" :key="key" v-show="!isShow">
         <CheckboxGroup v-model="checkAllGroup" @on-change="checkAllGroupChange">
-          <Checkbox :label="key" class="tab"><span class="head">{{item.title}}</span></Checkbox>
+          <Checkbox :label="key" class="tab">
+            <span class="head">{{item.title}}</span>
+          </Checkbox>
         </CheckboxGroup>
         <Collapse v-model="value" accordion @on-change="changeMess(item,key)">
-          <Panel :name="key+''" >
-            <span :class="item.status==0?'mess_icon1':'mess_icon2'"></span>{{item.title}}<span class="time">{{setTime(item.sendtime)}}</span>
+          <Panel :name="key+''">
+            <span :class="item.status==0?'mess_icon1':'mess_icon2'"></span>{{item.title}}
+            <span class="time">{{setTime(item.sendtime)}}</span>
             <p slot="content" class="cont_cont">{{item.content}}</p>
           </Panel>
         </Collapse>
@@ -48,8 +51,8 @@ export default {
       key:0,
     }
   },
-  mounted(){
-    this.togetUserMessage()
+  async mounted(){
+    await this.togetUserMessage()
   },
   methods: {
     ...mapActions('user',['getUserMessage','readUserMessage','delUserMessage']),
@@ -59,12 +62,12 @@ export default {
       this.userMessage = mess.data
       if (this.userMessage.length === 0) {this.isShow = true};
       this.data_length = this.userMessage.length
-		},
+    },
     async toreadUserMessage() {
       let readMess = await this.readUserMessage(this.guid);
       // this.togetUserMessage()status
       this.userMessage[this.key].status = 1
-		},
+    },
     async todelUserMessage() {
       let delMess = await this.delUserMessage(this.delIds);
       // this.togetUserMessage()
@@ -73,7 +76,7 @@ export default {
         this.userMessage.splice(this.checkAllGroup[i],1)
       }
       this.checkAllGroup = []
-		},
+    },
     handleCheckAll () {
       if (this.checkAll) {
         this.checkAllGroup = [];
@@ -113,24 +116,24 @@ export default {
       this.todelUserMessage()
     },
     setTime(t) {
-			let timestamp = t * 1000;
-			let assignTime = new Date(timestamp),
-				y = assignTime.getFullYear(),
-				M = assignTime.getMonth() + 1,
-				d = assignTime.getDate(),
-				h = assignTime.getHours(),
-				m = assignTime.getMinutes(),
-				s = assignTime.getSeconds(),
-				add0 = m => {
-					return m > 9 ? m : '0' + m;
-				};
-			return y + '-' + add0(M) + '-' + add0(d);
-		},
+      let timestamp = t * 1000;
+      let assignTime = new Date(timestamp),
+        y = assignTime.getFullYear(),
+        M = assignTime.getMonth() + 1,
+        d = assignTime.getDate(),
+        h = assignTime.getHours(),
+        m = assignTime.getMinutes(),
+        s = assignTime.getSeconds(),
+        add0 = m => {
+          return m > 9 ? m : '0' + m;
+        };
+      return y + '-' + add0(M) + '-' + add0(d);
+    },
   }
 }
 </script>
 <style lang="scss">
-.message_info_body{
+.message_info_body {
   .title {
     height: 35px;
     width: 100%;
@@ -139,58 +142,58 @@ export default {
     border: 1px solid #cccccc;
     background-color: #f3f3f3;
     padding: 0 35px;
-    .tit_left{
+    .tit_left {
       width: 30px;
       height: 20px;
       background: url(../../../assets/img/user_center_icons.png) -23px -36px;
       display: inline-block;
       float: left;
       margin-top: 7px;
-      border-left: 1px Solid #D2D2D2;
+      border-left: 1px Solid #d2d2d2;
     }
     .tit_txt {
       display: inline-block;
       line-height: 35px;
       margin-left: 20px;
     }
-    .tit_right{
+    .tit_right {
       display: inline-block;
       line-height: 20px;
       float: right;
       padding-left: 30px;
       margin-top: 7px;
-      border-left: 1px Solid #D2D2D2;
+      border-left: 1px Solid #d2d2d2;
     }
   }
   .cont {
     min-height: 600px;
-    border: 1px Solid #D2D2D2;
+    border: 1px Solid #d2d2d2;
     border-top: none;
     padding: 0 10px;
     position: relative;
     padding-bottom: 100px;
     .noData {
-			display: block;
+      display: block;
       margin: 0 auto;
-			padding: 150px 0;
+      padding: 150px 0;
     }
     .item {
       position: relative;
     }
     .label {
-      position:absolute;
-      left:10px;
-      bottom:50px;
+      position: absolute;
+      left: 10px;
+      bottom: 50px;
       width: 805px;
       height: 30px;
       line-height: 30px;
-      border-top: 1px Solid #D2D2D2;
-      .del{
+      border-top: 1px Solid #d2d2d2;
+      .del {
         position: absolute;
         top: 0;
         left: 60px;
-        color: rgb(79,166,234);
-        border: 1px solid rgb(79,166,234);
+        color: rgb(79, 166, 234);
+        border: 1px solid rgb(79, 166, 234);
         width: 40px;
         height: 20px;
         font-weight: 600;
@@ -201,21 +204,21 @@ export default {
         cursor: pointer;
       }
     }
-    .ivu-collapse{
+    .ivu-collapse {
       background-color: #fff;
       border-radius: 0;
       border: none;
       border-bottom: 1px solid #dddee1;
-      .ivu-collapse-item{
-        .ivu-collapse-header{
+      .ivu-collapse-item {
+        .ivu-collapse-header {
           height: 30px;
           line-height: 30px;
           padding-left: 75px;
           font-size: 14px;
-          .ivu-icon{
+          .ivu-icon {
             display: none;
           }
-          .mess_icon1{
+          .mess_icon1 {
             width: 20px;
             height: 20px;
             background: url(../../../assets/img/user_center_icons.png) -86px -36px;
@@ -225,7 +228,7 @@ export default {
             top: 50%;
             transform: translateY(-50%);
           }
-          .mess_icon2{
+          .mess_icon2 {
             width: 20px;
             height: 20px;
             background: url(../../../assets/img/user_center_icons.png) -60px -36px;
@@ -242,16 +245,16 @@ export default {
             right: 12px;
           }
         }
-        .ivu-collapse-content{
+        .ivu-collapse-content {
           padding: 0 35px;
-          .ivu-collapse-content-box{
-            padding:0;
+          .ivu-collapse-content-box {
+            padding: 0;
             padding-bottom: 10px;
-            p{
+            p {
               line-height: 25px;
             }
           }
-          .cont_cont{
+          .cont_cont {
             text-indent: 2em;
           }
         }
@@ -261,30 +264,30 @@ export default {
       width: 25px;
       height: 31px;
       position: absolute;
-      top:0;
-      left:0;
+      top: 0;
+      left: 0;
     }
-    .tab{
-        margin-right: 0;
-        height: 30px;
-        line-height: 30px;
-        margin-left:5px;
-        // position: absolute;
-        // left: 15px;
-        // top: 0;
-        .ivu-checkbox-inner:after{
-          width: 6px;
-          height: 10px;
-        }
-        .ivu-checkbox-inner{
-          width: 16px;
-          height: 16px;
-        }
-        .head {
-          font-size: 14px;
-          display: none;
-        }
+    .tab {
+      margin-right: 0;
+      height: 30px;
+      line-height: 30px;
+      margin-left: 5px;
+      // position: absolute;
+      // left: 15px;
+      // top: 0;
+      .ivu-checkbox-inner:after {
+        width: 6px;
+        height: 10px;
       }
+      .ivu-checkbox-inner {
+        width: 16px;
+        height: 16px;
+      }
+      .head {
+        font-size: 14px;
+        display: none;
+      }
+    }
     // .page {
     //   width: 440px;
     //   margin: 20px auto;

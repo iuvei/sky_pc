@@ -41,35 +41,46 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from 'vuex';
+
 export default {
-  name: "fast-bet",
+  name: 'fast-bet',
   data() {
     return {
-      names: ["重庆时时彩", "新疆时时彩", "安徽快三"],
-      curGame: "",
+      names: ['重庆时时彩', '新疆时时彩', '安徽快三'],
+      curGame: '',
       betNum: 1,
       price: 2,
       balls: []
     };
   },
   created() {
+    if(!process.browser) return
+    if(process.env.static) return
     if (!this.curGame.length && this.list && this.list.length) {
       this.curGame = this.list[0].game_name;
       this.balls = this.getBalls();
     }
   },
+
   computed: {
-    ...mapState("game", ["gameList"]),
+    // ...mapState('game', ['gameList']),
+    gameList(){
+      return this.$store.getters['game/gameList']
+    },
     list() {
       if (
         this.gameList &&
         Array.isArray(this.gameList) &&
         this.gameList.length
       ) {
-        return this.gameList.filter(
-          x => this.names.includes(x.game_name) && x.enable === 1
-        );
+        let res = this.gameList.filter(
+          x => x.type === 1 && x.game_name.enable !== 2
+        ),
+        def = this.gameList.filter(
+          x => this.names.includes(x.game_name)
+        )
+        return res.length < 3 ? res.slice(0, 3) : def
       }
     },
     firstGameName() {
@@ -87,10 +98,10 @@ export default {
       let balls = [];
       const game = this.gameList.find(x => x.game_name === this.curGame);
       switch (game.js_tag) {
-        case "ssc":
+        case 'ssc':
           balls = this.getRow(0, 9, 4);
           break;
-        case "k3":
+        case 'k3':
           balls = this.getRow(1, 6, 2, true);
           break;
       }
@@ -99,11 +110,20 @@ export default {
     goDes(game) {
       this.$router.push(`/gamehelp/tag/pcdd?game_name=${game.game_name}`);
     },
-    goTrend(game) {
-      this.$router.push("/trend");
+    goTrend(item) {
+      let excludeArr = ['xypk', 'tzyx']
+      if (excludeArr.includes(item.js_tag)) {
+        this.$Message.warning('此彩种暂无走势')
+        return
+      }
+      this.$router.push({ name: 'trend', params: item })
     },
     goBet() {
       const game = this.list.find(x => x.game_name === this.curGame);
+      if(game.enable === 2) {
+        this.$Message.warning('该彩种正在维护中···')
+        return
+      }
       this.$router.push(`/game/${game.js_tag}/${game.game_id}`);
     },
     clickTab(name) {
@@ -130,6 +150,14 @@ export default {
         }
       }
       return arr;
+    }
+  },
+  watch: {
+    list(val){
+      if(val && val.length){
+        this.curGame = this.list[0].game_name;
+        this.balls = this.getBalls();
+      }
     }
   }
 };

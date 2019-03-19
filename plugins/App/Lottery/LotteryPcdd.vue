@@ -12,48 +12,48 @@
 <script>
 import { pcddColor } from './color'
 export default {
-    name: 'pcdd',
-    props: ['number'],
-    computed: {
-        arr() {
-            return this.number.split('+')
-        }
-    },
-    methods: {
-        getBgColor(v) {
-            return { backgroundColor: pcddColor(v) }
-        }
+  name: 'pcdd',
+  props: ['number'],
+  computed: {
+    arr() {
+      return this.number.split('+')
     }
+  },
+  methods: {
+    getBgColor(v) {
+      return { backgroundColor: pcddColor(v) }
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>
 .th {
+  display: flex;
+  .td {
     display: flex;
-    .td {
-        display: flex;
-        // padding: 0 2px;
-    }
-    .waiting {
-        font-size: 24px;
-        color: #e93248;
-        text-align: center;
-    }
-    span {
-        height: 24px;
-        width: 24px;
-        border-radius: 50%;
-        font-size: 16px;
-        text-align: center;
-        background-color: #e93248;
-        color: #fff;
-    }
-    i {
-        color: #5e5e5e;
-        font-size: 16px;
-        font-weight: bolder;
-        padding: 0 4px;
-        font-style: normal;
-    }
+    // padding: 0 2px;
+  }
+  .waiting {
+    font-size: 24px;
+    color: #e93248;
+    text-align: center;
+  }
+  span {
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    font-size: 16px;
+    text-align: center;
+    background-color: #e93248;
+    color: #fff;
+  }
+  i {
+    color: #5e5e5e;
+    font-size: 16px;
+    font-weight: bolder;
+    padding: 0 4px;
+    font-style: normal;
+  }
 }
 </style>
 

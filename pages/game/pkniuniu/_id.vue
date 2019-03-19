@@ -1,43 +1,104 @@
 <template>
   <div class='niuniu'>
     <div class="nn">
-      <p class="title">PK拾牛牛</p>
-      <div class="info"><span>{{'请选择下方注项，每一期为一分钟开奖，一天共开奖为'+item.tip.match(/\d+/g)+'期。'}}</span></div>
+      <p class="title">{{item.game_name}}</p>
+      <!-- <div class="info"><span>{{'请选择下方注项，每一期为一分钟开奖，一天共开奖为'+item.tip.match(/\d+/g)+'期。'}}</span></div> -->
+      <div class="info"><span>{{'请选择下方注项，每一期为一分钟开奖，一天共开奖为'+item.tip}}</span></div>
       <div class="number">
         <div class="num">
-          <span :class="'car' + (item)" v-for="(item,key) in data" :key="key"></span>
+          <span
+            :class="'car' + (item)"
+            v-for="(item,key) in data"
+            :key="key"
+          ></span>
         </div>
         <div class="info">
           <p>现在开奖：<span>{{(qishu-1+'').slice(-4)}}</span> 期</p>
           <p>下期开奖：<span>{{(qishu+'').slice(-4)}}</span> 期</p>
-          <p>开奖时间：<AppTimer :openTime="openTime" v-if="openTime.length" :callback="nextOpen" :repeat='openLength' offset="true">
-          </AppTimer></p>
+          <p>开奖时间：<AppTimer
+              :openTime="openTime"
+              v-if="openTime.length"
+              :callback="nextOpen"
+              :repeat='openLength'
+              offset="true"
+            >
+            </AppTimer>
+          </p>
         </div>
       </div>
       <!-- 赛车 -->
-      <div class="racing" :class="isbg?'beg':''" v-show="!isOver">
-        <img class="start" src="../../../assets/img/game/pk10/car/start.png" alt="" :style="{transform:'translateX(' + bgPositionX + 'px)'}">
-        <img class="end" src="../../../assets/img/game/pk10/car/end.png" alt="" :style="{transform:'translateX(' + endPositionX + 'px)'}">
-        <ul class="carbox">
-          <li class="car" :id="key+1" :class="item.speed?'speed c'+(key-0+1):'c'+(key-0+1)" v-for="(item,key) in carArr" :key="key" :style="{top:(100+key*16)+'px',right:(98+item.Eright)+'px'}">
-            <span class="l_tyre" :class="isStart?'tyre':''"></span>
-            <span class="r_tyre" :class="isStart?'tyre':''"></span>
+      <div
+        class="racing"
+        :class="isbg?'beg':''"
+        v-show="!isOver"
+      >
+        <img
+          class="start"
+          src="../../../assets/img/game/pk10/car/start.png"
+          alt=""
+          :style="{transform:'translateX(' + bgPositionX + 'px)'}"
+        >
+        <img
+          class="end"
+          src="../../../assets/img/game/pk10/car/end.png"
+          alt=""
+          :style="{transform:'translateX(' + endPositionX + 'px)'}"
+        >
+        <ul
+          class="carbox"
+          id="carbox"
+        >
+          <li
+            class="car"
+            :id="key+1"
+            :class="item.speed?'speed c'+(key-0+1):'c'+(key-0+1)"
+            v-for="(item,key) in carArr"
+            :key="key"
+            :style="{top:(100+key*16)+'px',right:(98+item.Eright)+'px'}"
+          >
+            <span
+              class="l_tyre"
+              :class="isStart?'tyre':''"
+            ></span>
+            <span
+              class="r_tyre"
+              :class="isStart?'tyre':''"
+            ></span>
           </li>
         </ul>
-        <div class="count" v-show="!isStart">{{openless}}</div>
+        <div
+          class="count"
+          v-show="!isStart"
+        >{{openless}}</div>
         <div class="light">
-          <img src="../../../assets/img/game/pk10/car/red_light.png" v-if="!isStart">
-          <img src="../../../assets/img/game/pk10/car/green_light.png" v-else>
+          <img
+            src="../../../assets/img/game/pk10/car/red_light.png"
+            v-if="!isStart"
+          >
+          <img
+            src="../../../assets/img/game/pk10/car/green_light.png"
+            v-else
+          >
         </div>
       </div>
-      <div class="champion" :class="isOver?'show':''">
+      <div
+        class="champion"
+        :class="isOver?'show':''"
+      >
         <div class="num1"></div>
         <div class="num2"></div>
         <div class="num3"></div>
         <div class="sort">
-          <div :class="isOver?'scale'+(key+1)+ ' sort'+item+' st'+(key+1):'sort'+item+' st'+(key+1)" v-for="(item,key) in sortData" :key="key"></div>
+          <div
+            :class="isOver?'scale'+(key+1)+ ' sort'+item+' st'+(key+1):'sort'+item+' st'+(key+1)"
+            v-for="(item,key) in sortData"
+            :key="key"
+          ></div>
         </div>
-        <div class="colour" :class="isOver?'land':''"></div>
+        <div
+          class="colour"
+          :class="isOver?'land':''"
+        ></div>
         <div class="lamp">
           <div class="lamp_1"></div>
           <div class="lamp_2"></div>
@@ -46,19 +107,47 @@
         </div>
       </div>
       <div class="poker">
-        <canvas id="canvas" :width="canvasWidth" :height="canvasHeight" @click="sele()"></canvas>
+        <canvas
+          id="canvas"
+          :width="canvasWidth"
+          :height="canvasHeight"
+          @click="sele()"
+        ></canvas>
         <div class="niu">
-          <div class="box" :class="items.class" v-for="(items,key) in resultList" :key="key" @click="canvas(key)" :style="'height:'+(canvasHeight*items.h)+'px'">
+          <div
+            class="box"
+            :class="items.class"
+            v-for="(items,key) in resultList"
+            :key="key"
+            @click="canvas(key)"
+            :style="'height:'+(canvasHeight*items.h)+'px'"
+          >
             <p>{{items.title}}</p>
             <div class="poker">
-              <div class="item" :class="isOver?'sy':''" v-for="(item,key) in items.data" :key="key">
+              <div
+                class="item"
+                :class="isOver?'sy':''"
+                v-for="(item,key) in items.data"
+                :key="key"
+              >
                 <!-- <span :class="'poker'+item+'-'+(key==4?'4':key+1)"></span> -->
                 <span :class="'poker'+item+'-'+items.color[key]"></span>
-                <img src="../../../assets/img/game/pk10/brand.png" alt="">
+                <img
+                  src="../../../assets/img/game/pk10/brand.png"
+                  alt=""
+                >
               </div>
               <!-- <img :class="isStart?'rotate':''" :src="'../../../../img/game/'+item+'-'+(parseInt(Math.random() * 4 + 1))+'.png'" alt="" v-for="(item,key) in items.data" :key="key"> -->
-              <span class="niu" :class="'niu'+items.niu+'_'+items.result" v-show="isOver"></span>
-              <span class="res" :class="isOver?'show res_'+items.result:'res_'+items.result" v-if="!key==0"></span>
+              <span
+                class="niu"
+                :class="'niu'+items.niu+'_'+items.result"
+                v-show="isOver"
+              ></span>
+              <span
+                class="res"
+                :class="isOver?'show res_'+items.result:'res_'+items.result"
+                v-if="!key==0"
+              ></span>
             </div>
           </div>
         </div>
@@ -75,7 +164,11 @@
               <span>闲四</span>
               <span>闲五</span>
             </div>
-            <div class="list" v-for="(i,k) in kjList" :key="k">
+            <div
+              class="list"
+              v-for="(i,k) in kjList"
+              :key="k"
+            >
               <span style="color:#EF0202">{{i.qishu.toString().slice(-4)}}</span>
               <span>{{i.balls.length ==10 ? i.balls.join(',') : '正在开奖'}}</span>
               <span>{{i.balls.length ==10 ? niuniu(i.balls,0) : '-'}}</span>
@@ -89,20 +182,38 @@
         </div>
       </div>
       <div class="bet">
-        <div>您选择了 <span style="color:#EA3740;padding: 0 5px">{{betNum.length}}</span> 注，共 <span style="color:#EA3740">{{(betNum.length*money).toFixed(2)}}</span> 元，单注<input class="money" type="text" v-model="money">
-          <div class="tag"><span @click="selectSort(k)" :class="{active:k==index}" v-for="(i,k) in tag" :key="k">{{i}}</span></div>
+        <div>您选择了 <span style="color:#EA3740;padding: 0 5px">{{betNum.length}}</span> 注，共 <span style="color:#EA3740">{{(index?betNum.length*money/10:betNum.length*money).toFixed(2)}}</span> 元，单注<input
+            class="money"
+            type="text"
+            v-model="money"
+          >
+          <div class="tag"><span
+              @click="selectSort(k)"
+              :class="{active:k==index}"
+              v-for="(i,k) in tag"
+              :key="k"
+            >{{i}}</span></div>
         </div>
         <div class="betting">
-          <span class="add" @click="add">添加</span>
-          <span class="keyBet" @click="submit">一键投注</span>
+          <span
+            class="add"
+            @click="add"
+          >添加</span>
+          <span
+            class="keyBet"
+            @click="submit"
+          >一键投注</span>
         </div>
       </div>
     </div>
-    <commonCart :betList="betList" @resetBetnum="resets"></commonCart>
+    <commonCart
+      :betList="betList"
+      @resetBetnum="resets"
+    ></commonCart>
   </div>
 </template>
 <script>
-import { mapState, mapActions, mapMutations } from "vuex";
+import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
 import { pk10Color } from "../../../plugins/App/Lottery/color";
 import commonCart from "~/components/game/common/cart";
 let countDown;
@@ -113,6 +224,7 @@ let resTimer;
 export default {
   name: "pkniuniu",
   data() {
+    // const carArr = this.cars()
     return {
       isStart: false,
       isOver: false,
@@ -120,7 +232,7 @@ export default {
       bgPositionX:0,
       endPositionX:-110,
       carArr:[],
-      tag:['元','角','分'],
+      tag:['元','角'],
       index: 0,
       count:10,
       car:[1,2,3,4,5,6,7,8,9,10],
@@ -182,7 +294,14 @@ export default {
           color:[1,2,3,4,2]
         },
       ],
-      arr:[],
+      arr:[
+        {spot1:{x:600*0.365,y:0},spot2:{x:600*0.635,y:0},spot3:{x:600*0.635,y:400*0.67},spot4:{x:600*0.365,y:400*0.67}},//庄
+        {spot1:{x:0,y:0},spot2:{x:600*0.365,y:0},spot3:{x:600*0.365,y:400*0.37},spot4:{x:0,y:400*0.37}},//闲1
+        {spot1:{x:0,y:400*0.37},spot2:{x:600*0.365,y:400*0.37},spot3:{x:600*0.365,y:400*0.67},spot4:{x:0,y:400}},//闲2
+        {spot1:{x:600*0.365,y:400*0.67},spot2:{x:600*0.635,y:400*0.67},spot3:{x:600,y:400},spot4:{x:0,y:400}},//闲3
+        {spot1:{x:600*0.635,y:400*0.37},spot2:{x:600,y:400*0.37},spot3:{x:600,y:400},spot4:{x:600*0.635,y:400*0.67}},//闲4
+        {spot1:{x:600*0.635,y:0},spot2:{x:600,y:0},spot3:{x:600,y:400*0.37},spot4:{x:600*0.635,y:400*0.37}},//闲5
+      ],
       sortData:[1,2,3],
       time:20,
       data:[1,2,3,4,5,6,7,8,9,10],
@@ -205,26 +324,26 @@ export default {
       betList:[],
       bets:[],
       interval:0,
-      menuPlayConfig:[]
+      menuPlayConfig:[],
+      isBegin: false,
     };
   },
   components: { commonCart },
   computed: {
+    ...mapState('gameBet', ['playObj', 'stateOdds']),
     ...mapState("userinfo", ["isLogin"]),
-    ...mapState("game", ["gameList"]),
+    // ...mapState("game", ["gameList"]),
+    ...mapGetters("game",['gameList']),
     item() {
       return this.initItem();
     }
   },
   created(){
-    this.$store.commit("game/setGameId", this.$route.params.id);
-    this.$store.commit("game/setGameItem", this.item);
-    this.delShopCart()
-    this.togetPeilv()
+    if(!process.browser) return
+    this.cars()
     this.getInitData()
     this.gamePlayConfig()
     clearInterval(this.resTimer)
-    this.cars()
     if (process.browser) {
       this.resize()
       window.addEventListener("resize", this.resize);
@@ -233,7 +352,7 @@ export default {
   mounted() {
     
   },
-  deactivated() {
+  destroyed() {
     window.clearInterval(countDown)
     window.clearInterval(anima)
     window.clearInterval(sortss)
@@ -252,13 +371,15 @@ export default {
   },
   watch: {
     "$route.params.id"(val) {
-      this.toTop();
-      this.delShopCart();
-      this.setShopCart();
-      this.$bus.$emit("resetBetArea");
-      this.openPrize = false;
-      this.getInitData();
-      this.gamePlayConfig();
+      if(!val) return
+      this.reload()
+    },
+    "$route.query.id"(val) {
+      if(!val) return
+      this.reload()
+    },
+    playObj(obj) {
+      this.togetPeilv()
     },
     openPrize(val) {
       this.changeField({ isScrollBalls: this.openPrize });
@@ -271,35 +392,65 @@ export default {
           this.isOver = false
         },5000)
       }
-    },
+    }
   },
   methods: {
     ...mapActions("game", ["getCplogList", "getKjCpLog","getPeilv","getGamePlayConfig"]),
     ...mapMutations("gameBet", ["changeField", "setShopCart", "delShopCart"]),
     ...mapActions("gameBet", ["submitTouzhu"]),
     async gamePlayConfig() {
-      this.$store.commit("game/setGameId", this.$route.params.id);
+      this.$store.commit("game/setGameId", this.$route.params.id || this.$route.query.id);
       this.$store.commit("game/setGameItem", this.item);
       let ret = await this.getGamePlayConfig('pkniuniu');
       // this.menuPlayConfig = ret.list.filter(item => item.showofficial == 1);
       this.menuPlayConfig = ret.list;
+      this.$store.commit(
+        'gameBet/setBetPlay',
+        ret.list[0].submenu[0].playlist[0]
+      );
+    },
+    reload() {
+      this.isOne = 0
+      this.carArr = []
+      this.toTop();
+      // this.delShopCart();
+      // this.setShopCart();
+      this.resize()
+      window.addEventListener("resize", this.resize);
+      this.openPrize = false;
+      this.getInitData();
+      this.gamePlayConfig();
+      this.isbg = false
+      this.sortData = []
+      this.bgPositionX = 0
+      this.endPositionX = -110
+      this.isOver = false
+      this.isStart = false
+      this.betNum = []
+      this.bgPositionX = 0;
+      this.endPositionX = -110
+      this.$nextTick(()=>this.cars())
+      window.clearInterval(countDown)
+      window.clearInterval(anima)
+      window.clearInterval(sortss)
+      window.clearInterval(resTimer)
     },
     initItem() {
       return (
-        this.gameList.find(item => item.game_id == this.$route.params.id) || {}
+        this.gameList.find(item => item.game_id == (this.$route.params.id || this.$route.query.id)) || {}
       );
     },
-    // toTop() {
-    //   var timer = requestAnimationFrame(function fn() {
-    //     // ;
-    //     var s = document.documentElement.scrollTop;
-    //     if (s > 0) {
-    //       s -= 100;
-    //       document.documentElement.scrollTop = s;
-    //       timer = requestAnimationFrame(fn);
-    //     }
-    //   });
-    // },
+    toTop() {
+      var timer = requestAnimationFrame(function fn() {
+        // ;
+        var s = document.documentElement.scrollTop;
+        if (s > 0) {
+          s -= 100;
+          document.documentElement.scrollTop = s;
+          timer = requestAnimationFrame(fn);
+        }
+      });
+    },
     async getInitData() {
       this.animateKey++;
       [this.kjList, this.openTime] = await Promise.all([
@@ -308,7 +459,7 @@ export default {
       ]);
     },
     async togetKjCpLog() {
-      let ret = await this.getKjCpLog({ tag: 'xypknn', date: 0, pcount: 20,pageid: 0 });
+      let ret = await this.getKjCpLog({ tag: this.item.tag, date: 0, pcount: 20,pageid: 0 });
       if (ret && Array.isArray(ret) && ret.length) {
         this.balls = ret[0].balls && ret[0].balls.length ? ret[0].balls.split('+') : []
         for (let i = 0; i < ret.length; i++) {
@@ -322,39 +473,58 @@ export default {
           }
         }
         this.balls = ret[0].balls
+        if (this.isOne == 0) {
+          this.data = (this.balls.length == 10)? this.balls : [1,2,3,4,5,6,7,8,9,10]
+        }
+        this.isOne = 1
         this.kjList = ret;
       } 
       return ret
     },
     async togetCplogList() {
-      let ret = await this.getCplogList({ tag: 'xypknn' });
-      this.changeField({ periods: ret[0].next[0].qishu });
-      this.openLength = ret[0].next.length;
-      this.qishu = ret[0].next[0].qishu
-      this.openless = ret[0].next[0].openless || ret[0].next[1].openless
-      this.countDow()
-      this.$store.commit("game/setGameQishu", this.qishu);
-      return ret[0].next;
+      let ret = await this.getCplogList({ tag: this.item.tag });
+      if(ret){
+        this.changeField({ periods: ret[0].next[0].qishu });
+        this.openLength = ret[0].next.length;
+        this.qishu = ret[0].next[0].qishu
+        this.openless = ret[0].next[0].openless || ret[0].next[1].openless
+        this.countDow()
+        this.$store.commit("game/setGameQishu", this.qishu);
+        return ret[0].next;
+      } else {
+        this.togetCplogList()
+      }
     },
-    async nextOpen(length, long = 5) {
+    async nextOpen(length,long = 0) {
       let _this = this
+      // let [err, ret] = await this.togetCplogList();
+      // if(err){
+      //   this.nextOpen(length,long = 0)
+      //   return
+      // }
+      // console.error('err',err)
+      // console.error('ret',ret)
+      // if(ret){
+      //   this.openTime = ret
+      // }
+      // console.error('openless',this.openless)
+      // if(this.openless){
+      //   this.star()
+      // }
       this.openPrize = true;
       window.clearInterval(resTimer);
       resTimer = window.setInterval(async () => {
+        this.openTime = await this.togetCplogList();
         let list = await this.togetKjCpLog()
-        console.log(_this.balls)
-        if (list && Array.isArray(list) && list.length) {
-          this.compare();
+        // console.log(_this.balls)
+        if (list && Array.isArray(list) && list.length && list[0].qishu == _this.qishu-1) {
           if(_this.balls.length ==10){
-            setTimeout( () => {
-              _this.downTime()
-            },10000)
+            _this.downTime()
             window.clearInterval(resTimer);
           }
         }
-      }, (long + 1) * 1000);
-      let open = await this.togetCplogList();
-      this.openTime = open;
+      },5000);
+      this.openTime = await this.togetCplogList();
       this.star()
     },
     // 获取赔率
@@ -368,6 +538,7 @@ export default {
       this.$store.commit("game/setGameOdd", this.odd);
     },
     add(){
+      let _this = this
       if(this.betNum.length == 0){
         this.$Message.warning("请选择投注号码");
         return;
@@ -379,14 +550,15 @@ export default {
       let arr = []
       for (let i = 0; i < this.betNum.length; i++) {
         arr.push({
-          betNum: this.betNum[i],
-          money: this.money,
-          odd: this.odd[this.betNum[i]-1]
+          betNum: _this.betNum[i],
+          money: _this.index?_this.money/10:_this.money,
+          odd: _this.odd[_this.betNum[i]-1]
         })
       }
       this.betList = arr
       this.betNum = []
       this.resize()
+      this.$Message.success("成功添加至购物车");
     },
     async submit(){
       if (!this.isLogin) {
@@ -403,18 +575,18 @@ export default {
       }
       let bets = []
       for (let i = 0; i < this.betNum.length; i++) {
-        bets.push('1#'+this.money+'#'+(this.betNum[i]-1))
+        bets.push('1#'+(this.index?this.money/10:this.money)+'#'+(this.betNum[i]-1))
       }
       let [err, ret] = await this.submitTouzhu({
         qishu: this.qishu,
-        data: bets,
+        gameid: this.item.game_id,
+        data: JSON.stringify(bets),
         multiple: 1
       });
       if (ret) {
         this.$bus.$emit("resetBetArea");
         this.$Message.success("投注成功，祝您好运！");
         await this.$store.dispatch("userinfo/flushPrice");
-        this.money = ''
         this.betNum = []
         this.resize()
       }
@@ -428,20 +600,25 @@ export default {
     },
     // 定义汽车
     cars(){
-      this.carArr = []
+      let carArr = []
       for (let i = 0; i < 10; i++) {
         let car = {}
         car.id = i  //汽车号
         car.Sright = i*30  //初始位置
         car.Eright = i*9  //初始位置
         car.speed = false //加速
-        this.carArr.push(car)
+        carArr.push(car)
       }
+      // this.$set(this, 'carArr', carArr)
+      this.carArr = carArr
+      // this.$nextTick(()=>this.carArr = carArr)
+      // return carArr
     },
     star(){
-      window.clearInterval(anima);
+      // window.clearInterval(anima);
       this.isStart = true;
       this.isbg = true;
+      this.isBegin = true;
       this.bgPositionX = 350;
       this.begin();
       this.init();
@@ -450,6 +627,7 @@ export default {
     // 重置
     reset(){
       this.isOver = false
+      this.carArr = []
       this.cars()
     },
     init(){
@@ -458,11 +636,15 @@ export default {
     },
     countDow(){
       let _this = this;
-      window.clearInterval(sortss);
       window.clearInterval(countDown);
       countDown = window.setInterval(function() {
-        if(_this.openless < 0){_this.openless = 0}
         _this.openless--;
+        if(_this.openless < 0){
+          _this.openless = 0;
+          window.clearInterval(countDown);
+          _this.isStart = true
+          return
+        }
       }, 1000);
     },
     // 开始
@@ -479,6 +661,7 @@ export default {
     },
     // 结束倒计时
     downTime(){
+      let _this =this
       window.clearInterval(anima);
       let beg = document.querySelector(".racing");
       let arr = []
@@ -500,22 +683,24 @@ export default {
         }
       }
       window.setTimeout(() => {
-        this.isbg = false;
-        this.endPositionX = 200;
+        _this.isbg = false;
+        _this.endPositionX = 200;
         for (let i = 0; i < 10; i++) {
-          this.carArr[i].Eright = this.carArr[i].Eright + 2000;
-          this.carArr[i].speed = true;
+          _this.carArr[i].Eright = _this.carArr[i].Eright + 2000;
+          _this.carArr[i].speed = true;
         }
         window.setTimeout(() => {
-          this.data = this.balls
-          this.sortData = [];
+          _this.data = _this.balls
+          _this.sortData = [];
           for (let i = 0; i < 3; i++) {
-            this.sortData.push(this.data[i]);
+            _this.sortData.push(_this.data[i]);
           }
-          this.bgPositionX = 0;
-          this.endPositionX = -110;
-          this.isOver = true;
-          this.isStart = false;
+          _this.bgPositionX = 0;
+          _this.endPositionX = -110;
+          _this.isOver = true;
+          _this.isStart = false;
+          _this.isBegin = false;
+          _this.compare();
           window.clearInterval(sortss);
         },1000)
       }, 5000);
@@ -552,7 +737,7 @@ export default {
     },
     //结果
     compare(){
-      let _data = this.balls
+      let _data = this.data
       for (let i = 0 ; i < 6; i++) {
         this.resultList[i].data = _data.slice(i,i+5)
         this.resultList[i].niu = this.result(_data.slice(i,i+5))
@@ -709,14 +894,6 @@ export default {
       for (let i = 0; i < items.length; i++) {
         items[i].style.color = '#666'
       }
-      this.arr = [
-        {spot1:{x:this.canvasWidth*0.365,y:0},spot2:{x:this.canvasWidth*0.635,y:0},spot3:{x:this.canvasWidth*0.635,y:this.canvasHeight*0.67},spot4:{x:this.canvasWidth*0.365,y:this.canvasHeight*0.67}},//庄
-        {spot1:{x:0,y:0},spot2:{x:this.canvasWidth*0.365,y:0},spot3:{x:this.canvasWidth*0.365,y:this.canvasHeight*0.37},spot4:{x:0,y:this.canvasHeight*0.37}},//闲1
-        {spot1:{x:0,y:this.canvasHeight*0.37},spot2:{x:this.canvasWidth*0.365,y:this.canvasHeight*0.37},spot3:{x:this.canvasWidth*0.365,y:this.canvasHeight*0.67},spot4:{x:0,y:this.canvasHeight}},//闲2
-        {spot1:{x:this.canvasWidth*0.365,y:this.canvasHeight*0.67},spot2:{x:this.canvasWidth*0.635,y:this.canvasHeight*0.67},spot3:{x:this.canvasWidth,y:this.canvasHeight},spot4:{x:0,y:this.canvasHeight}},//闲3
-        {spot1:{x:this.canvasWidth*0.635,y:this.canvasHeight*0.37},spot2:{x:this.canvasWidth,y:this.canvasHeight*0.37},spot3:{x:this.canvasWidth,y:this.canvasHeight},spot4:{x:this.canvasWidth*0.635,y:this.canvasHeight*0.67}},//闲4
-        {spot1:{x:this.canvasWidth*0.635,y:0},spot2:{x:this.canvasWidth,y:0},spot3:{x:this.canvasWidth,y:this.canvasHeight*0.37},spot4:{x:this.canvasWidth*0.635,y:this.canvasHeight*0.37}},//闲5
-      ]
       this.$nextTick(() => {
 		    let cass = document.getElementById('canvas');
         let cxtx = cass.getContext( '2d' );
@@ -781,14 +958,14 @@ export default {
       text-align: center;
       line-height: 80px;
       font-size: 30px;
-      color: #43362D;
+      color: #43362d;
     }
-    >.info{
-      span{
+    > .info {
+      span {
         display: block;
         width: 400px;
         text-align: center;
-        background-color: #7F6047;
+        background-color: #7f6047;
         color: #fff;
         line-height: 30px;
         margin: 0 auto;
@@ -804,18 +981,18 @@ export default {
       .title {
         font-size: 14px;
         padding: 0 20px;
-        background: url("~assets/img/game/bet-note-title.png") no-repeat left
+        background: url('~assets/img/game/bet-note-title.png') no-repeat left
           center;
       }
       .case {
         padding: 0 20px;
-        background: url("~assets/img/game/bet-note-case.png") no-repeat left
+        background: url('~assets/img/game/bet-note-case.png') no-repeat left
           center;
         cursor: pointer;
       }
       .describe {
         padding: 0 20px;
-        background: url("~assets/img/game/bet-note-describe.png") no-repeat left
+        background: url('~assets/img/game/bet-note-describe.png') no-repeat left
           center;
         cursor: pointer;
       }
@@ -829,33 +1006,37 @@ export default {
       // background-color: rgb(230, 230, 230);
       padding: 10px 10px 10px 40px;
       margin-top: 20px;
-      border: 1px solid #D8D8D8;
+      border: 1px solid #d8d8d8;
       border-bottom: none;
-      background:url('../../../assets/img/game/pk10/car/bgcar2.png') 2% 50% no-repeat,url('../../../assets/img/game/pk10/car/bgcar1.png') 82% 50% no-repeat rgb(230, 230, 230);
-      .num{
+      background: url('../../../assets/img/game/pk10/car/bgcar2.png') 2% 50%
+          no-repeat,
+        url('../../../assets/img/game/pk10/car/bgcar1.png') 82% 50% no-repeat
+          rgb(230, 230, 230);
+      .num {
         padding: 10px 0;
         display: inline-block;
-        span{
+        span {
           display: inline-block;
           width: 60px;
           height: 60px;
         }
-        $car1:'1','2','3','4','5','6','7','8','9','10';
-        @each $n in $car1{
-          .car#{$n}{
-            background: url('../../../assets/img/game/pk10/car/num'+$n+'.png') no-repeat;
+        $car1: '1', '2', '3', '4', '5', '6', '7', '8', '9', '10';
+        @each $n in $car1 {
+          .car#{$n} {
+            background: url('../../../assets/img/game/pk10/car/num'+$n+'.png')
+              no-repeat;
             background-size: 100%;
           }
         }
       }
-      >.info {
+      > .info {
         display: inline-block;
         float: right;
-        p{
+        p {
           font-size: 14px;
           font-weight: 600;
           color: #000;
-          &:last-child{
+          &:last-child {
             margin-top: 10px;
           }
           span {
@@ -863,121 +1044,156 @@ export default {
           }
           div {
             display: inline-block;
-            color: red
+            color: red;
           }
         }
       }
     }
     // 赛车
-    .racing{
+    .racing {
       height: 300px;
       background: url(../../../assets/img/game/pk10/car/bg1.png);
       background-size: auto 100%;
       overflow: hidden;
       position: relative;
       transition: all 0.5s linear;
-      &.beg{
+      &.beg {
         animation: beg 10s linear infinite;
       }
-      @keyframes beg{from{background-position-x: 0px;}
-        to{background-position-x: 10000px;}
+      @keyframes beg {
+        from {
+          background-position-x: 0px;
+        }
+        to {
+          background-position-x: 10000px;
+        }
       }
-      .start{
+      .start {
         height: 164px;
         position: absolute;
         bottom: 14px;
         right: 230px;
       }
-      .end{
+      .end {
         height: 204px;
         position: absolute;
         bottom: 13px;
         left: -20px;
         transition: all 0.2s linear;
       }
-      .carbox{
+      .carbox {
         height: 300px;
-        .car{
+        .car {
           display: inline-block;
           width: 140px;
           height: 40px;
           position: absolute;
           transition: all 5s linear;
-          span{
+          span {
             display: inline-block;
             width: 25px;
             height: 25px;
-            background:url(../../../assets/img/game/pk10/car/tyre.png) no-repeat;
+            background: url(../../../assets/img/game/pk10/car/tyre.png)
+              no-repeat;
             background-size: 100%;
             position: absolute;
           }
-          .l_tyre{
+          .l_tyre {
             top: 18px;
             left: 15px;
           }
-          .r_tyre{
+          .r_tyre {
             top: 18px;
             left: 96.5px;
           }
-          .tyre{
+          .tyre {
             animation: rotate 1s linear infinite;
           }
-          @keyframes lamp_1{
-            0%{transform: rotate(-40deg)}
-            50%{transform: rotate(40deg)}
-            100%{transform: rotate(-40deg)}
+          @keyframes lamp_1 {
+            0% {
+              transform: rotate(-40deg);
+            }
+            50% {
+              transform: rotate(40deg);
+            }
+            100% {
+              transform: rotate(-40deg);
+            }
           }
-          @keyframes rotate{from{transform: rotate(0deg)}
-            to{transform: rotate(-1080deg)}
+          @keyframes rotate {
+            from {
+              transform: rotate(0deg);
+            }
+            to {
+              transform: rotate(-1080deg);
+            }
           }
-          @keyframes feng{
-            0%{opacity: 1}
-            50%{opacity: 0}
-            100%{opacity: 1}
+          @keyframes feng {
+            0% {
+              opacity: 1;
+            }
+            50% {
+              opacity: 0;
+            }
+            100% {
+              opacity: 1;
+            }
           }
-          @keyframes fire{from{background:url(../../../assets/img/game/pk10/car/fire1.png) no-repeat;background-size: 100%;}
-            to{background:url(../../../assets/img/game/pk10/car/fire2.png) no-repeat;background-size: 100%;}
+          @keyframes fire {
+            from {
+              background: url(../../../assets/img/game/pk10/car/fire1.png)
+                no-repeat;
+              background-size: 100%;
+            }
+            to {
+              background: url(../../../assets/img/game/pk10/car/fire2.png)
+                no-repeat;
+              background-size: 100%;
+            }
           }
-          i{
+          i {
             display: inline-block;
             position: absolute;
           }
-          &.speed{
-            &::before{
-              content:'';
+          &.speed {
+            &::before {
+              content: '';
               display: inline-block;
               width: 60px;
               height: 40px;
-              background:url(../../../assets/img/game/pk10/car/feng.png) no-repeat;
+              background: url(../../../assets/img/game/pk10/car/feng.png)
+                no-repeat;
               background-size: 100%;
               animation: feng 0.3s linear infinite;
-              position:absolute;
+              position: absolute;
               top: 0px;
               left: -5px;
             }
-            &::after{
-              content:'';
+            &::after {
+              content: '';
               display: inline-block;
               width: 45px;
               height: 12px;
-              background:url(../../../assets/img/game/pk10/car/fire1.png) no-repeat;
+              background: url(../../../assets/img/game/pk10/car/fire1.png)
+                no-repeat;
               background-size: 100%;
               animation: fire 0.3s linear infinite;
-              position:absolute;
+              position: absolute;
               top: 20px;
-              right: -44px
+              right: -44px;
             }
           }
         }
-        $car:'1','2','3','4','5','6','7','8','9','10';
-        @each $n in $car{
-          .c#{$n}{
-            background: url('../../../assets/img/game/pk10/car/car_'+$n+'.png') no-repeat;
+        $car: '1', '2', '3', '4', '5', '6', '7', '8', '9', '10';
+        @each $n in $car {
+          .c#{$n} {
+            background: url('../../../assets/img/game/pk10/car/car_'+$n+'.png')
+              no-repeat;
             background-size: 100%;
           }
         }
       }
-      .count{
+      .count {
         width: 500px;
         height: 135px;
         background: url(../../../assets/img/game/pk10/car/num_bg.png) no-repeat;
@@ -985,7 +1201,7 @@ export default {
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translate(-50%,-50%);
+        transform: translate(-50%, -50%);
         line-height: 135px;
         color: #fff;
         text-align: center;
@@ -1005,196 +1221,243 @@ export default {
         }
       }
     }
-    .champion{
+    .champion {
       // height: poTorem(150px);
       background: url(../../../assets/img/game/pk10/car/stage.png) no-repeat;
       background-size: 100% 100%;
       overflow: hidden;
       position: relative;
       visibility: hidden;
-      &.show{
+      &.show {
         visibility: visible;
         height: 300px;
       }
-      .sort{
-        >div{
-          position:absolute;
+      .sort {
+        > div {
+          position: absolute;
         }
-        .scale1{
+        .scale1 {
           // animation: scale1 2s linear infinite;
           transform: translateX(-50%) scale(1.6) !important;
           transition: transform 2s linear;
         }
-        .scale2{
+        .scale2 {
           // animation: scale2 2s linear infinite;
           transform: translateX(-165%) scale(1.3) !important;
           transition: transform 2s linear;
         }
-        .scale3{
+        .scale3 {
           // animation: scale3 2s linear infinite;
           transform: translateX(65%) scale(1.3) !important;
           transition: transform 2s linear;
         }
-        @keyframes scale1{
-          from{transform: translateX(-50%) !important}
-          to{transform: translateX(-50%) scale(1.6) !important}
+        @keyframes scale1 {
+          from {
+            transform: translateX(-50%) !important;
+          }
+          to {
+            transform: translateX(-50%) scale(1.6) !important;
+          }
         }
-        @keyframes scale2{
-          from{transform: translateX(-165%) !important}
-          to{transform: translateX(-165%) scale(1.3) !important}
+        @keyframes scale2 {
+          from {
+            transform: translateX(-165%) !important;
+          }
+          to {
+            transform: translateX(-165%) scale(1.3) !important;
+          }
         }
-        @keyframes scale3{
-          from{transform: translateX(65%) !important}
-          to{transform: translateX(65%) scale(1.3) !important}
+        @keyframes scale3 {
+          from {
+            transform: translateX(65%) !important;
+          }
+          to {
+            transform: translateX(65%) scale(1.3) !important;
+          }
         }
-        .st1{
+        .st1 {
           width: 105px;
           height: 60px;
-          top:55%;
-          left:50%;
+          top: 55%;
+          left: 50%;
           transform: translateX(-50%);
-          transform-origin:center;
+          transform-origin: center;
           // -webkit-box-reflect: below;
         }
-        .st2{
+        .st2 {
           width: 140px;
           height: 80px;
-          top:65%;
-          left:42%;
+          top: 65%;
+          left: 42%;
           transform: translateX(-165%);
         }
-        .st3{
+        .st3 {
           width: 140px;
           height: 80px;
-          top:65%;
-          left:58%;
+          top: 65%;
+          left: 58%;
           transform: translateX(65%);
         }
-        .sort1{
-          background: url(../../../assets/img/game/pk10/car/front_car_1.png) no-repeat;
+        .sort1 {
+          background: url(../../../assets/img/game/pk10/car/front_car_1.png)
+            no-repeat;
           background-size: 100%;
         }
-        .sort2{
-          background: url(../../../assets/img/game/pk10/car/front_car_2.png) no-repeat;
+        .sort2 {
+          background: url(../../../assets/img/game/pk10/car/front_car_2.png)
+            no-repeat;
           background-size: 100%;
         }
-        .sort3{
-          background: url(../../../assets/img/game/pk10/car/front_car_3.png) no-repeat;
+        .sort3 {
+          background: url(../../../assets/img/game/pk10/car/front_car_3.png)
+            no-repeat;
           background-size: 100%;
         }
-        .sort4{
-          background: url(../../../assets/img/game/pk10/car/front_car_4.png) no-repeat;
+        .sort4 {
+          background: url(../../../assets/img/game/pk10/car/front_car_4.png)
+            no-repeat;
           background-size: 100%;
         }
-        .sort5{
-          background: url(../../../assets/img/game/pk10/car/front_car_5.png) no-repeat;
+        .sort5 {
+          background: url(../../../assets/img/game/pk10/car/front_car_5.png)
+            no-repeat;
           background-size: 100%;
         }
-        .sort6{
-          background: url(../../../assets/img/game/pk10/car/front_car_6.png) no-repeat;
+        .sort6 {
+          background: url(../../../assets/img/game/pk10/car/front_car_6.png)
+            no-repeat;
           background-size: 100%;
         }
-        .sort7{
-          background: url(../../../assets/img/game/pk10/car/front_car_7.png) no-repeat;
+        .sort7 {
+          background: url(../../../assets/img/game/pk10/car/front_car_7.png)
+            no-repeat;
           background-size: 100%;
         }
-        .sort8{
-          background: url(../../../assets/img/game/pk10/car/front_car_8.png) no-repeat;
+        .sort8 {
+          background: url(../../../assets/img/game/pk10/car/front_car_8.png)
+            no-repeat;
           background-size: 100%;
         }
-        .sort9{
-          background: url(../../../assets/img/game/pk10/car/front_car_9.png) no-repeat;
+        .sort9 {
+          background: url(../../../assets/img/game/pk10/car/front_car_9.png)
+            no-repeat;
           background-size: 100%;
         }
-        .sort10{
-          background: url(../../../assets/img/game/pk10/car/front_car_10.png) no-repeat;
+        .sort10 {
+          background: url(../../../assets/img/game/pk10/car/front_car_10.png)
+            no-repeat;
           background-size: 100%;
         }
       }
       .colour {
         width: 100%;
         height: 100%;
-        background: url(../../../assets/img/game/pk10/car/colour_bar.png) no-repeat;
+        background: url(../../../assets/img/game/pk10/car/colour_bar.png)
+          no-repeat;
         background-size: 100%;
         position: absolute;
-        top:-100%;
-        left:0;
+        top: -100%;
+        left: 0;
         transition: all 2s linear;
       }
-      .colour.land{
+      .colour.land {
         top: 100%;
       }
-      .lamp{
-        .lamp_1{
+      .lamp {
+        .lamp_1 {
           width: 55px;
           height: 130px;
           background: url(../../../assets/img/game/pk10/car/lamp.png) no-repeat;
           background-size: 100%;
           position: absolute;
-          left:18%;
-          bottom:-10px;
+          left: 18%;
+          bottom: -10px;
           transform: rotate(-45deg);
           transform-origin: bottom;
           animation: lamp_1 1.5s linear infinite;
         }
-        .lamp_2{
+        .lamp_2 {
           width: 55px;
           height: 130px;
           background: url(../../../assets/img/game/pk10/car/lamp.png) no-repeat;
           background-size: 100%;
           position: absolute;
-          left:38%;
-          bottom:-10px;
+          left: 38%;
+          bottom: -10px;
           transform: rotate(45deg);
           transform-origin: bottom;
           animation: lamp_2 1.5s linear infinite;
         }
-        .lamp_3{
+        .lamp_3 {
           width: 55px;
           height: 130px;
           background: url(../../../assets/img/game/pk10/car/lamp.png) no-repeat;
           background-size: 100%;
           position: absolute;
-          left:58%;
-          bottom:-10px;
+          left: 58%;
+          bottom: -10px;
           transform: rotate(-45deg);
           transform-origin: bottom;
           animation: lamp_3 1.5s linear infinite;
         }
-        .lamp_4{
+        .lamp_4 {
           width: 55px;
           height: 130px;
           background: url(../../../assets/img/game/pk10/car/lamp.png) no-repeat;
           background-size: 100%;
           position: absolute;
-          left:78%;
-          bottom:-10px;
+          left: 78%;
+          bottom: -10px;
           transform: rotate(45deg);
           transform-origin: bottom;
           animation: lamp_4 1.5s linear infinite;
         }
-        @keyframes lamp_1{
-          0%{transform: rotate(-45deg)}
-          50%{transform: rotate(45deg)}
-          100%{transform: rotate(-45deg)}
+        @keyframes lamp_1 {
+          0% {
+            transform: rotate(-45deg);
+          }
+          50% {
+            transform: rotate(45deg);
+          }
+          100% {
+            transform: rotate(-45deg);
+          }
         }
-        @keyframes lamp_2{
-          0%{transform: rotate(45deg)}
-          50%{transform: rotate(-45deg)}
-          100%{transform: rotate(45deg)}
+        @keyframes lamp_2 {
+          0% {
+            transform: rotate(45deg);
+          }
+          50% {
+            transform: rotate(-45deg);
+          }
+          100% {
+            transform: rotate(45deg);
+          }
         }
-        @keyframes lamp_3{
-          0%{transform: rotate(-45deg)}
-          50%{transform: rotate(45deg)}
-          100%{transform: rotate(-45deg)}
+        @keyframes lamp_3 {
+          0% {
+            transform: rotate(-45deg);
+          }
+          50% {
+            transform: rotate(45deg);
+          }
+          100% {
+            transform: rotate(-45deg);
+          }
         }
-        @keyframes lamp_4{
-          0%{transform: rotate(45deg)}
-          50%{transform: rotate(-45deg)}
-          100%{transform: rotate(45deg)}
+        @keyframes lamp_4 {
+          0% {
+            transform: rotate(45deg);
+          }
+          50% {
+            transform: rotate(-45deg);
+          }
+          100% {
+            transform: rotate(45deg);
+          }
         }
       }
-      .num1{
+      .num1 {
         width: 95px;
         height: 65px;
         background: url(../../../assets/img/game/pk10/car/1st.png) no-repeat;
@@ -1202,9 +1465,9 @@ export default {
         position: absolute;
         top: 15%;
         left: 50%;
-        transform: translateX(-50%)
+        transform: translateX(-50%);
       }
-      .num2{
+      .num2 {
         width: 80px;
         height: 50px;
         background: url(../../../assets/img/game/pk10/car/2nd.png) no-repeat;
@@ -1212,9 +1475,9 @@ export default {
         position: absolute;
         top: 26%;
         left: 28%;
-        transform: translateX(-50%)
+        transform: translateX(-50%);
       }
-      .num3{
+      .num3 {
         width: 80px;
         height: 50px;
         background: url(../../../assets/img/game/pk10/car/3rd.png) no-repeat;
@@ -1222,38 +1485,38 @@ export default {
         position: absolute;
         top: 26%;
         left: 72%;
-        transform: translateX(-50%)
+        transform: translateX(-50%);
       }
     }
     // 扑克
-    >.poker {
+    > .poker {
       margin-top: 10px;
       #canvas {
         border: 1px solid #ccc;
       }
-      .niu{
+      .niu {
         position: absolute;
         width: 602px;
         height: 270px;
         z-index: 10;
         top: 723px;
-        >div{
+        > div {
           position: relative;
           color: #666;
-          &:nth-child(4){
+          &:nth-child(4) {
             p {
               line-height: 45px;
             }
           }
-          p{
+          p {
             font-size: 30px;
             text-align: center;
             line-height: 55px;
           }
-          &:nth-child(1){
+          &:nth-child(1) {
             p {
-              color:#ccc;
-              position:absolute;
+              color: #ccc;
+              position: absolute;
               top: 50%;
               width: 100%;
               font-family: serif;
@@ -1273,17 +1536,18 @@ export default {
             // display: flex;
             // justify-content: space-between;
             // align-items: center;
-            .item.sy{
+            .item.sy {
               transform: rotateY(-180deg) translateZ(-2px);
             }
             .item {
               width: 60px;
               height: 80px;
               position: absolute;
-              top:0;
+              top: 0;
               transform-style: preserve-3d;
               transition: all 1s;
-              span,img{
+              span,
+              img {
                 width: 100%;
                 height: 100%;
                 position: absolute;
@@ -1292,49 +1556,49 @@ export default {
               span {
                 transform: rotateY(-180deg) translateZ(1px);
               }
-              &:nth-child(1){
-                left:0px;
+              &:nth-child(1) {
+                left: 0px;
                 transition: all 1s;
                 z-index: 1;
               }
-              &:nth-child(2){
-                left:20px;
+              &:nth-child(2) {
+                left: 20px;
                 transition: all 1s 0.1s;
                 z-index: 2;
               }
-              &:nth-child(3){
-                left:40px;
+              &:nth-child(3) {
+                left: 40px;
                 transition: all 1s 0.2s;
                 z-index: 3;
               }
-              &:nth-child(4){
-                left:60px;
+              &:nth-child(4) {
+                left: 60px;
                 transition: all 1s 0.3s;
                 z-index: 4;
               }
-              &:nth-child(5){
-                left:80px;
+              &:nth-child(5) {
+                left: 80px;
                 transition: all 1s 0.4s;
                 z-index: 5;
               }
             }
-            span{
+            span {
               position: absolute;
               display: inline-block;
             }
-            .rotate{
+            .rotate {
               transform: rotateY(180deg);
             }
-            .niu{
+            .niu {
               top: 50%;
               left: 32%;
               transform: translateX(-50%) translateZ(10px);
               width: 70px;
               height: 35px;
               z-index: 100;
-              position:absolute;
+              position: absolute;
             }
-            .res{
+            .res {
               top: 15px;
               // right: 0.7rem;
               width: 0;
@@ -1343,135 +1607,143 @@ export default {
               visibility: hidden;
               z-index: 100;
               right: -10%;
-              position:absolute;
+              position: absolute;
               transform: translateZ(10px);
-              &.show{
+              &.show {
                 width: 67px;
                 height: 60px;
                 visibility: visible;
               }
             }
-            .niu0_t{
+            .niu0_t {
               background: url(../../../assets/img/game/pk10/n0-t.png) no-repeat;
               background-size: 100%;
             }
-            .niu0_w{
+            .niu0_w {
               background: url(../../../assets/img/game/pk10/n0-w.png) no-repeat;
               background-size: 100%;
             }
-            .niu1_t{
+            .niu1_t {
               background: url(../../../assets/img/game/pk10/n1-t.png) no-repeat;
               background-size: 100%;
             }
-            .niu1_w{
+            .niu1_w {
               background: url(../../../assets/img/game/pk10/n1-w.png) no-repeat;
               background-size: 100%;
             }
-            .niu2_t{
+            .niu2_t {
               background: url(../../../assets/img/game/pk10/n2-t.png) no-repeat;
               background-size: 100%;
             }
-            .niu2_w{
+            .niu2_w {
               background: url(../../../assets/img/game/pk10/n2-w.png) no-repeat;
               background-size: 100%;
             }
-            .niu3_t{
+            .niu3_t {
               background: url(../../../assets/img/game/pk10/n3-t.png) no-repeat;
               background-size: 100%;
             }
-            .niu3_w{
+            .niu3_w {
               background: url(../../../assets/img/game/pk10/n3-w.png) no-repeat;
               background-size: 100%;
             }
-            .niu4_t{
+            .niu4_t {
               background: url(../../../assets/img/game/pk10/n4-t.png) no-repeat;
               background-size: 100%;
             }
-            .niu4_w{
+            .niu4_w {
               background: url(../../../assets/img/game/pk10/n4-w.png) no-repeat;
               background-size: 100%;
             }
-            .niu5_t{
+            .niu5_t {
               background: url(../../../assets/img/game/pk10/n5-t.png) no-repeat;
               background-size: 100%;
             }
-            .niu5_w{
+            .niu5_w {
               background: url(../../../assets/img/game/pk10/n5-w.png) no-repeat;
               background-size: 100%;
             }
-            .niu6_t{
+            .niu6_t {
               background: url(../../../assets/img/game/pk10/n6-t.png) no-repeat;
               background-size: 100%;
             }
-            .niu6_w{
+            .niu6_w {
               background: url(../../../assets/img/game/pk10/n6-w.png) no-repeat;
               background-size: 100%;
             }
-            .niu7_t{
+            .niu7_t {
               background: url(../../../assets/img/game/pk10/n7-t.png) no-repeat;
               background-size: 100%;
             }
-            .niu7_w{
+            .niu7_w {
               background: url(../../../assets/img/game/pk10/n7-w.png) no-repeat;
               background-size: 100%;
             }
-            .niu8_t{
+            .niu8_t {
               background: url(../../../assets/img/game/pk10/n8-t.png) no-repeat;
               background-size: 100%;
             }
-            .niu8_w{
+            .niu8_w {
               background: url(../../../assets/img/game/pk10/n8-w.png) no-repeat;
               background-size: 100%;
             }
-            .niu9_t{
+            .niu9_t {
               background: url(../../../assets/img/game/pk10/n9-t.png) no-repeat;
               background-size: 100%;
             }
-            .niu9_w{
+            .niu9_w {
               background: url(../../../assets/img/game/pk10/n9-w.png) no-repeat;
               background-size: 100%;
             }
-            .niu10_t{
+            .niu10_t {
               background: url(../../../assets/img/game/pk10/n10-t.png) no-repeat;
               background-size: 100%;
             }
-            .niu10_w{
+            .niu10_w {
               background: url(../../../assets/img/game/pk10/n10-w.png) no-repeat;
               background-size: 100%;
             }
-            .res_w{
+            .res_w {
               background: url(../../../assets/img/game/pk10/w.png) no-repeat;
               background-size: 100%;
             }
-            .res_t{
+            .res_t {
               background: url(../../../assets/img/game/pk10/t.png) no-repeat;
               background-size: 100%;
             }
-            $name1:'1-1','2-1','3-1','4-1','5-1','6-1','7-1','8-1','9-1','10-1';
-            $name2:'1-2','2-2','3-2','4-2','5-2','6-2','7-2','8-2','9-2','10-2';
-            $name3:'1-3','2-3','3-3','4-3','5-3','6-3','7-3','8-3','9-3','10-3';
-            $name4:'1-4','2-4','3-4','4-4','5-4','6-4','7-4','8-4','9-4','10-4';
-            @each $n in $name1{
-              .poker#{$n}{
-                background: url('../../../assets/img/game/pk10/'+$n+'.png') no-repeat;
+            $name1: '1-1', '2-1', '3-1', '4-1', '5-1', '6-1', '7-1', '8-1',
+              '9-1', '10-1';
+            $name2: '1-2', '2-2', '3-2', '4-2', '5-2', '6-2', '7-2', '8-2',
+              '9-2', '10-2';
+            $name3: '1-3', '2-3', '3-3', '4-3', '5-3', '6-3', '7-3', '8-3',
+              '9-3', '10-3';
+            $name4: '1-4', '2-4', '3-4', '4-4', '5-4', '6-4', '7-4', '8-4',
+              '9-4', '10-4';
+            @each $n in $name1 {
+              .poker#{$n} {
+                background: url('../../../assets/img/game/pk10/'+$n+'.png')
+                  no-repeat;
                 background-size: 100% 100%;
               }
             }
-            @each $n in $name2{
-              .poker#{$n}{
-                background: url('../../../assets/img/game/pk10/'+$n+'.png') no-repeat;
+            @each $n in $name2 {
+              .poker#{$n} {
+                background: url('../../../assets/img/game/pk10/'+$n+'.png')
+                  no-repeat;
                 background-size: 100% 100%;
               }
             }
-            @each $n in $name3{
-              .poker#{$n}{
-                background: url('../../../assets/img/game/pk10/'+$n+'.png') no-repeat;
+            @each $n in $name3 {
+              .poker#{$n} {
+                background: url('../../../assets/img/game/pk10/'+$n+'.png')
+                  no-repeat;
                 background-size: 100% 100%;
               }
             }
-            @each $n in $name4{
-              .poker#{$n}{
-                background: url('../../../assets/img/game/pk10/'+$n+'.png') no-repeat;
+            @each $n in $name4 {
+              .poker#{$n} {
+                background: url('../../../assets/img/game/pk10/'+$n+'.png')
+                  no-repeat;
                 background-size: 100% 100%;
               }
             }
@@ -1491,29 +1763,29 @@ export default {
           top: 0;
           left: 36.5%;
         }
-        .xian5{
+        .xian5 {
           width: 36.5%;
           // height: 6.68rem;
           display: inline-block;
           float: right;
         }
-        .xian2{
+        .xian2 {
           width: 36.5%;
           // height: 0;
           display: inline-block;
           position: absolute;
-          top:55%;
-          left:0;
+          top: 55%;
+          left: 0;
         }
-        .xian4{
+        .xian4 {
           width: 36.5%;
           // height: 0;
           display: inline-block;
           position: absolute;
-          top:55%;
-          right:0;
+          top: 55%;
+          right: 0;
         }
-        .xian3{
+        .xian3 {
           width: 27%;
           // height: 5.86rem;
           margin: 0 auto;
@@ -1521,12 +1793,12 @@ export default {
           top: 100%;
           left: 36.5%;
           z-index: 1;
-          .res{
+          .res {
             // right:-0.8rem !important;
           }
         }
       }
-      .history{
+      .history {
         width: 330px;
         height: 402px;
         float: right;
@@ -1534,55 +1806,55 @@ export default {
           text-align: center;
           font-size: 18px;
           line-height: 30px;
-          background-color: #D7D7D7;
+          background-color: #d7d7d7;
           border: 1px solid #767676;
         }
         .item {
           width: 100%;
           height: 372px;
-          border: 1px solid #C4C4C4;
+          border: 1px solid #c4c4c4;
           border-top: none;
           overflow: auto;
-          >div {
+          > div {
             width: 448px;
-            span{
+            span {
               display: inline-block;
               width: 45px;
               text-align: center;
               line-height: 18px;
-              &:nth-child(1){
+              &:nth-child(1) {
                 width: 50px;
               }
-              &:nth-child(2){
+              &:nth-child(2) {
                 width: 125px;
               }
             }
           }
-          .tit{
-            background-color: #E7E7E7;
+          .tit {
+            background-color: #e7e7e7;
             border-bottom: 1px solid #767676;
             border-top: none;
             span {
               border-right: 1px solid #767676;
               padding: 0 10px;
-              &:last-child{
+              &:last-child {
                 border-right: none;
               }
             }
           }
           .list {
-            background-color: #E7E7E7;
+            background-color: #e7e7e7;
             // border-left: 1px solid #C4C4C4;
             // border-right: 1px solid #C4C4C4;
             padding: 3px 0;
-            &:nth-child(2n){
+            &:nth-child(2n) {
               background-color: #fff;
             }
             span {
-              border-right: 1px solid #C4C4C4;
+              border-right: 1px solid #c4c4c4;
               padding: 0 10px;
               line-height: 15px;
-              &:last-child{
+              &:last-child {
                 border-right: none;
               }
             }
@@ -1622,17 +1894,42 @@ export default {
             border-radius: 11px;
             cursor: pointer;
             margin: 0 2px;
-            &:hover{
-              color: #FB2D47;
+            &:hover {
+              color: #fb2d47;
             }
           }
           .active {
             color: #fff !important;
-            background: linear-gradient(top , rgb(252, 88, 109) 50% , rgb(253, 67, 90) 50% , rgb(253, 67, 90) 100%);
-            background: -o-linear-gradient(top , rgb(252, 88, 109) 50% , rgb(253, 67, 90) 50% , rgb(253, 67, 90) 100%);
-            background: -ms-linear-gradient(top , rgb(252, 88, 109) 50% , rgb(253, 67, 90) 50% , rgb(253, 67, 90) 100%);
-            background: -moz-linear-gradient(top , rgb(252, 88, 109) 50% , rgb(253, 67, 90) 50% , rgb(253, 67, 90) 100%);
-            background: -webkit-linear-gradient(top , rgb(252, 88, 109) 50% , rgb(253, 67, 90) 50% , rgb(253, 67, 90) 100%);
+            background: linear-gradient(
+              top,
+              rgb(252, 88, 109) 50%,
+              rgb(253, 67, 90) 50%,
+              rgb(253, 67, 90) 100%
+            );
+            background: -o-linear-gradient(
+              top,
+              rgb(252, 88, 109) 50%,
+              rgb(253, 67, 90) 50%,
+              rgb(253, 67, 90) 100%
+            );
+            background: -ms-linear-gradient(
+              top,
+              rgb(252, 88, 109) 50%,
+              rgb(253, 67, 90) 50%,
+              rgb(253, 67, 90) 100%
+            );
+            background: -moz-linear-gradient(
+              top,
+              rgb(252, 88, 109) 50%,
+              rgb(253, 67, 90) 50%,
+              rgb(253, 67, 90) 100%
+            );
+            background: -webkit-linear-gradient(
+              top,
+              rgb(252, 88, 109) 50%,
+              rgb(253, 67, 90) 50%,
+              rgb(253, 67, 90) 100%
+            );
           }
         }
       }
@@ -1649,10 +1946,10 @@ export default {
           border-radius: 5px;
         }
         .add {
-          background-color: #E9363C;
+          background-color: #e9363c;
         }
         .keyBet {
-          background-color: #3EACDD;
+          background-color: #3eacdd;
           margin-left: 10px;
         }
       }
@@ -1671,7 +1968,7 @@ export default {
     }
     .ent {
       cursor: pointer;
-      float:right;
+      float: right;
       display: inline-block;
       width: 120px;
       text-align: center;
@@ -1680,15 +1977,40 @@ export default {
       color: #fff;
       font-size: 16px;
       border-radius: 20px;
-      background: linear-gradient(top , rgb(255, 88, 108) 47% , rgb(253, 67, 90) 57% , rgb(253, 67, 90) 100%);
-      background: -o-linear-gradient(top , rgb(255, 88, 108) 47% , rgb(253, 67, 90) 57% , rgb(253, 67, 90) 100%);
-      background: -ms-linear-gradient(top , rgb(255, 88, 108) 47% , rgb(253, 67, 90) 57% , rgb(253, 67, 90) 100%);
-      background: -moz-linear-gradient(top , rgb(255, 88, 108) 47% , rgb(253, 67, 90) 57% , rgb(253, 67, 90) 100%);
-      background: -webkit-linear-gradient(top , rgb(255, 88, 108) 47% , rgb(253, 67, 90) 57% , rgb(253, 67, 90) 100%);
+      background: linear-gradient(
+        top,
+        rgb(255, 88, 108) 47%,
+        rgb(253, 67, 90) 57%,
+        rgb(253, 67, 90) 100%
+      );
+      background: -o-linear-gradient(
+        top,
+        rgb(255, 88, 108) 47%,
+        rgb(253, 67, 90) 57%,
+        rgb(253, 67, 90) 100%
+      );
+      background: -ms-linear-gradient(
+        top,
+        rgb(255, 88, 108) 47%,
+        rgb(253, 67, 90) 57%,
+        rgb(253, 67, 90) 100%
+      );
+      background: -moz-linear-gradient(
+        top,
+        rgb(255, 88, 108) 47%,
+        rgb(253, 67, 90) 57%,
+        rgb(253, 67, 90) 100%
+      );
+      background: -webkit-linear-gradient(
+        top,
+        rgb(255, 88, 108) 47%,
+        rgb(253, 67, 90) 57%,
+        rgb(253, 67, 90) 100%
+      );
       box-shadow: 0px 0px 8px 1px #ff586c;
       transition: transform 0.1s linear;
     }
-    .ent:hover{
+    .ent:hover {
       transform: scale(1.1);
     }
   }
@@ -1696,5 +2018,4 @@ export default {
 </style>
 
 <style lang="scss">
-
 </style>

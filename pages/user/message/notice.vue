@@ -8,10 +8,10 @@
       <img src="../../../assets/img/no_user_msg.png" alt="" v-show="isShow" class="noData">
       <div class="item" v-show="!isShow" v-for="(item,key) in noticeData" :key="key" @click="noticeInfo(item)">
         <span class="icon"></span>
-        <p class="txt">{{item.content}}</p>
+        <p class="txt" v-html="item.content"></p>
         <span class="time">{{setTime(item.send_time)}}</span>
       </div>
-      <Page :total="1" show-elevator show-total v-show="!isShow"></Page>
+      <Page :total="noticeData.length" show-elevator show-total v-show="!isShow"></Page>
     </div>
     <div class="notice_info" v-show="isNoticeInfo">
       <div class="nav">
@@ -19,18 +19,17 @@
         <span class="hover" @click="backNotice">网站公告</span>>
         <span class="hover">详情</span>
       </div>
-      <!-- <p class="tit">标题</p> -->
       <div class="time">{{setTime(notice_info.send_time)}}</div>
       <div class="info">
-        <p>{{notice_info.content}}</p>
+        <p v-html="notice_info.content"></p>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions } from 'vuex';
 export default {
-  name: "notice",
+  name: 'notice',
   data() {
     return {
       isShow: false,
@@ -40,11 +39,11 @@ export default {
       notice_info: {}
     };
   },
-  mounted() {
-    this.togetSystemNotice();
+  async mounted() {
+    await this.togetSystemNotice();
   },
   methods: {
-    ...mapActions("user", ["getSystemNotice"]),
+    ...mapActions('user', ['getSystemNotice']),
     async togetSystemNotice() {
       let noticeData = await this.getSystemNotice();
       if (noticeData.length === 0) {
@@ -70,9 +69,9 @@ export default {
         m = assignTime.getMinutes(),
         s = assignTime.getSeconds(),
         add0 = m => {
-          return m > 9 ? m : "0" + m;
+          return m > 9 ? m : '0' + m;
         };
-      return y + "-" + add0(M) + "-" + add0(d);
+      return y + '-' + add0(M) + '-' + add0(d);
     },
     backNotice() {
       this.isNoticeInfo = false;
@@ -127,7 +126,7 @@ export default {
         width: 30px;
         height: 30px;
         float: left;
-        background: url("../../../assets/img/pc_gengduo_xiaoxi.png") center
+        background: url('../../../assets/img/pc_gengduo_xiaoxi.png') center
           center no-repeat;
         background-size: 18px 18px;
       }

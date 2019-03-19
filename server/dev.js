@@ -1,9 +1,9 @@
-const Nuxt = require("nuxt");
-const app = require("express")();
+const Nuxt = require('nuxt');
+const app = require('express')();
 const port = process.env.PORT || 3000;
 
 // 传入配置初始化 Nuxt.js 实例
-let config = require("../nuxt.config.js");
+let config = require('../nuxt.config.js');
 const nuxt = new Nuxt(config);
 app.use(nuxt.render);
 
@@ -16,5 +16,5 @@ if (config.dev) {
 }
 
 // 监听指定端口
-app.listen(port, "0.0.0.0");
-console.log("服务器运行于 127.0.0.1:" + port);
+app.listen(port, '0.0.0.0');
+console.log('服务器运行于 127.0.0.1:' + port);

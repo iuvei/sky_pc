@@ -10,41 +10,41 @@
 </template>
 <script>
 export default {
-  name: "trendTool",
-  props: ["gameName", "option"],
+  name: 'trendTool',
+  props: ['gameName', 'option'],
   data() {
     return {
       lineKey: true,
       cellKey: true,
       data: [
-        { label: "最近20期", value: 20 },
-        { label: "最近30期", value: 30 },
-        { label: "最近50期", value: 50 },
-        { label: "最近100期", value: 100 },
-        { label: "前天", value: -2 },
-        { label: "昨天", value: -1 },
-        { label: "今天", value: 0 },
+        { label: '最近20期', value: 20 },
+        { label: '最近30期', value: 30 },
+        { label: '最近50期', value: 50 },
+        { label: '最近100期', value: 100 },
+        { label: '前天', value: -2 },
+        { label: '昨天', value: -1 },
+        { label: '今天', value: 0 },
       ],
       dataActive: 0,
-      test: "",
+      test: '',
     };
   },
   methods: {
     async clickItem(item, key) {
-      await this.$Throttle.promise(0.5, "change");
+      await this.$Throttle.promise(0.5, 'change');
       this.dataActive = key;
-      this.$bus.$emit("getTrenlistData", item.value);
+      this.$bus.$emit('getTrenlistData', item.value);
     },
     changeOption(key) {
-      this.$emit("changeOption", key);
+      this.$emit('changeOption', key);
     },
     line() {
       this.lineKey = !this.lineKey;
-      this.$emit("lineKey", this.lineKey);
+      this.$emit('lineKey', this.lineKey);
     },
     cell() {
       this.cellKey = !this.cellKey;
-      this.$emit("cellKey", this.cellKey);
+      this.$emit('cellKey', this.cellKey);
     },
   },
   mounted() {

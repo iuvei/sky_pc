@@ -6,13 +6,17 @@
         <span class="tip">{{game.tip}}</span>
       </div>
     </div>
+    <div v-if="!hotGames.length" v-for="(item,index) in 5" :key="index" class="menuitem">
+      <div>
+        <span class="img placeholder"></span>
+        <span class="tip placeholder"> </span>
+        <span class="tip placeholder"> </span>
+      </div>
+    </div>
     <div class="bottom allLottery">
       <ul>
         <li @mouseover="showHightDetail" @mouseleave="hideHightDetail">
           <div>
-            <!-- <Icon type="ios-alarm-outline" color="#f9d901" size="40" />
-            <Icon type="ios-checkmark" />
-            <Icon type="md-lock" style="font-size:18px;"></Icon> -->
             <span class="high-tip">
               高频彩
             </span>
@@ -23,7 +27,6 @@
             </li>
           </ul>
           <div class="game_menu_list_2 cp_highcp" v-show="showHigh">
-            <!-- <div class="mark_line"></div> -->
             <div class="content_title">
               <div class="title">高频彩</div>
             </div>
@@ -63,7 +66,6 @@
             </li>
           </ul>
           <div class="game_menu_list_2 cp_highcp cp_allcp" v-show="showAll">
-            <!-- <div class="mark_line"></div> -->
             <div class="content_title">
               <div class="title">全部</div>
             </div>
@@ -79,9 +81,9 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex';
 export default {
-  name: "IndexSidebar",
+  name: 'IndexSidebar',
   props:['notIndex'],
   data() {
     return {
@@ -93,11 +95,11 @@ export default {
     ...mapState({
       gamelist: state =>
         state.game.gameList
-          ? state.game.gameList.filter(x => x.enable === 1)
+          ? state.game.gameList.filter(x => x.type != 4 && x.type != 3 && x.enable === 1)
           : []
     }),
     hotGames() {
-      return this.gamelist.filter(x => x.hot === 1).slice(0, 5);
+      return this.gamelist.slice(0, 5);
     },
     lowSpeedGames() {
       return this.gamelist.filter(x => x.speed === 0 && x.type !== 2).slice(0, 5);
@@ -106,7 +108,7 @@ export default {
       return this.gamelist.filter(x => x.speed === 1).slice(0, 5);
     },
     sportGames() {
-      return this.gamelist.filter(x => x.js_tag === "sport_key");
+      return this.gamelist.filter(x => x.js_tag === 'sport_key');
     },
     allGames() {
       return this.gamelist.slice(0, 5);
@@ -114,14 +116,9 @@ export default {
   },
   methods: {
     buy(game) {
-      if (!this.$store.state.userinfo.isLogin) {
-        this.$Message.warning("请先登录");
-      } else {
-        const js_tag = game.js_tag==='3d'?'f3d':game.js_tag
-        this.$router.push(
-          `/game/${js_tag}/${game.gameid || game.game_id}`
-        );
-      }
+      const js_tag = game.js_tag === '3d' ? 'f3d' : game.js_tag
+      const path = `/game/${js_tag}${process.env.static?'?id=':'/'}${game.gameid || game.game_id}`
+      this.$router.push(path);
     },
     goSport(game) {
       window.location.href = `/sport/today/${game.tip}/championships`;
@@ -149,7 +146,7 @@ export default {
   border: 1px solid #dbd4cc;
 }
 .index-sidebar .menuitem:after {
-  content: "";
+  content: '';
   display: block;
   width: 90%;
   border-bottom: 1px solid #eee;
@@ -164,7 +161,6 @@ export default {
   height: 40px;
 }
 .index-sidebar .tip {
-  // width: auto;
   width: 73px;
   max-width: 84px;
   height: 24px;
@@ -175,20 +171,20 @@ export default {
   font-size: 12px;
   color: #a1a1a1;
   padding: 0px 4px 0px 4px;
+  &.placeholder {
+    background: #ddd;
+  }
+}
+.index-sidebar .img.placeholder {
+  width: 40px;
+  height: 40px;
+  background: #ddd;
+  border-radius: 50%;
 }
 .bottom {
   margin-top: 2px;
 }
 .bottom .high-tip {
-  // width: 24px;
-  // height: 60px;
-  // margin: 4px 6px 4px 8px;
-  // font-size: 14px;
-  // text-align: center;
-  // border: solid 1px #aaa;
-  // box-sizing: border-box;
-  // writing-mode: vertical-rl;
-  // color: #a1a1a1;
   height: 97px;
   color: #f9d901;
 }
@@ -203,29 +199,7 @@ export default {
   justify-content: flex-start;
   flex: 1;
 }
-// .bottom > ul > li {
-//   position: relative;
-//   border-top: 1px solid #fff;
-//   border-bottom: 1px solid #fff;
-// }
-// .bottom > ul > li:hover {
-//   border-top: 1px solid #dbd4cc;
-//   border-bottom: 1px solid #dbd4cc;
-// }
-// .bottom > ul > li:last-child:hover {
-//   border-bottom: 1px solid #fff;
-// }
-// .more:after {
-//   content: "";
-//   display: inline-block;
-//   position: absolute;
-//   background: url(~/assets/img/more.png) no-repeat top center;
-//   background-size: 12px 12px;
-//   width: 12px;
-//   height: 12px;
-//   right: 4px;
-//   top: 46%;
-// }
+
 .bottom > ul ul li {
   margin: 2px 10px 2px 0;
   line-height: 1.5;

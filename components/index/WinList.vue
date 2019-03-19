@@ -24,12 +24,12 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import rollnotice from "./rollnotice";
-import rollnoticeItem from "./rollnotice-item";
+import { mapActions } from 'vuex';
+import rollnotice from './rollnotice';
+import rollnoticeItem from './rollnotice-item';
 
 export default {
-  name: "index-userwinlist",
+  name: 'index-userwinlist',
   components: {
     rollnotice,
     rollnoticeItem
@@ -41,10 +41,11 @@ export default {
   },
   methods: {
     ...mapActions({
-      getUserWinList: "game/getUserWinList"
+      getUserWinList: 'game/getUserWinList'
     })
   },
   async created() {
+    if(!process.browser) return
     this.list = await this.getUserWinList();
   }
 };

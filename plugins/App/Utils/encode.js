@@ -1,6 +1,6 @@
-const encodeStr = (str, key) => {
-  const strArr = unescape(str).split(""),
-    keyArr = key.split("");
+const encodeStr = (str, key = '0') => {
+  const strArr = unescape(str).split(''),
+    keyArr = key.split('');
 
   for (let i = 0; i < strArr.length; i++) {
     for (let j = 0; j < keyArr.length; j++) {
@@ -9,10 +9,10 @@ const encodeStr = (str, key) => {
         keyArr[j].charCodeAt();
     }
   }
-  let result = "";
+  let result = '';
   for (let i = 0; i < strArr.length; i++) {
     const c = strArr[i];
-    result += c.toString(16).padStart(2, "0");
+    result += c.toString(16).padStart(2, '0');
   }
   return result.toUpperCase();
 };

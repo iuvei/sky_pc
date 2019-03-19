@@ -29,42 +29,63 @@
   </div>
 </template>
 <script>
-import http from "~/api/http";
+import http from '~/api/http';
 export default {
-  layout: "index",
+  layout: 'index',
   components: {},
   data() {
     return {
-      tab_tag: "ssc",
+      tab_tag: 'ssc',
       lotteryOptions: [
         {
-          label: "时时彩",
-          tag: "ssc"
+          label: '时时彩',
+          tag: 'ssc'
         },
         {
-          label: "PK拾",
-          tag: "pk10"
+          label: 'PK拾',
+          tag: 'pk10'
         },
         {
-          label: "快3",
-          tag: "k3"
+          label: '快3',
+          tag: 'k3'
         },
         {
-          label: "11选5",
-          tag: "11x5"
+          label: '11选5',
+          tag: '11x5'
         },
         {
-          label: "PC蛋蛋",
-          tag: "pcdd"
+          label: 'PC蛋蛋',
+          tag: 'pcdd'
         },
         {
-          label: "3D",
-          tag: "3d"
+          label: '3D',
+          tag: '3d'
         },
         {
-          label: "六合彩",
-          tag: "lhc"
-        }
+          label: '六合彩',
+          tag: 'lhc'
+        },
+
+        {
+          label: '梯子游戏',
+          tag: 'tzyx'
+        },
+        {
+          label: '幸运农场',
+          tag: 'xync'
+        },
+        {
+          label: '幸运扑克',
+          tag: 'xypk'
+        },
+        {
+          label: 'PK牛牛',
+          tag: 'pkniuniu'
+        },
+        {
+          label: '七星彩',
+          tag: 'qxc'
+        },
       ],
       rowsTitle: [],
       interval: 0, // 区间值，默认显示整数
@@ -104,23 +125,23 @@ export default {
       this.interval = this.interval === rate ? 0 : rate;
     },
     renderActionText(rate) {
-      let s = "";
+      let s = '';
       if (this.interval === 0 && rate != 0) {
-        s = "展开";
+        s = '展开';
       } else if (this.interval === rate) {
-        s = "收回";
+        s = '收回';
       }
       return s;
     },
     getBaseData() {
       http({
         loading: true,
-        ac: "getFPInfoBy0",
+        ac: 'getFPInfoBy0',
         tag: this.tab_tag
       }).then(res => {
         this.rowsTitle = res;
         const cols = Object.keys(res[0].list)
-          .map(el => el.replace(/fp_/, ""))
+          .map(el => el.replace(/fp_/, ''))
           .sort((a, b) => b - a);
         this.rowsContent = cols;
         // console.error(Object.getOwnPropertyNames(this.rowsContent))

@@ -90,11 +90,10 @@
 
 <script>
 export default {
-  name: "lottery-lhc",
-  props: ["game"]
+  name: 'lottery-lhc',
+  props: ['game']
 };
 </script>
 
 <style>
-
 </style>

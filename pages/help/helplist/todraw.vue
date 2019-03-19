@@ -14,19 +14,19 @@
 
 <script>
 export default {
-    name: "todraw"
+  name: 'todraw'
 };
 </script>
 <style lang="scss" scoped>
 .agent_thatw {
+  width: 100%;
+  .top_contentw {
     width: 100%;
-    .top_contentw {
-        width: 100%;
-        p {
-            margin-top: 7px;
-            margin-left: 60px;
-            font-size: 15px;
-        }
+    p {
+      margin-top: 7px;
+      margin-left: 60px;
+      font-size: 15px;
     }
+  }
 }
 </style>

@@ -1,54 +1,54 @@
 <template>
-    <!-- 现金交易页面 -->
-    <div class="agent_that_that">
-        <div class="top_content_that">
-            <Icon type="ios-checkmark-empty" style="width:30px;font-size:50px;color:#0cef2d"></Icon>
-            转账成功
-        </div>
-        <div class="intro_word_that">
-            <p class="sub-title">转账详情</p>
-            <div class="intro_word_that_srzh">
-                <div class="intro_word_that_srzh_left">转入账号:</div>
-                <div class="intro_word_that_srzh_right">{{tradeInfo.userName}}</div>
-            </div>
-            <div class="intro_word_that_srzh">
-                <div class="intro_word_that_srzh_left">转账金额:</div>
-                <div class="intro_word_that_srzh_right">{{tradeInfo.price}}</div>
-            </div>
-            <div class="intro_word_that_srzh">
-                <div class="intro_word_that_srzh_left">转账时间:</div>
-                <div class="intro_word_that_srzh_right">{{tradeInfo.time}}</div>
-            </div>
-        </div>
-        <div class="next_button">
-            <Button class="next_button_button" type="error" @click="nextClick">
-                返回继续转账
-            </Button>
-        </div>
-        <nuxt/>
+  <!-- 现金交易页面 -->
+  <div class="agent_that_that">
+    <div class="top_content_that">
+      <Icon type="ios-checkmark-empty" style="width:30px;font-size:50px;color:#0cef2d"></Icon>
+      转账成功
     </div>
+    <div class="intro_word_that">
+      <p class="sub-title">转账详情</p>
+      <div class="intro_word_that_srzh">
+        <div class="intro_word_that_srzh_left">转入账号:</div>
+        <div class="intro_word_that_srzh_right">{{tradeInfo.userName}}</div>
+      </div>
+      <div class="intro_word_that_srzh">
+        <div class="intro_word_that_srzh_left">转账金额:</div>
+        <div class="intro_word_that_srzh_right">{{tradeInfo.price}}</div>
+      </div>
+      <div class="intro_word_that_srzh">
+        <div class="intro_word_that_srzh_left">转账时间:</div>
+        <div class="intro_word_that_srzh_right">{{tradeInfo.time}}</div>
+      </div>
+    </div>
+    <div class="next_button">
+      <Button class="next_button_button" type="error" @click="nextClick">
+        返回继续转账
+      </Button>
+    </div>
+    <nuxt/>
+  </div>
 </template>
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions } from 'vuex';
 export default {
-  name: "cash-trade-success",
+  name: 'cash-trade-success',
   data() {
     return {};
   },
   computed: {
-    ...mapState("agent", ["cashTransaction"]),
+    ...mapState('agent', ['cashTransaction']),
     tradeInfo() {
       return { userName: this.cashTransaction.other, ...this.cashTransaction.tradeInfo };
     }
   },
   methods: {
-    ...mapActions("agent", ["modifyField"]),
+    ...mapActions('agent', ['modifyField']),
     nextClick() {
       this.modifyField({
-        prefix: "cashTransaction",
+        prefix: 'cashTransaction',
         params: {
-          view: "cashTransaction",
-          other: "",
+          view: 'cashTransaction',
+          other: '',
           otherInfo: {},
           tradeInfo: {}
         }

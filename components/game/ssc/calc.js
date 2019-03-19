@@ -1,6 +1,6 @@
 class CalcSSC {
   constructor() {
-    this.tag_js = "ssc";
+    this.tag_js = 'ssc';
   }
   calcBetNum(playid, arr) {
     switch (playid) {
@@ -139,52 +139,52 @@ class CalcSSC {
         return this.calc_h3_dxds(arr);
       // 下边的是单式
       case 2:
-        return this.calc_5x_zxds(arr.split(","));
+        return this.calc_5x_zxds(arr.split(','));
         break;
       case 4:
       case 95:
-        return this.calc_4x_zxds(arr.split(","));
+        return this.calc_4x_zxds(arr.split(','));
         break;
       case 6:
       case 20:
       case 102:
-        return this.calc_h3_zxds(arr.split(","));
+        return this.calc_h3_zxds(arr.split(','));
         break;
       case 11:
       case 25:
       case 107:
-        return this.calc_h3_z3ds(arr.split(","));
+        return this.calc_h3_z3ds(arr.split(','));
         break;
       case 13:
       case 27:
       case 109:
-        return this.calc_h3_z6ds(arr.split(","));
+        return this.calc_h3_z6ds(arr.split(','));
         break;
       case 34:
       case 116:
-        return this.calc_q2_zxds(arr.split(","));
+        return this.calc_q2_zxds(arr.split(','));
         break;
       case 38:
       case 120:
-        return this.calc_q2_zuxds(arr.split(","));
+        return this.calc_q2_zuxds(arr.split(','));
         break;
       case 58:
-        return this.calc_r2_zxds(arr.split(","));
+        return this.calc_r2_zxds(arr.split(','));
         break;
       case 61:
-        return this.calc_r2_zuxds(arr.split(","));
+        return this.calc_r2_zuxds(arr.split(','));
         break;
       case 64:
-        return this.calc_r3_zxds(arr.split(","));
+        return this.calc_r3_zxds(arr.split(','));
         break;
       case 67:
-        return this.calc_r3_zu3ds(arr.split(","));
+        return this.calc_r3_zu3ds(arr.split(','));
         break;
       case 69:
-        return this.calc_r3_zu6ds(arr.split(","));
+        return this.calc_r3_zu6ds(arr.split(','));
         break;
       case 73:
-        return this.calc_r4_zxds(arr.split(","));
+        return this.calc_r4_zxds(arr.split(','));
         break;
     }
   }
@@ -203,7 +203,7 @@ class CalcSSC {
     }
     const num = [];
     for (let i = 0; i < ba.length; i++) {
-      const res = ba[i].split("|");
+      const res = ba[i].split('|');
       if (this.checkArrIs(res, /^([0-9]|[0][0-9])$/)) {
         num[i] = res.length;
       } else {
@@ -234,7 +234,7 @@ class CalcSSC {
     const zhushu = 5;
     const temp_arr = [];
     for (let i = 0; i < 5; i += 1) {
-      const res = ba[i].split("|");
+      const res = ba[i].split('|');
       if (!this.checkArrIs(res, /^([0-9]|[0][0-9])$/)) {
         return 0;
       }
@@ -280,8 +280,8 @@ class CalcSSC {
     if (ba.length !== 2) {
       return 0;
     }
-    const balls1 = ba[0].split("|");
-    const balls2 = ba[1].split("|");
+    const balls1 = ba[0].split('|');
+    const balls2 = ba[1].split('|');
     if (
       !this.checkArrIs(balls1, /^([0-9]|[0][0-9])$/) ||
       !this.checkArrIs(balls2, /^([0-9]|[0][0-9])$/)
@@ -336,8 +336,8 @@ class CalcSSC {
     if (ba.length !== 2) {
       return 0;
     }
-    const balls1 = ba[0].split("|");
-    const balls2 = ba[1].split("|");
+    const balls1 = ba[0].split('|');
+    const balls2 = ba[1].split('|');
     if (
       !this.checkArrIs(balls1, /^([0-9]|[0][0-9])$/) ||
       !this.checkArrIs(balls2, /^([0-9]|[0][0-9])$/)
@@ -394,8 +394,8 @@ class CalcSSC {
     if (ba.length !== 2) {
       return 0;
     }
-    const balls1 = ba[0].split("|");
-    const balls2 = ba[1].split("|");
+    const balls1 = ba[0].split('|');
+    const balls2 = ba[1].split('|');
     if (
       !this.checkArrIs(balls1, /^([0-9]|[0][0-9])$/) ||
       !this.checkArrIs(balls2, /^([0-9]|[0][0-9])$/)
@@ -452,8 +452,8 @@ class CalcSSC {
     if (ba.length !== 2) {
       return 0;
     }
-    const balls1 = ba[0].split("|");
-    const balls2 = ba[1].split("|");
+    const balls1 = ba[0].split('|');
+    const balls2 = ba[1].split('|');
     if (
       !this.checkArrIs(balls1, /^([0-9]|[0][0-9])$/) ||
       !this.checkArrIs(balls2, /^([0-9]|[0][0-9])$/)
@@ -476,8 +476,8 @@ class CalcSSC {
     if (ba.length !== 2) {
       return 0;
     }
-    const balls1 = ba[0].split("|");
-    const balls2 = ba[1].split("|");
+    const balls1 = ba[0].split('|');
+    const balls2 = ba[1].split('|');
     if (
       !this.checkArrIs(balls1, /^([0-9]|[0][0-9])$/) ||
       !this.checkArrIs(balls2, /^([0-9]|[0][0-9])$/)
@@ -504,7 +504,7 @@ class CalcSSC {
     }
     const num = [];
     for (let i = 0; i < ba.length; i++) {
-      const k = ba[i].split("|");
+      const k = ba[i].split('|');
       if (this.checkArrIs(k, /^([0-9]|[0][0-9])$/)) {
         num[i] = k.length;
       } else {
@@ -536,7 +536,7 @@ class CalcSSC {
     const zhushu = 4;
     const temp_arr = [];
     for (let i = 0; i < 4; i += 1) {
-      const res = ba[i].split("|");
+      const res = ba[i].split('|');
       if (!this.checkArrIs(res, /^([0-9]|[0][0-9])$/)) {
         return 0;
       }
@@ -577,8 +577,8 @@ class CalcSSC {
     if (len !== 2) {
       return 0;
     }
-    const balls1 = ba[0].split("|");
-    const balls2 = ba[1].split("|");
+    const balls1 = ba[0].split('|');
+    const balls2 = ba[1].split('|');
     if (
       !this.checkArrIs(balls1, /^([0-9]|[0][0-9])$/) ||
       !this.checkArrIs(balls2, /^([0-9]|[0][0-9])$/)
@@ -663,8 +663,8 @@ class CalcSSC {
     if (ba.length !== 2) {
       return 0;
     }
-    const balls1 = ba[0].split("|");
-    const balls2 = ba[1].split("|");
+    const balls1 = ba[0].split('|');
+    const balls2 = ba[1].split('|');
     if (
       !this.checkArrIs(balls1, /^([0-9]|[0][0-9])$/) ||
       !this.checkArrIs(balls2, /^([0-9]|[0][0-9])$/)
@@ -693,7 +693,7 @@ class CalcSSC {
     }
     const num = [];
     for (let i = 0; i < ba.length; i++) {
-      const k = ba[i].split("|");
+      const k = ba[i].split('|');
       if (this.checkArrIs(k, /^([0-9]|[0][0-9])$/)) {
         num[i] = k.length;
       }
@@ -995,8 +995,8 @@ class CalcSSC {
     if (ba.length !== 2) {
       return 0;
     }
-    const ba_0 = ba[0].split("|");
-    const ba_1 = ba[1].split("|");
+    const ba_0 = ba[0].split('|');
+    const ba_1 = ba[1].split('|');
     if (
       this.checkArrIs(ba_0, /^([0-9]|[0][0-9])$/) &&
       this.checkArrIs(ba_1, /^([0-9]|[0][0-9])$/)
@@ -1177,7 +1177,7 @@ class CalcSSC {
     } else {
       let zhushu = 0;
       for (let i = 1, len = ba.length; i < len; i += 1) {
-        const res = ba[i].split("|");
+        const res = ba[i].split('|');
         if (this.checkArrIs(res, /^([0-9])$/)) {
           zhushu += res.length;
         }
@@ -1711,7 +1711,7 @@ class CalcSSC {
     // return 0;
     // console.log('任三-混合组选：')
     // console.log(ba)
-    if (ba.length < 2 || ba[1] === "") {
+    if (ba.length < 2 || ba[1] === '') {
       return 0;
     }
     let zhushu = 0;
@@ -1889,8 +1889,8 @@ class CalcSSC {
     if (len < 3) {
       return 0;
     }
-    const ball1 = ba[1].split("|"); // 2重号数组
-    const ball2 = ba[2].split("|"); // 单号数组
+    const ball1 = ba[1].split('|'); // 2重号数组
+    const ball2 = ba[2].split('|'); // 单号数组
     let zhushu = 0;
     for (let i = 0; i < ball1.length; i++) {
       const ball1_value = parseInt(ball1[i]);
@@ -1938,8 +1938,8 @@ class CalcSSC {
     if (len < 3) {
       return 0;
     }
-    const balls_1 = ba[1].split("|"); // 三重号
-    const balls_2 = ba[2].split("|"); // 单号
+    const balls_1 = ba[1].split('|'); // 三重号
+    const balls_2 = ba[2].split('|'); // 单号
     //		console.log(balls_1);
     //		console.log(balls_2);
     if (
@@ -1973,7 +1973,7 @@ class CalcSSC {
     }
     let zhushu = 0;
     for (let i = 0; i < ba.length; i++) {
-      if (ba[i] !== "?") {
+      if (ba[i] !== '?') {
         const res = ba[i].split(/[\|\/]/);
         if (this.checkArrIs(res, /^([0-9]|[0][0-9])$/)) {
           zhushu += res.length;
@@ -1999,7 +1999,7 @@ class CalcSSC {
     }
     let zhushu = 0;
     for (let i = 0; i < ba.length; i++) {
-      if (ba[i] !== "?") {
+      if (ba[i] !== '?') {
         const res = ba[i].split(/[\|\/]/);
         if (this.checkArrIs(res, /[0-9]/)) {
           zhushu += res.length;

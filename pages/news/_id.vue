@@ -1,9 +1,15 @@
 <template>
-
   <div clsss="wrap">
-    <div class="title" v-if="curNew">{{curNew.title}}</div>
+    <div
+      class="title"
+      v-if="curNew"
+    >{{curNew.title}}</div>
     <div class="sec">来源：{{curNew && curNew.source}}</div>
-    <div class="content" v-if="curNew" v-html="htmlcontent"></div>
+    <div
+      class="content"
+      v-if="curNew"
+      v-html="htmlcontent"
+    ></div>
     <div class="bottom">
       <div class="pre">
         <a @click.stop.prevent="toLink(preLink)">上一篇：{{preLink.title}}</a>
@@ -15,18 +21,21 @@
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
-import cheerio from "cheerio";
+import { mapState } from 'vuex';
+import cheerio from 'cheerio';
+
 export default {
-  name: "news-detail",
-  computed: {
-    ...mapState("sysinfo", ["news"]),
-    curNew() {
+  name: 'news-detail',
+  computed:{
+    ...mapState('sysinfo', ['news']),
+     curNew() {
+      const id = this.$route.params.id || this.$route.query.id
       if (this.news && Array.isArray(this.news) && this.news.length) {
-        return this.news.find(x => x.id == this.$route.params.id);
+        return this.news.find(x => x.id == id);
       } else {
-        let news = this.$store.dispatch("getNews", 0);
-        return news.find(x => x.id == this.$route.params.id);
+        const news = this.$store.dispatch('sysinfo/getNews', 0);
+        if(news && news.length) return news.find(x => x.id == id)
+        return {}
       }
       return {};
     },
@@ -34,15 +43,16 @@ export default {
       if (this.news && Array.isArray(this.news) && this.news.length) {
         return this.news.findIndex(x => x.id == this.curNew.id);
       }
+      return 1
     },
     htmlcontent() {
-      let output = "";
+      let output = '';
       if (this.curNew && this.curNew.content) {
         let div = null;
         if (process.server) {
-          div = cheerio.load("<div></div>")[0];
+          div = cheerio.load('<div></div>')[0];
         } else {
-          div = document.createElement("div");
+          div = document.createElement('div');
         }
         if (div) {
           div.innerHTML = this.curNew.content;
@@ -54,28 +64,17 @@ export default {
       }
     },
     preLink() {
-      if (this.news && Array.isArray(this.news) && this.news.length) {
-        if (this.news[this.curNewIndex - 1]) {
-          return this.news[this.curNewIndex - 1];
-        } else {
-          return { title: "没有了", link: "#" };
-        }
-      }
+      return this.news[this.curNewIndex - 1] || { title: '没有了', link: '#' };
     },
     nextLink() {
-      if (this.news && Array.isArray(this.news) && this.news.length) {
-        if (this.news[this.curNewIndex + 1]) {
-          return this.news[this.curNewIndex + 1];
-        } else {
-          return { title: "没有了", link: "#" };
-        }
-      }
+      return this.news[this.curNewIndex + 1] || { title: '没有了', link: '#' }
     }
   },
   methods: {
     toLink(link) {
       if (link.id) {
-        this.$router.push(`/news/${link.id}`);
+        const path = process.env.static ? `/news?id=${link.id}` : `/news/${link.id}`
+        this.$router.push(path);
       }
     }
   }

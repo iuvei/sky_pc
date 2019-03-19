@@ -1,6 +1,6 @@
 <template>
   <div class="detail ft14">
-    <template v-if='item.js_tag !== "sport_key"'>
+    <template v-if="!['sport_key','jingcai_key','JC_BK','JC_FT'].includes(item.js_tag)">
       <div class="info">
         <div class="left"><img :src="item.icon" alt=""></div>
         <div class="right">
@@ -14,7 +14,7 @@
       </div>
       <div class="lottery">
         <div>上期开奖：</div>
-        <AppLotteryNum class="num" v-if="openNum.balls" :number="openNum.balls" :type="item.js_tag"></AppLotteryNum>
+        <AppLotteryNum class="num" v-if="openNum.balls" :number="openNum.balls" :type="item.js_tag" :qishu="openNum.qishu"></AppLotteryNum>
         <div v-else>正在开奖......</div>
       </div>
       <div class="btn-group">
@@ -26,7 +26,7 @@
       </div>
     </template>
 
-    <template v-if='item.js_tag === "sport_key"'>
+    <template v-if="['sport_key','jingcai_key','JC_BK','JC_FT'].includes(item.js_tag)">
       <div class="sport">
         <div class="img"><img :src="item.icon" alt=""></div>
         <div class="txt">
@@ -47,6 +47,7 @@
 
 <script>
 let otherJsTag = ['qxc', 'pkniuniu', 'xypk', 'xync', 'tzyx']
+
 export default {
   name: 'gameIndexItem',
   props: {
@@ -75,7 +76,12 @@ export default {
       })
     },
     goTrend() {
+      let excludeArr = ['xypk', 'tzyx']
       console.log(this.item)
+      if (excludeArr.includes(this.item.js_tag)) {
+        this.$Message.warning('此彩种暂无走势')
+        return
+      }
       this.$router.push({ name: 'trend', params: this.item })
     },
     goBetting() {
@@ -85,6 +91,9 @@ export default {
       // }
       if (this.item.js_tag === 'sport_key') {
         window.location.replace('/sport')
+        return
+      } else if (['jingcai_key', 'JC_BK', 'JC_FT'].includes(this.item.js_tag)) {
+        window.location.replace('/jingcai')
         return
       }
       if (
@@ -104,11 +113,18 @@ export default {
         ].includes(this.item.js_tag) &&
         this.item.enable !== 2
       ) {
+        let path = `/game/${this.item.js_tag}${
+          process.env.static ? '?id=' : '/'
+        }${this.item.game_id}`
         if (this.item.js_tag == '3d') {
-          this.$router.push(`/game/f3d/${this.item.game_id}`)
+          path = process.env.static
+            ? `/game/f3d?id=${this.item.game_id}`
+            : `/game/f3d/${this.item.game_id}`
+          this.$router.push(path)
           return
         }
-        this.$router.push(`/game/${this.item.js_tag}/${this.item.game_id}`)
+        // this.$router.push(`/game/${this.item.js_tag}/${this.item.game_id}`)
+        this.$router.push(path)
       } else {
         this.$Message.warning('彩种正在维护中')
       }

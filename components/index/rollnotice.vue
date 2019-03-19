@@ -10,14 +10,14 @@
 
 <script type="text/babel">
 export default {
-  name: "rollnotice",
+  name: 'rollnotice',
   data() {
     return {
       timer: null,
       index: 1,
       totalNum: 0,
-      firtstItem: "",
-      lastItem: "",
+      firtstItem: '',
+      lastItem: '',
       styles: {
         transform: 0,
         transitionDuration: 0
@@ -51,25 +51,26 @@ export default {
     },
     align: {
       validator(value) {
-        return ["left", "center", "right"].indexOf(value) > -1;
+        return ['left', 'center', 'right'].indexOf(value) > -1;
       },
-      default: "left"
+      default: 'left'
     },
     direction: {
       validator(value) {
-        return ["up", "down"].indexOf(value) > -1;
+        return ['up', 'down'].indexOf(value) > -1;
       },
-      default: "up"
+      default: 'up'
     }
   },
   created() {
+    if(!process.browser) return
     this.init();
   },
   methods: {
     init() {
       this.destroy();
       this.items = this.$children.filter(
-        item => item.$options.name === "yd-rollnotice-item"
+        item => item.$options.name === 'yd-rollnotice-item'
       );
       this.totalNum = this.items.length;
       if (this.totalNum <= 0) return;
@@ -80,7 +81,7 @@ export default {
     },
     autoPlay() {
       this.timer = setInterval(() => {
-        if (this.direction === "up") {
+        if (this.direction === 'up') {
           this.setTranslate(this.speed, -(++this.index * this.itemHeight));
           if (this.index >= this.totalNum) {
             this.index = 0;
@@ -100,8 +101,8 @@ export default {
       }, this.autoplay);
     },
     setTranslate(speed, translate) {
-      this.styles.transitionDuration = speed + "ms";
-      this.styles.transform = "translate3d(0, " + translate + "px, 0)";
+      this.styles.transitionDuration = speed + 'ms';
+      this.styles.transform = 'translate3d(0, ' + translate + 'px, 0)';
     },
     destroy() {
       clearInterval(this.timer);

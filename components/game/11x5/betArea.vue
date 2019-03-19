@@ -1,7 +1,5 @@
 <template >
   <div class="bet-main">
-    <!-- {{playObj.playid}} -->
-
     <div v-if="!danshiArr.includes(playObj.playid)" v-for="(group,idx) in betSelectSet" :key='idx' class="group">
       <div class="title">
         <div class="title-txt" v-if="group.name">{{group.name}}</div>
@@ -13,15 +11,15 @@
         </div>
       </div>
 
-      <div class="actions" v-if="![56, 54, 57].includes(playObj.playid)">
+      <div class="actions" v-if="!isNeedaction || (isDantuo && idx)">
         <div class="ball" v-for="(txt, index) in actionsArr" :key="index" @click="changeGroup(group, index)">
           <span>{{txt}}</span>
         </div>
       </div>
     </div>
-    <!-- <div v-if="danshiArr.includes(playObj.playid)">单式投注</div> -->
     <div v-if="isDanshi">
       <Input v-model="textarea" type="textarea" :autosize="{minRows: 3,maxRows: 5}" :placeholder="'例如：' + myPlaceholder" @on-blur="filterData" />
+      <div class="tiper">每个号码之间请用空格隔开，每一注号码之间请用一个逗号[,]隔开</div>
     </div>
   </div>
 </template>
@@ -72,6 +70,12 @@ export default {
     },
     isDanshi() {
       return this.danshiArr.includes(this.playObj.playid)
+    },
+    isDantuo() {
+      return [5, 10, 15, 20, 25, 45, 46, 47, 48, 49, 50, 51].includes(this.playObj.playid)
+    },
+    isNeedaction() {
+      return [56, 54, 57, 5, 10, 15, 20, 25, 45, 46, 47, 48, 49, 50, 51].includes(this.playObj.playid)
     }
   },
   methods: {
@@ -429,7 +433,8 @@ export default {
     // });
     // if (!this.playObj.palayid) return;
     this.setBetting()
-    await this.togetPeilv()
+    // todo 后期删除 开发热更新兼容 开发时开启 上线时关闭
+    // this.togetPeilv()
   },
   destroyed() {
     this.$bus.$off('resetBetArea')
@@ -437,6 +442,7 @@ export default {
   },
   watch: {
     playObj(obj) {
+      // console.log(111)
       const val = obj.playid
       this.setBetting()
       this.togetPeilv()

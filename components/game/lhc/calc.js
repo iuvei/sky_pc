@@ -1,6 +1,6 @@
 class CalcLhc {
   constructor() {
-    this.tag_js = "lhc";
+    this.tag_js = 'lhc';
   }
   calcBetNum(playid, ba) {
     const towArr = [22, 26, 32, 33, 34],
@@ -33,7 +33,7 @@ class CalcLhc {
     for (let i = 0; i < arrLen - 1; i++) {
       for (let k = i + 1; k < arrLen; k++) {
         if (i !== k) {
-          return_obj.push(arr[i] + " " + arr[k]);
+          return_obj.push(arr[i] + ' ' + arr[k]);
         }
       }
     }
@@ -49,7 +49,7 @@ class CalcLhc {
       for (let k = i + 1; k < arrLen - 1; k++) {
         for (let j = k + 1; j < arrLen; j++) {
           if (i !== k && i !== j && k !== j) {
-            return_obj.push(arr[i] + " " + arr[k] + " " + arr[j]);
+            return_obj.push(arr[i] + ' ' + arr[k] + ' ' + arr[j]);
           }
         }
       }
@@ -75,7 +75,7 @@ class CalcLhc {
               j !== l
             ) {
               return_obj.push(
-                arr[i] + " " + arr[k] + " " + arr[j] + " " + arr[l]
+                arr[i] + ' ' + arr[k] + ' ' + arr[j] + ' ' + arr[l]
               );
             }
           }
@@ -97,13 +97,13 @@ class CalcLhc {
             for (let n = m + 1; n < arrLen; n += 1) {
               return_obj.push(
                 arr[i] +
-                  " " +
+                  ' ' +
                   arr[j] +
-                  " " +
+                  ' ' +
                   arr[k] +
-                  " " +
+                  ' ' +
                   arr[m] +
-                  " " +
+                  ' ' +
                   arr[n]
               );
             }
@@ -125,20 +125,20 @@ class CalcLhc {
       fiveArr = [25, 29];
 
     if (towArr.includes(betData.playid)) {
-      betData.arr = getTwoBalls(betData.formatValueStr.split(" "));
-      betData.arr2 = getTwoBalls(betData.arr2[0].split("|"));
+      betData.arr = getTwoBalls(betData.formatValueStr.split(' '));
+      betData.arr2 = getTwoBalls(betData.arr2[0].split('|'));
     }
     if (threeArr.includes(betData.playid)) {
-      betData.arr = getThreeBalls(betData.formatValueStr.split(" "));
-      betData.arr2 = getThreeBalls(betData.arr2[0].split("|"));
+      betData.arr = getThreeBalls(betData.formatValueStr.split(' '));
+      betData.arr2 = getThreeBalls(betData.arr2[0].split('|'));
     }
     if (fourArr.includes(betData.playid)) {
-      betData.arr = getFourBalls(betData.formatValueStr.split(" "));
-      betData.arr2 = getFourBalls(betData.arr2[0].split("|"));
+      betData.arr = getFourBalls(betData.formatValueStr.split(' '));
+      betData.arr2 = getFourBalls(betData.arr2[0].split('|'));
     }
     if (fiveArr.includes(betData.playid)) {
-      betData.arr = getFiveBalls(betData.formatValueStr.split(" "));
-      betData.arr2 = getFiveBalls(betData.arr2[0].split("|"));
+      betData.arr = getFiveBalls(betData.formatValueStr.split(' '));
+      betData.arr2 = getFiveBalls(betData.arr2[0].split('|'));
     }
   }
 }

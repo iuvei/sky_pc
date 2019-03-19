@@ -3,7 +3,7 @@ const checkArrIs = (arr, regx) => {
 };
 class ClacPk10 {
   constructor() {
-    this.tag_js = "pk10";
+    this.tag_js = 'pk10';
   }
   calcBetNum(playid, arr) {
     // console.log("pk10calc", playid, arr);
@@ -37,7 +37,7 @@ class ClacPk10 {
   }
   // 前一 直选复式
   calc_q1_zxfs(ba) {
-    if (ba.length < 1 || ba[0] === "") {
+    if (ba.length < 1 || ba[0] === '') {
       return 0;
     } else {
       return ba.length;
@@ -49,8 +49,8 @@ class ClacPk10 {
       return 0;
     }
     let zhushu = 0;
-    const balls1 = ba[0].split("|");
-    const balls2 = ba[1].split("|");
+    const balls1 = ba[0].split('|');
+    const balls2 = ba[1].split('|');
     if (
       !checkArrIs(balls1, /[0-1][0-9]/) ||
       !checkArrIs(balls2, /[0-1][0-9]/)
@@ -105,9 +105,9 @@ class ClacPk10 {
       return 0;
     }
     let zhushu = 0;
-    const balls1 = ba[0].split("|");
-    const balls2 = ba[1].split("|");
-    const balls3 = ba[2].split("|");
+    const balls1 = ba[0].split('|');
+    const balls2 = ba[1].split('|');
+    const balls3 = ba[2].split('|');
     if (
       !checkArrIs(balls1, /[0-1][0-9]/) ||
       !checkArrIs(balls2, /[0-1][0-9]/) ||
@@ -187,10 +187,10 @@ class ClacPk10 {
     }
     let zhushu = 0;
     for (let i = 1; i < ba.length; i++) {
-      const subballs = ba[i].split("|");
+      const subballs = ba[i].split('|');
       for (const k in subballs) {
         if (
-          subballs !== "" &&
+          subballs !== '' &&
           parseInt(subballs[k]) > 0 &&
           parseInt(subballs[k]) <= 10
         ) {
@@ -226,12 +226,12 @@ class ClacPk10 {
 
   // 定位大小单双
   calc_all_dxds(ba) {
-    if (ba.length < 2 || ba[1] === "") {
+    if (ba.length < 2 || ba[1] === '') {
       return 0;
     }
     let zhushu = 0;
     for (let i = 1; i < ba.length; i += 1) {
-      const res = ba[i].split("|");
+      const res = ba[i].split('|');
       zhushu += res.length;
     }
     return zhushu;
@@ -239,7 +239,7 @@ class ClacPk10 {
 
   // 前三总大小单双
   calc_q3_dxds(ba) {
-    if (ba.length < 1 || ba[0] === "") {
+    if (ba.length < 1 || ba[0] === '') {
       return 0;
     } else {
       return ba.length;
@@ -248,7 +248,7 @@ class ClacPk10 {
 
   // 前三特选
   calc_q3_qtx(ba) {
-    if (ba.length < 1 || ba[0] === "") {
+    if (ba.length < 1 || ba[0] === '') {
       return 0;
     } else {
       return ba.length;
@@ -257,7 +257,7 @@ class ClacPk10 {
 
   // 龙虎斗
   calc_whjx(ba) {
-    if (ba.length < 0 || ba[0] === "") {
+    if (ba.length < 0 || ba[0] === '') {
       return 0;
     } else {
       return ba.length;
@@ -272,10 +272,10 @@ class ClacPk10 {
     }
     let zhushu = 0;
     for (let i = 1; i < ba.length; i++) {
-      const subballs = ba[i].split("|");
+      const subballs = ba[i].split('|');
       for (const k in subballs) {
         if (
-          subballs !== "" &&
+          subballs !== '' &&
           parseInt(subballs[k]) >= 0 &&
           parseInt(subballs[k]) <= 5
         ) {

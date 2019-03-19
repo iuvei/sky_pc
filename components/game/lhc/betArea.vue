@@ -46,19 +46,19 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from "vuex";
-import mixinMutex from "../mixinMutex";
-import { setBallList, default_color } from "./field.js";
-import calcLhc from "./calc.js";
-import zxbz from "./zxbz";
-import lxbz from "./lxbz";
-import lm from "./lm";
-import hx from "./hx";
-import TwoCol from "./TwoCol";
-import OneCol from "./OneCol";
-import tmsb from "./tmsb";
+import { mapState, mapActions, mapMutations } from 'vuex';
+import mixinMutex from '../mixinMutex';
+import { setBallList, default_color } from './field.js';
+import calcLhc from './calc.js';
+import zxbz from './zxbz';
+import lxbz from './lxbz';
+import lm from './lm';
+import hx from './hx';
+import TwoCol from './TwoCol';
+import OneCol from './OneCol';
+import tmsb from './tmsb';
 export default {
-  name: "betArea",
+  name: 'betArea',
   data() {
     return {
       betSelectSet: [],
@@ -80,17 +80,17 @@ export default {
   },
   mixins: [mixinMutex],
   computed: {
-    ...mapState("gameBet", ["playObj", "curPrice"]),
+    ...mapState('gameBet', ['playObj', 'curPrice']),
     columns() {
       if ([4, 6].includes(this.playObj.playid)) {
-        return { "": true };
+        return { '': true };
       } else {
         return {
-          "col-5": this.betSelectSet[0].option.length % 5 === 0,
-          "col-4":
+          'col-5': this.betSelectSet[0].option.length % 5 === 0,
+          'col-4':
             this.betSelectSet[0].option.length % 4 === 0 ||
             this.betSelectSet[0].option.length === 49,
-          "col-3": this.betSelectSet[0].option.length % 3 === 0
+          'col-3': this.betSelectSet[0].option.length % 3 === 0
         };
       }
     },
@@ -169,9 +169,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions("game", ["getPeilv"]),
-    ...mapMutations("gameBet", ["setBetting", "changeField"]),
-
+    ...mapActions('game', ['getPeilv', 'getGameListAtin']),
+    ...mapMutations('gameBet', ['setBetting', 'changeField']),
     // 设置修改输入框金额
     priceChange(item) {
       window.________timer = setTimeout(() => {
@@ -181,35 +180,37 @@ export default {
     },
     // 下注数据组装 结构+赔率
     async togetPeilv() {
-      console.log("this.playObj.playid",this.playObj.playid)
-      
       if (!this.playObj.playid) return;
       // 获取模板数据
-      this.betSelectSet = setBallList(this.playObj.playid);
+
+      /********* 获取yearid *********/
+      let yearid =this.$store.state.game.gameList.filter(i => i.js_tag === 'lhc')[0].yearid
+      this.betSelectSet = setBallList(this.playObj.playid, '', yearid);
+      this.pushdata.splice(0)
       if (this.isZXBZ || this.isLM) {
-        this.pushdata.push({ id: 0, money: "" });
+        this.pushdata.push({ id: 0, money: '' });
       } else if (this.betSelectSet[0].option.length === 49) {
         if (this.isZXBZ || this.isLM) {
-          this.pushdata.push({ id: 0, money: "" });
+          this.pushdata.push({ id: 0, money: '' });
         } else {
-          this.pushdata.push({ id: 0, money: "" });
-          this.pushdata.push({ id: 0, money: "" });
-          this.pushdata.push({ id: 0, money: "" });
+          this.pushdata.push({ id: 0, money: '' });
+          this.pushdata.push({ id: 0, money: '' });
+          this.pushdata.push({ id: 0, money: '' });
         }
       }
 
       let item,
         ret = await this.getPeilv();
       const playItem = ret.find(val => val.playid == this.playObj.playid);
-      const peilv = playItem ? playItem.peilv : "";
-      item = peilv ? peilv.split("|") : [];
+      const peilv = playItem ? playItem.peilv : '';
+      item = peilv ? peilv.split('|') : [];
       // 单一赔率
       if (this.isLM) {
         this.odds = item.map(x => this.processZero(x));
-        this.odd = this.odds.join("/");
+        this.odd = this.odds.join('/');
         this.changeField({ stateOdds: this.odd });
       }
-       else if (this.isZXBZ || this.isHX) {
+      else if (this.isZXBZ || this.isHX) {
         this.odds = item;
       } else if (item.length === 1) {
         this.changeField({ stateOdds: this.processZero(item[0]) });
@@ -219,7 +220,7 @@ export default {
           let odds = item.splice(0, group.option.length),
             opt = [];
           this.betSelectSet[idx].option = group.option.map((val, key) => {
-            this.$set(val, "odds", this.processZero(odds[key]));
+            this.$set(val, 'odds', this.processZero(odds[key]));
             return val;
           });
         });
@@ -233,7 +234,7 @@ export default {
       this.betSelectSet.forEach((group, idx) => {
         this.betSelectSet[idx].option = group.option.map((val, key) => {
           val.selected = false;
-          val.money = "";
+          val.money = '';
           return val;
         });
       });
@@ -241,7 +242,7 @@ export default {
     // 注数计算
     getBetNum(value) {
       let arr = [];
-      arr = value[0].split("|");
+      arr = value[0].split('|').filter(x=>x.length);
       return calcLhc.calcBetNum(this.playObj.playid, arr);
     },
     // 选择号码
@@ -294,22 +295,22 @@ export default {
           .map(v => Object.assign(v, { name: g.name }));
         arr = [...arr, ...tr];
         name[i] = g.name;
-        label[i] = tr.map(td => td.label).join("|");
+        label[i] = tr.map(td => td.label).join('|');
         value[i] = tr
           .map(td => td.value)
           .sort()
-          .join("|");
+          .join('|');
       });
 
       if (this.isZXBZ) {
-        let len = label[0].split("|").length;
+        let len = label[0].split('|').length;
         if (len > 5) {
           this.odd = this.odds[len - 6];
           this.changeField({ stateOdds: this.odd });
         }
       }
       if (this.isHX) {
-        let len = label[0].split("|").length;
+        let len = label[0].split('|').length;
         if (len > 1) {
           this.odd = this.odds[len - 2];
           this.changeField({ stateOdds: this.odd });
@@ -333,7 +334,7 @@ export default {
     //提交的数据特殊处理
     calcAddData(name, label, value) {
       if ([8, 21].includes(this.playObj.playid)) {
-        value[0] = value[0].replace(/\|/g, "+");
+        value[0] = value[0].replace(/\|/g, '+');
       }
 
       const towArr = [22, 26, 32, 33, 34],
@@ -344,44 +345,44 @@ export default {
       let isNormal = false;
 
       if (towArr.includes(this.playObj.playid)) {
-        label = calcLhc.getTwoBalls(label[0].split("|"));
-        value = calcLhc.getTwoBalls(value[0].split("|"));
+        label = calcLhc.getTwoBalls(label[0].split('|'));
+        value = calcLhc.getTwoBalls(value[0].split('|'));
       } else if (threeArr.includes(this.playObj.playid)) {
-        label = calcLhc.getThreeBalls(label[0].split("|"));
-        value = calcLhc.getThreeBalls(value[0].split("|"));
+        label = calcLhc.getThreeBalls(label[0].split('|'));
+        value = calcLhc.getThreeBalls(value[0].split('|'));
       } else if (fourArr.includes(this.playObj.playid)) {
-        label = calcLhc.getFourBalls(label[0].split("|"));
-        value = calcLhc.getFourBalls(value[0].split("|"));
+        label = calcLhc.getFourBalls(label[0].split('|'));
+        value = calcLhc.getFourBalls(value[0].split('|'));
       } else if (fiveArr.includes(this.playObj.playid)) {
-        label = calcLhc.getFiveBalls(label[0].split("|"));
-        value = calcLhc.getFiveBalls(value[0].split("|"));
+        label = calcLhc.getFiveBalls(label[0].split('|'));
+        value = calcLhc.getFiveBalls(value[0].split('|'));
       } else {
         isNormal = true;
       }
-      console.log(name, label, value)
+
       return {
         name,
         label,
-        value: isNormal ? value : value.map(x => x.split(" ").join("+"))
+        value: isNormal ? value : value.map(x => x.split(' ').join('+'))
       };
     }
   },
   watch: {
-    "playObj"(val) {
+    'playObj'(val) {
       this.pushdata = [];
       this.setBetting();
       this.togetPeilv();
     }
   },
   mounted() {
-    this.$bus.$on("resetBetArea", this.clearSelect);
-    this.$bus.$on("randomBet", this.addData);
+    this.$bus.$on('resetBetArea', this.clearSelect);
+    this.$bus.$on('randomBet', this.addData);
     this.setBetting();
-    // 后期删除 开发热更新 兼容
-    this.togetPeilv();
+   // todo 后期删除 开发热更新兼容 开发时开启 上线时关闭
+    // this.togetPeilv()
   },
   destroyed() {
-    this.$bus.$off("randomBet");
+    this.$bus.$off('randomBet');
   }
 };
 </script>
@@ -487,7 +488,7 @@ export default {
     .head,
     .body {
       // column-count: 4;
-      column-count: 1;
+      // column-count: 1;
       column-gap: 0px;
       &.col-5 {
         column-count: 5;

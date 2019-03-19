@@ -1,8 +1,14 @@
 <template>
   <div class='game-head'>
-    <div class="left fadeInLeftBig" v-switchClass="{key:animateKey,class:'fadeInLeftBig'}">
+    <div
+      class="left fadeInLeftBig"
+      v-switchClass="{key:animateKey,class:'fadeInLeftBig'}"
+    >
       <div class="icon">
-        <img :src="item.icon" alt="">
+        <img
+          :src="item.icon"
+          alt=""
+        >
       </div>
       <div class="info">
         <div class="info-name">{{item.game_name}}</div>
@@ -14,35 +20,70 @@
         </div>
         <div>
           距离
-          <span v-if="openTime" class="red">{{openTime[0].qishu}}</span>
+          <span
+            v-if="openTime"
+            class="red"
+          >{{openTime[0].qishu}}</span>
           <span v-else>???</span>
           期开奖
         </div>
         <div class="lottery">
-          <AppTimer :openTime="openTime" v-if="openTime.length" :callback="nextOpen" :repeat='openLength' offset="true">
+          <AppTimer
+            :openTime="openTime"
+            v-if="openTime.length"
+            :callback="nextOpen"
+            :repeat='openLength'
+            offset="true"
+          >
           </AppTimer>
           <div v-else>欢迎下注</div>
         </div>
       </div>
     </div>
-    <div class="center fadeInDownBig" v-switchClass="{key:animateKey,class:'fadeInDownBig'}">
+    <div
+      class="center fadeInDownBig"
+      v-switchClass="{key:animateKey,class:'fadeInDownBig'}"
+    >
       <div class="center-top">
-        <SelfCenterTopTxt :kjList='kjList' :openPrize='openPrize' :openTime="openTime"></SelfCenterTopTxt>
+        <SelfCenterTopTxt
+          :kjList='kjList'
+          :openPrize='openPrize'
+          :openTime="openTime"
+        ></SelfCenterTopTxt>
       </div>
       <div class="center-balls">
-        <AppLotteryNum v-if="kjList" :number="kjList[0].balls" :type="item.js_tag"></AppLotteryNum>
-        <div class='balls-opening' v-else>正在开奖......</div>
+        <AppLotteryNum
+          v-if="kjList"
+          :number="kjList[0].balls"
+          :type="item.js_tag"
+          :qishu="kjList[0].qishu"
+        ></AppLotteryNum>
+        <div
+          class='balls-opening'
+          v-else
+        >正在开奖......</div>
       </div>
-      <!-- <div @click="nextOpen(20)">click</div> -->
     </div>
-    <div class="right fadeInRightBig" v-switchClass="{key:animateKey,class:'fadeInRightBig'}">
+    <div
+      class="right fadeInRightBig"
+      v-switchClass="{key:animateKey,class:'fadeInRightBig'}"
+    >
       <div class="tr th">
         <div class="qh">期号</div>
         <div class="kjhm">开奖号码</div>
       </div>
-      <div v-for="(v,key) in kjList" :key="key" class="tr" :class="{'slidlhz':item.js_tag == 'lhc'}">
+      <div
+        v-for="(v,key) in kjList"
+        :key="key"
+        class="tr"
+        :class="{'slidlhz':item.js_tag == 'lhc'}"
+      >
         <div>{{v.qishu}}</div>
-        <AppLotteryNum :number="v.balls" :type="item.js_tag"></AppLotteryNum>
+        <AppLotteryNum
+          :number="v.balls"
+          :type="item.js_tag"
+          :qishu="v.qishu"
+        ></AppLotteryNum>
       </div>
     </div>
   </div>
@@ -102,7 +143,6 @@ export default {
     ...mapMutations('gameBet', ['changeField', 'setShopCart', 'delShopCart']),
     toTop() {
       var timer = requestAnimationFrame(function fn() {
-        // ;
         var s = document.documentElement.scrollTop
         if (s > 0) {
           s -= 100
@@ -146,6 +186,10 @@ export default {
     // 开奖时间 getCplogList
     async togetCplogList() {
       let ret = await this.getCplogList({ tag: this.item.tag })
+      // 结果为空的异常处理
+      if (!ret) {
+        return 0
+      }
       this.changeField({
         periods: ret[0].next[0].qishu,
         openTime: JSON.parse(JSON.stringify(ret[0].next))
@@ -252,8 +296,19 @@ export default {
     this.delShopCart()
     this.setShopCart()
   },
+  destroyed() {
+    clearTimeout(window.__nextTimer)
+  },
   watch: {
     '$route.params.id'(val) {
+      this.toTop()
+      this.delShopCart()
+      this.setShopCart()
+      this.$bus.$emit('resetBetArea')
+      this.openPrize = false
+      this.getInitData()
+    },
+    '$route.query.id'(val) {
       this.toTop()
       this.delShopCart()
       this.setShopCart()
@@ -466,6 +521,16 @@ export default {
         display: inline-block;
         width: 60px;
         height: 70px;
+        img {
+          display: inline-block;
+          width: 40px;
+        }
+      }
+    }
+    .farm-balls {
+      height: 60px;
+      margin-top: 10px;
+      span {
         img {
           display: inline-block;
           width: 40px;

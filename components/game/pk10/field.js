@@ -3,25 +3,25 @@ function getField(playid, labels) {
     ? Array.isArray(labels)
       ? labels
       : labels.length
-        ? labels.split("")
+        ? labels.split('')
         : []
     : null;
 
   const defaultArr = [
-    "01",
-    "02",
-    "03",
-    "04",
-    "05",
-    "06",
-    "07",
-    "08",
-    "09",
-    "10"
+    '01',
+    '02',
+    '03',
+    '04',
+    '05',
+    '06',
+    '07',
+    '08',
+    '09',
+    '10'
   ];
 
-  const smp1 = ["大", "小", "单", "双", "龙", "虎"];
-  const smp2 = ["大", "小", "单", "双"];
+  const smp1 = ['大', '小', '单', '双', '龙', '虎'];
+  const smp2 = ['大', '小', '单', '双'];
 
   const defaultFunc = (arr = defaultArr, values = []) => {
     return arr.map((item, index) => {
@@ -49,7 +49,7 @@ function getField(playid, labels) {
     case 1: //直选复式	前一直选
       return [
         {
-          name: (labels && labels[0]) || "冠军",
+          name: (labels && labels[0]) || '冠军',
           option: defaultFunc()
         }
       ];
@@ -58,11 +58,11 @@ function getField(playid, labels) {
       //直选复式	前二直选复式
       return [
         {
-          name: (labels && labels[0]) || "冠军",
+          name: (labels && labels[0]) || '冠军',
           option: defaultFunc()
         },
         {
-          name: (labels && labels[1]) || "亚军",
+          name: (labels && labels[1]) || '亚军',
           option: defaultFunc()
         }
       ];
@@ -70,15 +70,15 @@ function getField(playid, labels) {
     case 5:
       return [
         {
-          name: (labels && labels[0]) || "冠军",
+          name: (labels && labels[0]) || '冠军',
           option: defaultFunc()
         },
         {
-          name: (labels && labels[1]) || "亚军",
+          name: (labels && labels[1]) || '亚军',
           option: defaultFunc()
         },
         {
-          name: (labels && labels[2]) || "季军",
+          name: (labels && labels[2]) || '季军',
           option: defaultFunc()
         }
       ];
@@ -86,86 +86,86 @@ function getField(playid, labels) {
     case 15: //数字盘
       return [
         {
-          name: (labels && labels[0]) || "冠军",
+          name: (labels && labels[0]) || '冠军',
           option: defaultFunc()
         },
         {
-          name: (labels && labels[1]) || "亚军",
+          name: (labels && labels[1]) || '亚军',
           option: defaultFunc()
         },
         {
-          name: (labels && labels[2]) || "季军",
+          name: (labels && labels[2]) || '季军',
           option: defaultFunc()
         },
         {
-          name: (labels && labels[3]) || "第四名",
+          name: (labels && labels[3]) || '第四名',
           option: defaultFunc()
         },
         {
-          name: (labels && labels[4]) || "第五名",
+          name: (labels && labels[4]) || '第五名',
           option: defaultFunc()
         },
         {
-          name: (labels && labels[5]) || "第六名",
+          name: (labels && labels[5]) || '第六名',
           option: defaultFunc()
         },
         {
-          name: (labels && labels[6]) || "第七名",
+          name: (labels && labels[6]) || '第七名',
           option: defaultFunc()
         },
         {
-          name: (labels && labels[7]) || "第八名",
+          name: (labels && labels[7]) || '第八名',
           option: defaultFunc()
         },
         {
-          name: (labels && labels[8]) || "第九名",
+          name: (labels && labels[8]) || '第九名',
           option: defaultFunc()
         },
         {
-          name: (labels && labels[9]) || "第十名",
+          name: (labels && labels[9]) || '第十名',
           option: defaultFunc()
         }
       ];
     case 14: //双面盘
       return [
         {
-          name: (labels && labels[0]) || "冠军",
+          name: (labels && labels[0]) || '冠军',
           option: smpFunc(smp1)
         },
         {
-          name: (labels && labels[1]) || "亚军",
+          name: (labels && labels[1]) || '亚军',
           option: smpFunc(smp1)
         },
         {
-          name: (labels && labels[2]) || "季军",
+          name: (labels && labels[2]) || '季军',
           option: smpFunc(smp1)
         },
         {
-          name: (labels && labels[3]) || "第四名",
+          name: (labels && labels[3]) || '第四名',
           option: smpFunc(smp1)
         },
         {
-          name: (labels && labels[4]) || "第五名",
+          name: (labels && labels[4]) || '第五名',
           option: smpFunc(smp1)
         },
         {
-          name: (labels && labels[5]) || "第六名",
+          name: (labels && labels[5]) || '第六名',
           option: smpFunc(smp2)
         },
         {
-          name: (labels && labels[6]) || "第七名",
+          name: (labels && labels[6]) || '第七名',
           option: smpFunc(smp2)
         },
         {
-          name: (labels && labels[7]) || "第八名",
+          name: (labels && labels[7]) || '第八名',
           option: smpFunc(smp2)
         },
         {
-          name: (labels && labels[8]) || "第九名",
+          name: (labels && labels[8]) || '第九名',
           option: smpFunc(smp2)
         },
         {
-          name: (labels && labels[9]) || "第十名",
+          name: (labels && labels[9]) || '第十名',
           option: smpFunc(smp2)
         }
       ];
@@ -173,15 +173,15 @@ function getField(playid, labels) {
     case 7: //	冠亚和
       return [
         {
-          name: (labels && labels[0]) || "冠亚和",
+          name: (labels && labels[0]) || '冠亚和',
           option: defaultFunc(
             [
-              "大",
-              "小",
-              "单",
-              "双",
-              "中",
-              "和",
+              '大',
+              '小',
+              '单',
+              '双',
+              '中',
+              '和',
               3,
               4,
               5,
@@ -249,19 +249,19 @@ const gyh_sortby = [
   17,
   18,
   19,
-  "大",
-  "小",
-  "单",
-  "双",
-  "中",
-  "和"
+  '大',
+  '小',
+  '单',
+  '双',
+  '中',
+  '和'
 ];
 function sortBallList(playid, dataSource) {
   let _arr = [];
   if (playid === 7) {
     const sortBy = gyh_sortby;
     sortBy.forEach(x => {
-      _arr.push(dataSource[0].option.find(y => y.label + "" === x + ""));
+      _arr.push(dataSource[0].option.find(y => y.label + '' === x + ''));
     });
     dataSource[0].option = _arr;
   }

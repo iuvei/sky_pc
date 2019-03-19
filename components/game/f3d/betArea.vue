@@ -7,7 +7,6 @@
       <div class="option" :class="{'niuniu': playObj.playid == 131}">
         <div v-for="(item,key) in group.option" :key="key" class="item">
           <div class="item-value" :class="[group.class,{'active':item.selected}]" @click="selectItem(item,idx)">{{item.label}}</div>
-          <!-- :style="{visibility:item.odds?'visible':'hidden'}" -->
           <div class="item-odd" v-show="item.odds">{{item.odds}}</div>
         </div>
       </div>
@@ -19,6 +18,7 @@
     </div>
     <div v-if="isDanshi">
       <Input v-model.trim="textarea" type="textarea" :autosize="{minRows: 3,maxRows: 5}" placeholder="例如：1 2 3" @on-blur="filterData" />
+      <div class="tiper">每个号码之间请用空格隔开，每一注号码之间请用一个逗号[,]隔开</div>
     </div>
   </div>
 </template>
@@ -117,7 +117,6 @@ export default {
     // 选择号码
     selectItem(item, idx) {
       // 互斥
-      // this.mutexK3(item, idx);
       item.selected = !item.selected
       this.addData()
     },
@@ -131,10 +130,10 @@ export default {
             x.selected = true
             break
           case 1:
-            if (x.value > 5) x.selected = true
+            if (x.value > 4) x.selected = true
             break
           case 2:
-            if (x.value < 6) x.selected = true
+            if (x.value < 5) x.selected = true
             break
           case 3:
             if (x.value % 2 !== 0) x.selected = true
@@ -270,7 +269,8 @@ export default {
     })
     this.$bus.$on('randomBet', this.addData)
     this.setBetting()
-    await this.togetPeilv()
+    // todo 后期删除 开发热更新兼容 开发时开启 上线时关闭
+    // this.togetPeilv()
   },
   watch: {
     playObj(val) {

@@ -12,9 +12,11 @@
           </Input>
         </FormItem>
         <FormItem prop="vcode">
-          <Input type="text" v-model.trim="user.vcode" placeholder="验证码" class="vcode" size="large" :maxlength="4">
+          <Input type="text" v-model.trim="user.vcode" placeholder="验证码" class="vcode" size="large" :maxlength="4" @on-focus="randomVerify">
           <div slot="append" style="overflow:hidden;width:80px;height:34px;">
-            <img :src="verifyImg" alt="" @click="getVerify" class="vscode-locked-outline">
+            <span @click="randomVerify" ref="randomVerifyImg" style="display: inline-block;width: 100%;height: 100%;line-height:34px;">
+              <i v-for="(item, index) in verifyArr" :key="index" style="color: white">{{item}}</i>
+            </span>
           </div>
           </Input>
         </FormItem>
@@ -154,13 +156,15 @@
 </template>
 
 <script>
-import Vue from "vue";
-import http from "~/api/http";
-import { mapState, mapActions } from "vuex";
+import Vue from 'vue';
+import http from '~/api/http';
+import { mapState, mapActions } from 'vuex';
 import { setTimeout } from 'timers';
+import verifyMixins from '../components/auth/verifyMixins.js'
 
 export default {
-  name: "user_regist",
+  name: 'user_regist',
+  mixins: [verifyMixins],
   data() {
     return {
       loading: false,
@@ -168,13 +172,13 @@ export default {
       findpasstype:'',
       findstep:'first',
       user: {
-        username: "",
-        vcode: "",
-        vid: "",
-        accessCode:"",
+        username: '',
+        vcode: '',
+        vid: '',
+        accessCode:'',
       },
-      wayType: "",
-      verifyImg: "",
+      wayType: '',
+      verifyImg: '',
       phone: {
         phone:''
       },
@@ -199,61 +203,61 @@ export default {
       wayTypeArr: [
         {
           present: false,
-          text: "通过密保问题"
+          text: '通过密保问题'
         },
         {
           present: false,
-          text: "通过密保邮箱"
+          text: '通过密保邮箱'
         },
         {
           present: false,
-          text: "通过手机号码"
+          text: '通过手机号码'
         },
         {
           present: false,
-          text: "通过交易密码"
+          text: '通过交易密码'
         }
       ],
       questionArr: [
-        "请选择密保问题",
-        "您母亲的姓名是？",
-        "您父亲的姓名是？",
-        "您配偶的姓名是？",
-        "您的出生地是？",
-        "您高中班主任的名字是？",
-        "您初中班主任的名字是？",
-        "您小学班主任的名字是？",
-        "您的小学校名是？",
-        "您的学号（或工号）是？",
-        "您父亲的生日是？",
-        "您母亲的生日是",
-        "您配偶的生日是？"
+        '请选择密保问题',
+        '您母亲的姓名是？',
+        '您父亲的姓名是？',
+        '您配偶的姓名是？',
+        '您的出生地是？',
+        '您高中班主任的名字是？',
+        '您初中班主任的名字是？',
+        '您小学班主任的名字是？',
+        '您的小学校名是？',
+        '您的学号（或工号）是？',
+        '您父亲的生日是？',
+        '您母亲的生日是',
+        '您配偶的生日是？'
       ],
       ruleInline: {
         username: [
           {
             required: true,
-            message: "请输入用户名",
-            trigger: "blur"
+            message: '请输入用户名',
+            trigger: 'blur'
           },
           {
-            type: "string",
-            min: 6,
-            message: "用户名必须是六位以上",
-            trigger: "blur"
+            type: 'string',
+            min: 4,
+            message: '用户名必须是四位以上',
+            trigger: 'blur'
           },
           {
-            type: "string", 
+            type: 'string',
             pattern: /^[a-zA-Z0-9@$_]+$/,
-            message: "用户名不能包含特殊字符",
-            trigger: "blur"
+            message: '用户名不能包含特殊字符',
+            trigger: 'blur'
           }
         ],
         vcode: [
           {
             required: true,
-            message: "请输入验证码",
-            trigger: "blur"
+            message: '请输入验证码',
+            trigger: 'blur'
           }
         ],
         question: [
@@ -265,21 +269,21 @@ export default {
         ],
         answerone:[
           {
-            required: true,  
+            required: true,
             message: '请输入答案',
             trigger: 'blur'
           }
         ],
         answertwo:[
           {
-            required: true,  
+            required: true,
             message: '请输入答案',
             trigger: 'blur'
           }
         ],
         answerthree:[
           {
-            required: true,  
+            required: true,
             message: '请输入答案',
             trigger: 'blur'
           }
@@ -322,36 +326,41 @@ export default {
   },
   methods: {
     ...mapActions({
-      register: "userinfo/register"
+      register: 'userinfo/register'
     }),
     findType(type){
       this.findstep = 'third';
       this.findpasstype = type;
     },
-    
+
     async handleSubmit() {
       let _valid = false;
       // console.log(this.findpasstype);
       //找回密码第一步：验证用户名
       if(this.findstep=='first'){
-        this.$refs["user"].validate(valid => {
+        this.$refs['user'].validate(valid => {
           _valid = valid;
         });
         if (!_valid) return false;
+        if(this.user.vcode != this.verifyArr.join('')) {
+        this.$Message.warning('验证码错误！')
+        this.randomVerify()
+        return false
+      }
         this.loading = true;
         setTimeout(() => {
           this.loading = false;
         }, 2000);
         if (!this.wayType) {
           let res = await http({
-            ac: "FPgetAccountScrectList",
-            vcode: this.user.vcode,
+            ac: 'FPgetAccountScrectList',
+            vcode: 6666,
             username: this.user.username,
-            vid: this.user.vid
+            vid: 'b97ec930-7c7c-11e8-acae-0242ac190002'
           });
 
           if (Array.isArray(res) && !res.length) {
-            this.$Message.warning("你的账号未绑定任何安全设置,无法进行密码找回!");
+            this.$Message.warning('你的账号未绑定任何安全设置,无法进行密码找回!');
             setTimeout(() => {
               this.loading = false;
             }, 2000);
@@ -389,7 +398,7 @@ export default {
       // 修改密码
       if(this.findstep == 'fourth'){
         if(this.password.newpass == this.password.confirmpass){
-          this.$refs["question"].validate(valid => {
+          this.$refs['question'].validate(valid => {
             _valid = valid;
           })
           if(!_valid){
@@ -401,12 +410,12 @@ export default {
           }
         }
         if(this.password.newpass !== this.password.confirmpass){
-          this.$Message.warning("两次输入的密码不一致！");
+          this.$Message.warning('两次输入的密码不一致！');
           return ;
         }
         if(!this.wayType){
-            let res = await http({
-            ac : "FPchangePassword",
+          let res = await http({
+            ac : 'FPchangePassword',
             username : this.user.username,
             pass: this.password.newpass,
             client: 0,
@@ -414,25 +423,25 @@ export default {
             client_type : 0
           });
           if(res == 0){
-            this.$Message.warning("您的密保问题验证失败!");
+            this.$Message.warning('您的密保问题验证失败!');
             this.loading = true;
             setTimeout(() => {
-                this.loading = false;
-              }, 2000);
+              this.loading = false;
+            }, 2000);
           }else{
-             this.loading = true;
+            this.loading = true;
             setTimeout(() => {
               this.loading = false;
             }, 2000);
             this.$Message.warning('密码修改成功');
-            this.$router.push("/login");
+            this.$router.push('/login');
           }
         }
       }
       //找回密码第二步：选择找回密码方式
       // 密保问题找回
       if(this.findstep == 'third'&& this.findpasstype =='question'){
-        this.$refs["question"].validate(valid => {
+        this.$refs['question'].validate(valid => {
           _valid = valid;
         });
         if (!_valid){
@@ -443,35 +452,35 @@ export default {
           return false;
         }
         if(this.question.questone!==0&&this.question.questtwo!==0&&this.question.questthree!==0){
-            let res = await http({
-              ac : "FPcheckQuestion",
-              question_1 : this.question.questone,
-              question_2 : this.question.questtwo,
-              question_3 : this.question.questthree,
-                answer_1 : this.question.answerone,
-                answer_2 : this.question.answertwo,
-                answer_3 : this.question.answerthree,
-                username : this.user.username,
-             client_type : 0
+          let res = await http({
+            ac : 'FPcheckQuestion',
+            question_1 : this.question.questone,
+            question_2 : this.question.questtwo,
+            question_3 : this.question.questthree,
+            answer_1 : this.question.answerone,
+            answer_2 : this.question.answertwo,
+            answer_3 : this.question.answerthree,
+            username : this.user.username,
+            client_type : 0
           });
           // console.log(res);
           this.user.accesscode = res.accessCode;
-          if(res==""){
-            this.$Message.warning("您的密保问题验证失败!");
+          if(res==''){
+            this.$Message.warning('您的密保问题验证失败!');
             setTimeout(() => {
               this.loading = false;
             }, 2000);
             this.findstep = 'third';
             this.findpasstype = 'question'
           }else{
-            this.$Message.success('密保问题校验成功，请设置新的密保问题');            
+            this.$Message.success('密保问题校验成功，请设置新的密保问题');
             this.findstep = 'fourth';
           }
         }
       }
       // 邮箱找回
       if(this.findstep == 'third' && this.findpasstype == 'email'){
-        this.$Message.warning("该功能暂未开放！");
+        this.$Message.warning('该功能暂未开放！');
         //  this.$refs["email"].validate(valid => {
         //   _valid = valid;
         // });
@@ -504,7 +513,7 @@ export default {
       }
       //手机号码
       if(this.findstep == 'third' && this.findpasstype == 'phone'){
-        this.$Message.warning("该功能暂未开放！");
+        this.$Message.warning('该功能暂未开放！');
         // this.$refs["phone"].validate(valid => {
         //   _valid = valid;
         // });
@@ -534,11 +543,11 @@ export default {
         //   }else{
         //     this.findstep = 'fourth';
         //   }
-        // } 
+        // }
       }
       //交易密码
       if(this.findstep == 'third'&& this.findpasstype == 'tkpass'){
-        this.$Message.warning("该功能暂未开放！");
+        this.$Message.warning('该功能暂未开放！');
         // this.$refs["tkpass"].validate(valid => {
         //   _valid = valid;
         // });
@@ -573,7 +582,7 @@ export default {
     },
     async getVerify() {
       let img = await http({
-        ac: "getVerifyImage"
+        ac: 'getVerifyImage'
       });
       this.verifyImg = img.img;
       this.user.vid = img.vid;
@@ -585,7 +594,7 @@ export default {
     });
   },
   computed: {
-    ...mapState(["sysinfo"])
+    ...mapState(['sysinfo'])
   }
 };
 </script>

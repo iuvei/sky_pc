@@ -35,23 +35,23 @@
 </template>
 
 <script>
-import Vue from "vue";
-import http from "~/api/http";
-import { mapState } from "vuex";
+import Vue from 'vue';
+import http from '~/api/http';
+import { mapState } from 'vuex';
 
 export default {
-  name: "user_login",
-  props: ["userinfo"],
+  name: 'user_login',
+  props: ['userinfo'],
   data() {
     return {
       loading: false,
       user: {
-        username: "",
-        password: "",
-        vcode: "",
-        vid: ""
+        username: '',
+        password: '',
+        vcode: '',
+        vid: ''
       },
-      verifyImg: "",
+      verifyImg: '',
       ruleInline: {},
       key: 0
       // spinShow: true
@@ -60,7 +60,7 @@ export default {
   methods: {
     handleSubmit() {
       this.loading = true;
-      let err = this.$store.dispatch("login", this.user);
+      let err = this.$store.dispatch('login', this.user);
       if (!!err) {
         this.getVerify();
         this.loading = false;
@@ -68,7 +68,7 @@ export default {
     },
     async getVerify() {
       let img = await http({
-        ac: "getVerifyImage"
+        ac: 'getVerifyImage'
       });
       this.verifyImg = img.img;
       this.user.vid = img.vid;
@@ -85,5 +85,4 @@ export default {
 </script>
 
 <style>
-
 </style>

@@ -1,29 +1,32 @@
 function setBallList(playid, labels) {
-  labels = labels ?
-    Array.isArray(labels) ?
-    labels :
-    labels.length ?
-    labels.split("") :
-    [] :
-    null;
-    /******** 基础数据准备 **********/
-  const productNum = (max) => {
-    let arr = [], startNum = 0
-    max += 1
-    while(max--) {
-      arr.push(startNum++)
+  labels = labels
+    ? Array.isArray(labels)
+      ? labels
+      : labels.length
+        ? labels.split('')
+        : []
+    : null;
+  /******** 基础数据准备 **********/
+  const productNum = max => {
+    let arr = [],
+      startNum = 0;
+    max += 1;
+    while (max--) {
+      arr.push(startNum++);
     }
-    return arr
-  }
-  const assemRowName = (name) => {
-    return [{
-      name,
-      option: defaultFunc()
-    }]
-  }
-  const defaultArr = productNum(9)
-  const heZhiArr = productNum(27)
-  const erHeZhiArr = productNum(18)
+    return arr;
+  };
+  const assemRowName = name => {
+    return [
+      {
+        name,
+        option: defaultFunc()
+      }
+    ];
+  };
+  const defaultArr = productNum(9);
+  const heZhiArr = productNum(27);
+  const erHeZhiArr = productNum(18);
   const defaultFunc = (arr = defaultArr, type) => {
     return arr.map((item, index) => {
       return {
@@ -35,7 +38,8 @@ function setBallList(playid, labels) {
     });
   };
   /******* 渲染界面的数据 ********/
-  const severalRows = [{
+  const severalRows = [
+    {
       name: '万位',
       option: defaultFunc()
     },
@@ -54,40 +58,56 @@ function setBallList(playid, labels) {
     {
       name: '个位',
       option: defaultFunc()
-    },
-  ]
-  const erZuxuanFushi = [{
-    name: '组选',
-    option: defaultFunc()
-  }]
-  const heZhiRow = [{
-    name: '和值',
-    option: defaultFunc(heZhiArr)
-  }]
-  const erHeZhiRow =[{
-    name: '和值',
-    option: defaultFunc(erHeZhiArr)
-  }]
-  const kuaduRow = [{
-    name: '跨度',
-    option: defaultFunc()
-  }]
-  const zusanRow = [{
-    name: '组三',
-    option: defaultFunc()
-  }]
-  const zuliuRow = [{
-    name: '组六',
-    option: defaultFunc()
-  }]
-  const baodanRow = [{
-    name: '包胆',
-    option: defaultFunc()
-  }]
-  const weishuRow = [{
-    name: '尾数',
-    option: defaultFunc()
-  }]
+    }
+  ];
+  const erZuxuanFushi = [
+    {
+      name: '组选',
+      option: defaultFunc()
+    }
+  ];
+  const heZhiRow = [
+    {
+      name: '和值',
+      option: defaultFunc(heZhiArr)
+    }
+  ];
+  const erHeZhiRow = [
+    {
+      name: '和值',
+      option: defaultFunc(erHeZhiArr)
+    }
+  ];
+  const kuaduRow = [
+    {
+      name: '跨度',
+      option: defaultFunc()
+    }
+  ];
+  const zusanRow = [
+    {
+      name: '组三',
+      option: defaultFunc()
+    }
+  ];
+  const zuliuRow = [
+    {
+      name: '组六',
+      option: defaultFunc()
+    }
+  ];
+  const baodanRow = [
+    {
+      name: '包胆',
+      option: defaultFunc()
+    }
+  ];
+  const weishuRow = [
+    {
+      name: '尾数',
+      option: defaultFunc()
+    }
+  ];
   const niuniu = [
     '牛一',
     '牛二',
@@ -105,7 +125,7 @@ function setBallList(playid, labels) {
     '牛小',
     '牛单',
     '牛双'
-  ]
+  ];
   const lhd = [
     {
       name: '万、千',
@@ -147,7 +167,7 @@ function setBallList(playid, labels) {
       name: '拾、个',
       option: ['龙', '虎', '和']
     }
-  ]
+  ];
   const template_smp = [
     {
       name: '总和值',
@@ -177,28 +197,30 @@ function setBallList(playid, labels) {
       name: '个位',
       option: ['大', '小', '单', '双']
     }
-  ]
-  const teshuhao = [{
-    name: '特殊号',
-    option: ['豹子', '顺子', '对子']
-  }]
-  const smp1 = ["大", "小", "单", "双", "龙", "虎"];
-  const smp2 = ["大", "小", "单", "双"];
-  const rowsLine = (arr) => {
-    let a = 0
+  ];
+  const teshuhao = [
+    {
+      name: '特殊号',
+      option: ['豹子', '顺子', '对子']
+    }
+  ];
+  const smp1 = ['大', '小', '单', '双', '龙', '虎'];
+  const smp2 = ['大', '小', '单', '双'];
+  const rowsLine = arr => {
+    let a = 0;
     arr.forEach((item, index) => {
-      a += item.option.length
+      a += item.option.length;
       item.option = item.option.map((n, i) => {
         return {
           label: n,
           value: a - item.option.length + i,
           selected: false,
           odds: false
-        }
-      })
+        };
+      });
     });
-    return arr
-  }
+    return arr;
+  };
 
   switch (playid) {
     case 12: // 后三组六
@@ -210,13 +232,14 @@ function setBallList(playid, labels) {
     case 107:
     case 109:
     case 120:
-      return severalRows.slice(0, 1)
+      return severalRows.slice(0, 1);
     case 41: // 双面盘	数字盘
     case 57:
-      return severalRows
+      return severalRows;
     case 131: // 牛牛
-      return [{
-          name: "牛牛",
+      return [
+        {
+          name: '牛牛',
           option: defaultFunc(niuniu)
         }
       ];
@@ -281,8 +304,8 @@ function setBallList(playid, labels) {
       return erZuxuanFushi;
     case 39: // 前二组选和值
     case 121:
-      erHeZhiRow[0].option.pop()
-      erHeZhiRow[0].option.shift()
+      erHeZhiRow[0].option.pop();
+      erHeZhiRow[0].option.shift();
       return erHeZhiRow;
     case 83: // 五星120
       return assemRowName('组选');

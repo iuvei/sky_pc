@@ -3,13 +3,13 @@
 </template>
 
 <script>
-import { default_color } from "./field.js";
+import { default_color } from './field.js';
 export default {
-  name: "ColorBall",
+  name: 'ColorBall',
   props: {
     num: {
       type: String,
-      default: ""
+      default: ''
     }
   },
   methods: {

@@ -16,12 +16,12 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions } from 'vuex';
 export default {
-  name: "remarkModal",
+  name: 'remarkModal',
   model: {
-    prop: "modal",
-    event: "updateModelValue"
+    prop: 'modal',
+    event: 'updateModelValue'
   },
   props: {
     modal: {
@@ -46,7 +46,7 @@ export default {
         return this.modal;
       },
       set(v) {
-        this.$emit("updateModelValue", v);
+        this.$emit('updateModelValue', v);
       }
     },
     row() {
@@ -54,10 +54,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions("agent", ["setTuiguangRemark"]),
+    ...mapActions('agent', ['setTuiguangRemark']),
     async okClick() {
       if (!this.row.remark || this.row.remark.length > 50) {
-        this.$Message.error("备注不能为空,且不得高于50个字符!");
+        this.$Message.error('备注不能为空,且不得高于50个字符!');
         return;
       }
       this.modal_loading = true;
@@ -65,7 +65,7 @@ export default {
       let data = await this.setTuiguangRemark(this.row);
       // console.error(data);
       this.modal_loading = false;
-      this.$emit("updateModelValue", false);
+      this.$emit('updateModelValue', false);
     }
   }
 };

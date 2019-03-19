@@ -6,16 +6,18 @@
   </div>
 </template>
 <script>
-import trendNav from "~/components/watch/trendNav";
-import all from "~/components/lottery/all";
-import record from "~/components/lottery/record";
+import trendNav from '~/components/watch/trendNav';
+import all from '~/components/lottery/all';
+import record from '~/components/lottery/record';
+;
 export default {
-  name: "notice",
+  name: 'notice',
+   
   components: { trendNav, all, record },
   data() {
     return {
       gameId: 0,
-      gameJsTag: "",
+      gameJsTag: '',
       game: {}
     };
   },
@@ -31,7 +33,14 @@ export default {
   },
   mounted() {},
   async asyncData({ store }) {
-    await store.dispatch("game/getGameListAtin");
+    if(process.env.static) return
+    await store.dispatch('game/getGameListAtin');
+  },
+  async created(){
+    if(!process.browser) return
+    if(process.env.static){
+      await this.$store.dispatch('game/getGameListAtin')
+    }
   }
 };
 </script>
@@ -67,7 +76,7 @@ table.shuoming {
   background: rgb(244, 244, 244);
 }
 table.shuoming td {
-  border: 1px Solid #aaa;
+  border: 1px #aaa solid;
   text-align: center;
   padding: 10px;
   color: #333;

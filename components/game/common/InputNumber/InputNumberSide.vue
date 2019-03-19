@@ -1,19 +1,18 @@
 <template>
   <div class='app-input-number-side'>
     <span :class="['l',{active:l==='l'}]" @click="setMultiple(-1)">-</span>
-    <!-- <AppInputNumber class="multiple" v-model="value"></AppInputNumber> -->
     <GameInputNumber class="multiple" :value="value" @input="change"></GameInputNumber>
     <span :class="['r',{active:l==='r'}]" @click="setMultiple(1)">+</span>
   </div>
 </template>
 <script>
-import GameInputNumber from "./InputNumber";
+import GameInputNumber from './InputNumber';
 export default {
-  name: "GameNumberSide",
+  name: 'GameNumberSide',
   components: { GameInputNumber },
   model: {
-    prop: "value",
-    event: "change",
+    prop: 'value',
+    event: 'change',
   },
   props: {
     value: [Number, String],
@@ -23,24 +22,19 @@ export default {
   },
   data() {
     return {
-      l: "",
+      l: '',
     };
   },
   methods: {
     setMultiple(n) {
-      n > 0 ? (this.l = "r") : (this.l = "l");
+      n > 0 ? (this.l = 'r') : (this.l = 'l');
       if (this.value + n < 1) return;
-      this.$emit("change", this.value + n);
+      this.$emit('change', this.value + n);
     },
     change(v) {
-      this.$emit("change", v);
+      this.$emit('change', v);
     },
-  },
-  watch: {
-    // value() {
-    //   this.$emit("change", this.value);
-    // },
-  },
+  }
 };
 </script>
 <style lang='scss' scoped>

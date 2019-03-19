@@ -14,36 +14,38 @@
       </div>
       <div class="btn-func" data-link="" v-if="showType.includes(3)" @click="openService">
         <div class="index_sprite btn_service_icon"></div>
-        在线客服</div>
+        在线客服
+      </div>
       <div class="spline1"></div>
       <div class="btn-func" v-if="showType.includes(4)" @click="openQQ">
         <div class="index_sprite btn_qq_icon"></div>
-        联系QQ</div>
+        联系QQ
+      </div>
       <div class="spline1"></div>
       <div class="qrcode"><img :src="img" border="0" alt=""></div>
-      <div class="tip">扫一扫</div>
-      <div class="tip">{{clientStr}} App 下载</div>
-      <div class="spline3"></div>
+        <div class="tip">扫一扫</div>
+        <div class="tip">{{clientStr}} App 下载</div>
+        <div class="spline3"></div>
+      </div>
+      <div class="bx_top index_to_top" @click="toTop">
+        <a href="javascript:void(0)">返回顶部</a>
+      </div>
     </div>
-    <div class="bx_top index_to_top" @click="toTop">
-      <a href="javascript:void(0)">返回顶部</a>
-    </div>
-  </div>
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapGetters } from 'vuex';
 export default {
-  name: "index-couplet",
+  name: 'index-couplet',
   props: {
     showType: {
       default: [],
     },
     client: {
-      default: "",
+      default: '',
     },
     position: {
-      default: "",
+      default: '',
     },
   },
   data() {
@@ -55,32 +57,35 @@ export default {
     // ...mapState("sysinfo", ["sysinfo"]),
     ...mapState({
       accountInfo: state => state.userinfo.accountInfo,
-      sysinfo: state => state.sysinfo.sysinfo
+      // sysinfo: state => state.sysinfo.sysinfo
     }),
+    sysinfo(){
+      return this.$store.getters['sysinfo/sysInfo']
+    },
     clientStr() {
-      return this.client.toLowerCase().includes("ios") ? "苹果" : "安卓";
+      return this.client.toLowerCase().includes('ios') ? '苹果' : '安卓';
     },
     img() {
       if (this.sysinfo) {
-        if (this.client.toLowerCase().includes("ios"))
+        if (this.client.toLowerCase().includes('ios'))
           return this.sysinfo.ios_qrcode;
         else return this.sysinfo.android_qrcode;
       }
-      return "";
+      return '';
     },
     serviceUrl() {
       return this.sysinfo
-        ? this.sysinfo.service_url.replace(/&amp;/g, "&")
-        : "/";
+        ? this.sysinfo.service_host_url.replace(/&amp;/g, '&')
+        : '/';
     },
     isTestUser(){
       return this.accountInfo.test === 2
     }
   },
   methods: {
-    ...mapActions("sysinfo", ["regGuestUser"]),
+    ...mapActions('sysinfo', ['regGuestUser', 'getServiceUrl']),
     help() {
-      window && window.open(`/help/helplist/registered`);
+      window && window.open('/help/helplist/registered');
     },
     openQQ() {
       window &&
@@ -90,8 +95,9 @@ export default {
           }&site=qq&menu=yes`
         );
     },
-    openService() {
-      window && window.open(this.serviceUrl);
+    async openService() {
+      let serviceUrl = await this.getServiceUrl()
+      window && window.open(serviceUrl);
     },
     close() {
       this.hide = true;

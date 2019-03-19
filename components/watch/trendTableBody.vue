@@ -14,11 +14,11 @@
   </div>
 </template>
 <script>
-import trendTableBodyGroup from "./trendTableBodyGroup";
+import trendTableBodyGroup from './trendTableBodyGroup';
 export default {
-  name: "trendTableBody",
+  name: 'trendTableBody',
   components: { trendTableBodyGroup },
-  props: ["bodyOption", "bodyLeftData", "bodyRightData", "viewOption"],
+  props: ['bodyOption', 'bodyLeftData', 'bodyRightData', 'viewOption'],
 
   mounted() {},
 };

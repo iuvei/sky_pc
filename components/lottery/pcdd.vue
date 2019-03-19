@@ -54,11 +54,10 @@
 
 <script>
 export default {
-  name: "lottery-pcdd",
-  props: ["game"]
+  name: 'lottery-pcdd',
+  props: ['game']
 };
 </script>
 
 <style>
-
 </style>

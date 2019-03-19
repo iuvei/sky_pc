@@ -23,3 +23,6 @@ config/test.js
 /build/main.js
 /build/main.map
 *.bat
+.vs
+/dev.bat
+/deploy.bat

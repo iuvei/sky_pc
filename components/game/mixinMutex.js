@@ -52,6 +52,8 @@ export default {
       let _peilv = num;
       if (/.000/.test(num)) {
         _peilv = num.substring(0, num.length - 2);
+      } else if (/\.00[1-9]/.test(num)) {
+        _peilv = num;
       } else if (/.00/.test(num)) {
         _peilv = num.substring(0, num.length - 1);
       } else if (/.[0-9][1-9]0/.test(num)) {
@@ -75,13 +77,16 @@ export default {
     }
   },
   watch: {
-    "$store.state.userinfo.isLoign": {
+    '$store.state.userinfo.isLoign': {
       // 登录后重新获取赔率
       handle(newVal, oldVal) {
         if (oldVal === false && newVal === true) {
           this.togetPeilv && this.togetPeilv();
         }
       }
+    },
+    '$route.params.id'() {
+      this.togetPeilv()
     }
   }
 };

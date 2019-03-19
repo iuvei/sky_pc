@@ -1,22 +1,44 @@
 <template>
   <section class="sidebar-c">
-    <!-- <gameHead></gameHead> -->
-    <div class="home" @click="()=>{this.$router.push('/game')}">购彩大厅</div>
+    <div
+      class="home"
+      @click="()=>{this.$router.push('/game')}"
+    >购彩大厅</div>
     <div class="game-menu">
-      <div v-for="(item,key) in data" :key="key" class="item">
-        <div class="item-title" @click="toggle(key,item.group)">
+      <div
+        v-for="(item,key) in data"
+        :key="key"
+        class="item"
+      >
+        <div
+          class="item-title"
+          @click="toggle(key,item.group)"
+        >
           <div class="item-title-txt">
             <div :class="[`_${item.group}`,'icon']"></div>
             {{item.title}}
           </div>
-          <div class="arrow" :class="{'open':openArr[key]}"></div>
+          <div
+            class="arrow"
+            :class="{'open':openArr[key]}"
+          ></div>
         </div>
-        <AppCollapse :open="openArr[key]" class="app-collapse">
-          <!-- <ul > -->
-          <li v-for="(v,k) in item.li " :key="k" :class="[{active:liActive==v.game_id},'li']" @click="goBetting(v)">
+        <AppCollapse
+          :open="openArr[key]"
+          class="app-collapse"
+        >
+          <li
+            v-for="(v,k) in item.li "
+            :key="k"
+            :class="[{active:liActive==v.game_id},'li']"
+            @click="goBetting(v)"
+          >
+            <img
+              :src="v.icon"
+              alt=""
+            >
             <span>{{v.game_name}}</span>
           </li>
-          <!-- </ul> -->
         </AppCollapse>
       </div>
     </div>
@@ -24,7 +46,6 @@
 </template>
 
 <script>
-// import category from "../user/userSidebarData.js";
 import { mapState, mapActions } from 'vuex'
 
 let otherJsTag = ['qxc', 'pkniuniu', 'xypk', 'xync', 'tzyx']
@@ -50,7 +71,6 @@ export default {
         }
         obj[item.js_tag].push(item)
         if (otherJsTag.includes(item.js_tag)) {
-          console.log(item.game_name)
           obj.otherJsTag.push(item)
         }
       })
@@ -77,9 +97,9 @@ export default {
       if (this.openArr[key]) {
         this.$router.push('/game')
       }
-      console.log(this.openArr[key])
+
       if (!this.openArr[key]) {
-        this.openArr = new Array(8).fill(false)
+        this.openArr = new Array(9).fill(false)
       }
       this.$set(this.openArr, key, !this.openArr[key])
     },
@@ -87,14 +107,12 @@ export default {
       this.data = await this.getGameListAtin()
     },
     goBetting(item) {
-      // if (otherJsTag.includes(item.js_tag) && item.enable !== 2) {
-      //   this.$router.push(`/game/${item.js_tag}/${item.game_id}`)
-      //   return
-      // }
       if (item.js_tag === 'sport_key') {
         window.location.replace('/sport')
         return
       }
+      let path = `/game/${item.js_tag}${process.env.static?'?id=':'/'}${item.game_id}`
+
       if (
         [
           'pcdd',
@@ -113,11 +131,11 @@ export default {
         item.enable !== 2
       ) {
         if (item.js_tag == '3d') {
-          // item.js_tag = "f3d";
-          this.$router.push(`/game/f3d/${item.game_id}`)
+          path = `/game/f3d${process.env.static?'?id=':'/'}${item.game_id}`
+          this.$router.push(path)
           return
         }
-        this.$router.push(`/game/${item.js_tag}/${item.game_id}`)
+        this.$router.push(path)
       } else {
         this.$Message.warning('彩种正在维护中')
       }
@@ -155,6 +173,9 @@ export default {
     overflow: hidden;
     .li {
       cursor: pointer;
+      img {
+        width: 40px;
+      }
     }
   }
   .item {
@@ -187,9 +208,7 @@ export default {
         width: 30px;
         height: 24px;
         background: url('~assets/img/game/arrow.png') center center no-repeat;
-        // background-size: 10px 10px;
         transition: all 0.5s;
-        // transform: rotate(90deg);
       }
       .open {
         transform: rotate(180deg);
@@ -217,27 +236,26 @@ export default {
       }
       ._sport_key {
         background: url('~assets/img/touzhu_sport.png') no-repeat;
-
-        // background: url("~assets/img/touzhu_sport_key.png") no-repeat;
       }
       ._otherJsTag {
         background: url('~assets/img/touzhu_otherLottery.png') no-repeat;
       }
     }
     li {
-      // f3e4d2  f4f5f6
       width: 100%;
       height: 48px;
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       background: #f4f5f6;
       border-bottom: solid 1px #eaeaea;
       font-size: 14px;
       cursor: pointer;
       span {
-        flex: 1;
-        text-align: center;
+        // flex: 1;
+        // text-align: center;
+        display: inline-block;
+        width: 100px;
       }
       .li-img {
         text-align: center;
@@ -248,7 +266,6 @@ export default {
       }
     }
     .active {
-      // background: url(~assets/img/user_center_icons.png) no-repeat 20px -155px;
       background-color: #f3e4d2;
       color: #f13131;
     }

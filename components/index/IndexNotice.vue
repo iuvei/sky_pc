@@ -18,7 +18,7 @@
 
       <Tabs value="name1" size="small">
         <TabPane label="网站公告" name="name1">
-          <a href="#">温馨提示：如您需要快捷方便的充值</a>
+          <a href="user/message/notice" v-html="sysContent" title="点击查看">温馨提示：如您需要快捷方便的充值</a>
         </TabPane>
         <TabPane label="新手指导" name="name2">
           <a target="_blank" href="help/helplist/registered">如何注册账号?</a><br>
@@ -32,19 +32,30 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters, mapActions } from 'vuex';
 export default {
-  name: "index-notice",
+  name: 'index-notice',
   data() {
     return {
-      val: 0
+      val: 0,
+      sysContent: ''
     };
   },
   serverCacheKey() {
     return Math.floor(Date.now() / 1000 * 60 * 60 * 24);
   },
   computed: {
-    ...mapState("sysinfo", ["sysinfo"])
+    // ...mapState('sysinfo', ['sysinfo'])
+    sysinfo(){
+      return this.$store.getters['sysinfo/sysInfo']
+    }
+  },
+  methods: {
+    ...mapActions('user', ['getSystemNotice']),
+  },
+  async mounted() {
+    let sysArray = await this.getSystemNotice()
+    this.sysContent = sysArray.length ? this.decode(sysArray[0].content) : '暂无内容'
   }
 };
 </script>
@@ -55,6 +66,7 @@ export default {
 }
 .index-notice {
   margin-bottom: 10px;
+  overflow: hidden;
 }
 .index-notice,
 .ivu-card {

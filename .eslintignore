@@ -1,0 +1,7 @@
+*.min.js
+build/
+.nuxt/
+dist/
+*.config.js
+es6-promise.auto.min.js
+assets/

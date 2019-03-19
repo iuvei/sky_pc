@@ -1,4 +1,4 @@
-import Lottery from "./Lottery.js";
+import Lottery from './Lottery.js';
 Lottery.install = Vue => {
   Vue.component(Lottery.name, Lottery);
 };

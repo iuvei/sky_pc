@@ -112,6 +112,7 @@
     <!-- 单式 -->
     <template v-if="isSingle">
       <Input v-model="textarea" type="textarea" :autosize="{minRows: 3,maxRows: 5}" :placeholder="'例如：' + myPlaceholder" @on-blur="filterData" />
+      <div class="tiper">每个号码之间请用空格隔开，每一注号码之间请用一个逗号[,]隔开</div>
     </template>
   </div>
 </template>
@@ -161,36 +162,23 @@ export default {
       let dataSource = getField(this.playObj.playid)
       // 请求赔率
       let ret = await this.getPeilv()
-
-      if (ret && ret.length) {
-        let item = []
-        const playItem = ret.find(val => val.playid == this.playObj.playid)
-        const peilv = playItem ? playItem.peilv : ''
-        if (this.playObj.playid == 1) {
-          const arr = peilv ? peilv.split('|') : []
-          let pre = arr.length ? arr.splice(0, 4) : []
-          item = [...arr, ...pre]
-        } else {
-          item = peilv ? peilv.split('|') : []
-        }
-        // 单一赔率
-        if (item.length === 1) {
-          this.changeField({ stateOdds: this.processZero(item[0]) })
-        } else {
-          this.changeField({ stateOdds: false })
-          // this.betSelectSet.forEach((group, idx) => {
-          dataSource.forEach((group, idx) => {
-            let odds = item.splice(0, group.option.length),
-              opt = []
-            // this.betSelectSet[idx].option = group.option.map((val, key) => {
-            dataSource[idx].option = group.option.map((val, key) => {
-              this.$set(val, 'odds', this.processZero(odds[key]))
-              return val
-            })
-          })
-        }
+      let item = []
+      const playItem = ret.find(val => val.playid == this.playObj.playid)
+      const peilv = playItem ? playItem.peilv : ''
+      item = peilv ? peilv.split('|') : []
+      // 单一赔率
+      if (item.length === 1) {
+        this.changeField({ stateOdds: this.processZero(item[0]) })
       } else {
-        return
+        this.changeField({ stateOdds: false })
+        dataSource.forEach((group, idx) => {
+          let odds = item.splice(0, group.option.length),
+            opt = []
+          dataSource[idx].option = group.option.map((val, key) => {
+            this.$set(val, 'odds', this.processZero(odds[key]))
+            return val
+          })
+        })
       }
       // 根据模板排序
       this.betSelectSet = sortBallList(this.playObj.playid, dataSource)
@@ -236,9 +224,9 @@ export default {
             x =>
               x.length
                 ? x
-                    .split('|')
-                    .map(y => y.length && y.padStart(2, '0'))
-                    .join('|')
+                  .split('|')
+                  .map(y => y.length && y.padStart(2, '0'))
+                  .join('|')
                 : ''
           )
           break
@@ -417,13 +405,14 @@ export default {
     this.$bus.$on('resetBetArea', this.clearSelect)
     this.$bus.$on('randomBet', this.addData)
     this.setBetting()
-    this.togetPeilv()
+      // todo 后期删除 开发热更新兼容 开发时开启 上线时关闭
+    // await this.togetPeilv()
   },
   destroyed() {
     this.$bus.$off('randomBet')
   },
   watch: {
-    playObj(obj) {
+    async playObj(obj) {
       const val = obj.playid
       if (val == 3) {
         this.myPlaceholder = '1 2'
@@ -432,7 +421,7 @@ export default {
         this.myPlaceholder = '1 2 3'
       }
       this.setBetting()
-      this.togetPeilv()
+      await this.togetPeilv()
       this.textarea = ''
     },
     textarea(val) {

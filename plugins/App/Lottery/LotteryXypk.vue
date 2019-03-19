@@ -1,25 +1,24 @@
 <template>
   <div class="th" v-if="number.length">
-    <div v-for="(ball,num) in arr" :key='num' class="td">
+    <span v-for="(ball,num) in arr" :key='num' class="td">
       <span class="pk_card"><img :src="require('../../../assets/img/puke/card/'+ cardColor(ball) +'_'+ cardNum(ball) +'.png')" alt=""></span>
-    </div>
+    </span>
   </div>
   <div class="waiting" v-else>正在开奖...</div>
 </template>
 <script>
-import { pcddColor } from "./color";
 export default {
   name: "xypk",
   props: ["number"],
   computed: {
     arr() {
+      if(Array.isArray(this.number)) return this.number
       return this.number.split("+");
+      
     },
   },
-  mounted () {
-    console.error(this.number)
-  },
   methods: {
+    // 计算花色
     cardColor(ball){
       let balls = parseInt(ball, 10);
       let color = (ball%4);
@@ -41,6 +40,7 @@ export default {
       }
       return hs;
     },
+    // 计算大小
     cardNum(ball){
       let balls = parseInt(ball, 10);
       let dx = parseInt((balls/4) + 1);
@@ -56,13 +56,17 @@ export default {
 <style lang="scss" scoped>
 .th {
   display: flex;
+  justify-content: center;
+  align-items: center;
   .td {
     display: flex;
+    display: inline-block;
+    margin-left: 5px;
     // padding: 0 2px;
   }
-img{
+  img {
     width: 18px;
-}
+  }
   span {
     height: 24px;
     width: 24px;

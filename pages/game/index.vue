@@ -13,7 +13,7 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import gameIndexItem from '~/components/game/gameIndexItem'
-
+let otherJsTag = ['qxc', 'pkniuniu', 'xypk', 'xync', 'tzyx']
 export default {
   name: 'gameIndex',
   components: { gameIndexItem },
@@ -25,8 +25,11 @@ export default {
       'isShowAllGame'
     ]),
     gameCenterList() {
+      if (this.nowGameTag === 'otherJsTag') {
+        return this.gameList.filter(item=>otherJsTag.includes(item.js_tag))
+      }
       if (!this.nowGameTag || this.isShowAllGame) {
-        return this.gameList
+        return this.gameList.filter(item=>item.js_tag)
       } else {
         return this.gameList.filter(item => item.js_tag == this.nowGameTag)
       }
@@ -40,7 +43,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('game', ['getCplogList', 'getKjCpLog']),
+    ...mapActions('game', ['getCplogList', 'getKjCpLog', 'setNowGameTag']),
     // 获取开奖号码
     async togetCplogList(request = {}) {
       let obj = {}
@@ -93,6 +96,7 @@ export default {
     }
   },
   async mounted() {
+    this.setNowGameTag('')
     this.togetKjCpLog()
     this.openTimes = await this.togetCplogList()
   }

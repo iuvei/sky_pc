@@ -1,32 +1,63 @@
 <template>
   <div class="activity-container">
     <div class="headrs">
-      <img src="/head_t.png" width="285px" height="54px">
+      <img
+        src="/head_t.png"
+        width="285px"
+        height="54px"
+      >
     </div>
     <div class="beijin_m">
-      <div class="event_content" v-for="(item, index) in list" :key="index">
+      <div
+        class="event_content"
+        v-for="(item, index) in list"
+        :key="index"
+      >
         <div class="yh_box">
           <img :src="item.pc_head">
           <div class="right">
-            <h1 style="width: 210px;height: 27px; overflow: hidden;" :title="item.event_title">{{item.event_title}}</h1>
+            <h1
+              style="width: 210px;height: 27px; overflow: hidden;"
+              :title="item.event_title"
+            >{{item.event_title}}</h1>
             <p :title="item.event_short">{{item.event_short}}</p>
-            <button class="btns" @click="toggle(item, $event)">查看详情
+            <button
+              class="btns"
+              @click="toggle(item, $event)"
+              :class="{'open': item.show, 'loading': item.loading}"
+            >{{item.loading?'加载中':'查看详情'}}
               <span class="xuanzhuan"></span>
             </button>
           </div>
         </div>
-        <AppCollapse :open="item.show" class="app-collapse">
-          <div class="wz" v-html="item.event_detail">
+        <AppCollapse
+          :open="item.show"
+          class="app-collapse"
+        >
+          <div
+            class="wz"
+            v-html="item.event_detail"
+          >
           </div>
         </AppCollapse>
       </div>
-      <p class="no_activities" v-if="!list.length">暂无活动记录，敬请期待～</p>
+      <p
+        class="no_activities"
+        v-if="!list.length"
+      >暂无活动记录，敬请期待～</p>
     </div>
   </div>
 </template>
 
 <script>
 import { mapActions } from "vuex";
+import { setInterval, clearInterval } from "timers";
+import decompress from "../plugins/decompress";
+const expend = el => {
+  if (el.scrollHeight > (el.style.height + "").replace("px", "") * 1)
+    el.style.height = el.scrollHeight + "px";
+};
+
 export default {
   name: "activies",
   data() {
@@ -35,6 +66,7 @@ export default {
     };
   },
   created() {
+    if (!process.browser) return;
     this.getData();
   },
   filters: {
@@ -56,51 +88,79 @@ export default {
     async getData() {
       if (process.browser) {
         let _list = await this.getGameEventList();
-        _list.forEach(x => {
-          x.event_detail = null;
-          x.show = false;
-        });
-        // if (_list && _list.length) {
-        //   let div = window.document.createElement("div");
-        //   _list.forEach(item => {
-        //     let c = unescape(item.event_detail);
-        //     div.innerHTML = c.replace(/\\u0026/g, "&");
-        //     let output = div.innerText || div.textContent;
-        //     item.event_detail = output;
-        //     item.show = false;
-        //   });
-        //   div = null;
-        // }
-        this.list = _list;
+        if (_list && Array.isArray(_list) && _list.length) {
+          _list.forEach(x => {
+            x.event_detail = null;
+            x.show = false;
+            x.loading = false;
+          });
+          this.list = _list;
+        }
       }
     },
     async getContent(eid) {
       let result = await this.getEventContent(eid);
+      // console.log(result)
       if (result) {
-        let decodedStr = this.decode(result),
+        let _result;
+        const isNew = result.slice(0, 2) === "GZ";
+        if (isNew) {
+          result = result.substring(2);
+          _result = decompress(result);
+        } else {
+          _result = this.decode(result);
+        }
+        if (!_result) return "暂无活动详情";
+        let decodedStr = _result,
           div = window.document.createElement("div");
-        let c = unescape(decodedStr);
+        let c = decodeURIComponent(escape(unescape(decodedStr)));
         div.innerHTML = c.replace(/\\u0026/g, "&");
         let output = div.innerText || div.textContent;
-        return output;
+        // console.log(output)
         div = null;
+        return output;
+      } else {
+        return "暂无活动详情";
       }
       return "";
     },
     async toggle(item, event) {
+      const el =
+        event.srcElement.tagName === "SPAN"
+          ? event.srcElement.parentElement.parentElement.parentElement
+              .nextElementSibling
+          : event.srcElement.parentElement.parentElement.nextElementSibling;
+      if (item.loading) return false;
       if (!item.event_detail) {
+        item.loading = true;
         item.event_detail = await this.getContent(item.event_id);
       }
 
       this.$nextTick(() => {
         if (item.event_detail.length) {
           item.show = !item.show;
-          const el = event.target;
-          if (!el.classList.contains("open")) {
-            el.classList.add("open");
-          } else {
-            el.classList.remove("open");
-          }
+          if (!el) return;
+          setTimeout(() => {
+            item.show && expend(el);
+            setTimeout(() => {
+              item.show && expend(el);
+            }, 1000);
+          }, 500);
+          var itemInterval = setInterval(() => {
+            if (!el) return;
+            if (
+              item.show &&
+              el.scrollHeight === (el.style.height + "").replace("px", "") * 1
+            ) {
+              item.loading = false;
+              clearInterval(itemInterval);
+            } else if (!item.show) {
+              item.loading = false;
+              clearInterval(itemInterval);
+            }
+          }, 300);
+        } else {
+          item.loading = false;
         }
       });
     }
@@ -204,6 +264,9 @@ export default {
       border-radius: 3px;
       position: relative;
       transition: transform 0.3 ease;
+      &.loading {
+        background: #ccc;
+      }
       .xuanzhuan {
         background: #00a0e9;
         height: 6px;
@@ -221,28 +284,11 @@ export default {
     }
   }
   .wz {
-    // display: none;
     padding: 0;
-    // transition: all 0.5s linear;
-    // height: 0;
     overflow: hidden;
     padding: 0 0 0 27px;
     padding: 0px 27px 20px 27px;
     height: auto;
-    // &.show {
-    //   padding: 0px 27px 20px 27px;
-    //   height: auto;
-    // }
   }
 }
-
-// .slide-enter-active,
-// .slide-leave-active {
-//   transition: transform 0.4s;
-// }
-// .slide-enter,
-// .slide-leave-active {
-//   transform: translate3d(0, 1rem, 0);
-//   // opacity: 0;
-// }
 </style>

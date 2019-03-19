@@ -4,7 +4,7 @@ class Calc_Zhushu_Obj {
     this.tag_js = 'f3d'
   }
   calcBetNum(playid, arr) {
-    console.log(playid, arr)
+    // console.log(playid, arr)
     switch (playid) {
       case 1:
         return this.calc_3x_zhxfs(arr)
@@ -63,7 +63,7 @@ class Calc_Zhushu_Obj {
 
   // 三星 直选单式
   calc_3x_zhxds(ba) {
-    console.log(ba)
+    // console.log(ba)
     if (ba.length < 1 || ba[0] === '') {
       return 0
     }

@@ -26,7 +26,7 @@
 
 <script>
 export default {
-  name: "tmsb",
+  name: 'tmsb',
   props: {
     dataSource: {
       type: Array,
@@ -37,7 +37,7 @@ export default {
   },
   methods: {
     selectItem(item) {
-      this.$emit("selectItem", item);
+      this.$emit('selectItem', item);
     }
   }
 };

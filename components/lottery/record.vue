@@ -14,21 +14,21 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
-import k3 from "./k3";
-import lhc from "./lhc";
-import ssc from "./ssc";
-import pk10 from "./pk10";
-import elevenx5 from "./elevenx5";
-import threed from "./threed";
-import pcdd from "./pcdd";
-import tab from "./tab";
-import detail from "./table";
-import LotHead from "./LotHead";
-import dayjs from "dayjs";
+import { mapState, mapActions } from 'vuex';
+import k3 from './k3';
+import lhc from './lhc';
+import ssc from './ssc';
+import pk10 from './pk10';
+import elevenx5 from './elevenx5';
+import threed from './threed';
+import pcdd from './pcdd';
+import tab from './tab';
+import detail from './table';
+import LotHead from './LotHead';
+import dayjs from 'dayjs';
 export default {
-  name: "notice-record",
-  props: ["game"],
+  name: 'notice-record',
+  props: ['game'],
   components: {
     k3,
     lhc,
@@ -50,13 +50,13 @@ export default {
   data() {
     return {
       info: {},
-      day: "",
+      day: '',
       data: [],
       kjList: []
     };
   },
   computed: {
-    ...mapState("game", ["gameList"])
+    ...mapState('game', ['gameList'])
   },
 
   methods: {

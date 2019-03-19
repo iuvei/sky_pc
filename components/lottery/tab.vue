@@ -3,7 +3,6 @@
     <div class="cur-day">{{curDay}} 开奖号码</div>
     <div class="ivu-tabs-nav-scroll">
       <div class="nav-text ivu-tabs-nav">
-        <!-- <div class="ivu-tabs-ink-bar ivu-tabs-ink-bar-animated" style="display: none; width: 62px; transform: translate3d(0px, 0px, 0px);"></div> -->
         <div class="ivu-tabs-tab" :class="{'ivu-tabs-tab-active': curIndex===0}" @click="tabClick(0)">
           今日
         </div>
@@ -19,38 +18,39 @@
 </template>
 
 <script>
-import dayjs from "dayjs";
-import { mapState, mapActions } from "vuex";
+import dayjs from 'dayjs';
+import { mapState, mapActions } from 'vuex';
 export default {
-  name: "lottery-tab",
-  props: ["game"],
+  name: 'lottery-tab',
+  props: ['game'],
   data() {
     return {
-      curDay: dayjs(new Date().getTime()).format("YYYY-MM-DD"),
+      curDay: dayjs(new Date().getTime()).format('YYYY-MM-DD'),
       curIndex: 0
     };
   },
   created() {
-    this.$bus.$on("reload", () => {
+    if(!process.browser) return
+    this.$bus.$on('reload', () => {
       this.tabClick(this.curIndex);
     });
   },
   methods: {
-    ...mapActions("game", ["getCplogList", "getKjCpLog", "setCurIndex"]),
+    ...mapActions('game', ['getCplogList', 'getKjCpLog', 'setCurIndex']),
     async tabClick(tabIndex) {
       this.curIndex = tabIndex;
       this.setCurIndex(tabIndex);
       this.curDay = this.getCurDay(tabIndex);
-      this.$emit("setDay", this.curDay.replace(/-/g, ""));
+      this.$emit('setDay', this.curDay.replace(/-/g, ''));
       await this.togetKjCpLogOne(this.game.tag, -tabIndex);
     },
     async togetKjCpLogOne(tag, date, pcount = 0) {
       let ret = await this.getKjCpLog({ tag, date, pcount});
-      this.$emit("getDetail", ret);
+      this.$emit('getDetail', ret);
     },
     getCurDay(index) {
       return dayjs(new Date().getTime() - 86400 * 1000 * index).format(
-        "YYYY-MM-DD"
+        'YYYY-MM-DD'
       );
     }
   }
@@ -120,7 +120,7 @@ export default {
   border-top-right-radius: 2px;
 }
 .lottery-tab-container .ivu-tabs-tab-active:before {
-  content: "";
+  content: '';
   display: block;
   width: 100%;
   height: 1px;
@@ -130,7 +130,7 @@ export default {
   left: 0;
 }
 .lottery-tab-container .ivu-tabs-tab-active:after {
-  content: "";
+  content: '';
   display: block;
   position: absolute;
   width: 100%;

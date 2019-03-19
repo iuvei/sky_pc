@@ -30,8 +30,9 @@ if (process.browser) {
 }
 
 export default class {
-  constructor(el) {
-    this.canvas = document.getElementById(el)
+  constructor(canvas) {
+    if(!canvas) return console.log('canvas = null')
+    this.canvas = canvas
     this.ctx = this.canvas.getContext('2d')
     this.routes_default = [
       [20, 30],
@@ -47,7 +48,7 @@ export default class {
     ]
   }
 
-  drawBg(fourRoot = true, reverse = false) {
+  drawBg(right = false, fourRoot = true) {
     this.clear()
     this.start = 1
     this.timer = ''
@@ -65,7 +66,7 @@ export default class {
     this.txt_color_default = '#ffffff'
     this.txt_gap = 6
     this.font = '18px Microsoft Yahei'
-    this.reverse = reverse
+    this.reverse = right
     this.fourRoot = fourRoot
     const ctx = this.ctx
 

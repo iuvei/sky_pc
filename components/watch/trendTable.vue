@@ -12,15 +12,15 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import { getTrendBallArr, getTrendHeads } from "./tableHeader";
-import trendTableHeader from "./trendTableHeader";
-import trendTableBody from "./trendTableBody";
-import trendTableView from "./trendTableView";
+import { mapActions } from 'vuex';
+import { getTrendBallArr, getTrendHeads } from './tableHeader';
+import trendTableHeader from './trendTableHeader';
+import trendTableBody from './trendTableBody';
+import trendTableView from './trendTableView';
 export default {
-  name: "trendTable",
+  name: 'trendTable',
   components: { trendTableHeader, trendTableBody, trendTableView },
-  props: ["gameId", "gameJsTag", "option"],
+  props: ['gameId', 'gameJsTag', 'option'],
   data() {
     return {
       periodsWidth: 160,
@@ -28,7 +28,7 @@ export default {
       //开奖下标
       keys: [],
       change: 1,
-      headerData: "",
+      headerData: '',
       bodyLeftData: [],
       bodyRightData: [],
       bodyOption: {},
@@ -36,14 +36,14 @@ export default {
     };
   },
   methods: {
-    ...mapActions("game", ["getTrenlistData"]),
+    ...mapActions('game', ['getTrenlistData']),
     // 组装头部数据
     getHeaderData() {
       let head = getTrendHeads[this.gameJsTag];
       let ballArr = getTrendBallArr[this.gameJsTag];
       this.headerData = {
-        periods: { label: "期号", width: this.periodsWidth },
-        numbers: { label: "开奖号码", width: this.cellWidth * head.length },
+        periods: { label: '期号', width: this.periodsWidth },
+        numbers: { label: '开奖号码', width: this.cellWidth * head.length },
         data: head.map(v => ({
           label: v,
           sub: ballArr,
@@ -98,7 +98,7 @@ export default {
   },
   mounted() {
     this.togetTrenlistData();
-    this.$bus.$on("getTrenlistData", this.togetTrenlistData);
+    this.$bus.$on('getTrenlistData', this.togetTrenlistData);
   },
   watch: {
     gameId() {

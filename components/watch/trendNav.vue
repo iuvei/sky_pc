@@ -10,65 +10,71 @@
 </template>
 
 <script>
-import trendNavMenu from "./trendNavMenu";
-import { mapState, mapActions } from "vuex";
+import trendNavMenu from './trendNavMenu'
+import { mapState, mapActions } from 'vuex'
 export default {
-  name: "trendNav",
+  name: 'trendNav',
   components: { trendNavMenu },
-  props: ["gameJsTag"],
+  props: ['gameJsTag'],
   data() {
     return {
-      menuActive: "total",
-      subActive: "",
+      menuActive: 'total',
+      subActive: '',
       menu: {
-        total: "全部",
-        ssc: "时时彩",
-        pk10: "PK拾",
-        k3: "快三",
-        "11x5": "11选5",
-        lows: "低频彩",
-        pcdd: "PC蛋蛋",
-      },
-    };
+        total: '全部',
+        ssc: '时时彩',
+        pk10: 'PK拾',
+        k3: '快三',
+        '11x5': '11选5',
+        lows: '低频彩',
+        pcdd: 'PC蛋蛋'
+      }
+    }
   },
   computed: {
     ...mapState({
       game2txt: state => state.game.game2txt,
       gameList: state =>
         state.game.gameList
-          ? state.game.gameList.filter(x => x.js_tag != "sport_key")
-          : [],
+          ? state.game.gameList.filter(item => {
+              return item.js_tag != 'sport_key' && item.js_tag
+            })
+          : []
     }),
     subData() {
-      // return
-      switch (this.menuActive) {
-        case "total":
-          return this.gameList;
-          break;
-        case "lows":
-          return this.gameList.filter(v => v.speed == 0);
-          break;
-        default:
-          return this.gameList.filter(v => v.js_tag == this.menuActive);
-          break;
+      let gameList = this.gameList
+      if (this.$route.name === 'trend') {
+        let excludeArr = ['xypk', 'tzyx']
+        gameList = gameList.filter(item => !excludeArr.includes(item.js_tag))
       }
-    },
+      switch (this.menuActive) {
+        case 'total':
+          return gameList
+          break
+        case 'lows':
+          return gameList.filter(v => v.speed == 0)
+          break
+        default:
+          return gameList.filter(v => v.js_tag == this.menuActive)
+          break
+      }
+    }
   },
   methods: {
     clickItem(key) {
-      this.menuActive = key;
-      this.$emit("afterClickNav", key);
+      this.menuActive = key
+      this.$emit('afterClickNav', key)
     },
     subMenu(item, k) {
-      this.subActive = item.tag;
-      this.$emit("callback", item);
-    },
+      this.subActive = item.tag
+      this.$emit('callback', item)
+    }
   },
   mounted() {
     // console.log(this.gameJsTag, this.$route.params);
-    this.subActive = this.$route.params.tag;
-  },
-};
+    this.subActive = this.$route.params.tag
+  }
+}
 </script>
 
 <style lang="scss" scoped>

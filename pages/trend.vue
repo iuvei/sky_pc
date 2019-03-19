@@ -9,18 +9,20 @@
   </div>
 </template>
 <script>
-import trendNav from "~/components/watch/trendNav";
-import trendTool from "~/components/watch/trendTool";
-import trendTable from "~/components/watch/trendTable";
-import trendHot from "~/components/watch/trendHot";
+import trendNav from '~/components/watch/trendNav';
+import trendTool from '~/components/watch/trendTool';
+import trendTable from '~/components/watch/trendTable';
+import trendHot from '~/components/watch/trendHot';
+;
 export default {
-  name: "trend",
+  name: 'trend',
+   
   components: { trendNav, trendTable, trendHot, trendTool },
   data() {
     return {
-      gameId: "",
-      gameJsTag: "",
-      gameName: "",
+      gameId: '',
+      gameJsTag: '',
+      gameName: '',
       // 是否显示线 是否显示遗漏数字
       option: {
         lineKey: true,
@@ -43,18 +45,23 @@ export default {
     let query = this.$route.params;
     if (sessionStorage.query) {
       query = JSON.parse(sessionStorage.query);
-      sessionStorage.query = "";
+      sessionStorage.query = '';
     }
     this.gameId = query.game_id;
     this.gameJsTag = query.js_tag;
     this.gameName = query.game_name;
   },
   async asyncData({ store }) {
-    await store.dispatch("game/getGameListAtin");
+    if(process.env.static) return
+    await store.dispatch('game/getGameListAtin');
   },
-  // async created() {
-  //   await this.$store.dispatch("game/getGameListAtin");
-  // }
+  async created() {
+    if(!process.browser) return
+    if(process.env.static){
+      await this.$store.dispatch("game/getGameListAtin");
+    }
+   
+  }
 };
 </script>
 

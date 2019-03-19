@@ -1,8 +1,6 @@
 <template>
   <div>
     {{str}}
-    <!-- <slot v-if="$scopedSlots.default" v-bind:todo="str"> </slot> -->
-    <!-- <div v-else>{{str}}</div> -->
   </div>
 </template>
 
@@ -43,7 +41,6 @@ export default {
     },
     offsetSize() {
       return 4
-      // return this.openTime[0].openless - this.openTime[0].stopless
     }
   },
   methods: {
@@ -52,10 +49,8 @@ export default {
       this.doRun()
       clearInterval(this.timer)
       this.timer = setInterval(this.doRun, 1000)
-      // this.oldOpen = this.time
     },
     doRun() {
-      // console.log(this.timer);
       let leftTime = this.lastTime - Math.floor(new Date().getTime() / 1000)
       if (leftTime > 0) {
         this.str = this.timestampTotime(leftTime)
@@ -72,7 +67,7 @@ export default {
       time = Math.floor(time / 60)
       t.m = time % 60
       time = Math.floor(time / 60)
-      t.h = time
+      t.h = time >= 10 ? time : ('0' + time)
       // t.d = Math.floor(time / 24);
       const ment = function(a) {
         if (a <= 0) return '00'
@@ -87,10 +82,10 @@ export default {
   },
   watch: {
     openTime(val) {
-      if (val.length == this.repeat) {
+      if (val.length === this.repeat) {
         this.oldOpen = 0
       }
-      console.log('header watch run~~~~~~~~~~~~~', val.length, this.repeat)
+      // console.log('header watch run~~~~~~~~~~~~~', val.length, this.repeat)
       val.length && this.run()
     }
   },

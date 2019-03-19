@@ -27,21 +27,15 @@
         元
       </div>
       <div class="number ">
-        <!-- <AppInputNumber class="money " v-model="money "></AppInputNumber> -->
         <div class="unit ">
           <span :class="{active:unit==0} " @click="unit=0 ">元</span>
           <span :class="{active:unit==1} " @click="unit=1 ">角</span>
-          <!-- <span :class="{active:unit==2} " @click="unit=2 ">分</span> -->
         </div>
       </div>
       <div class="multiple-group ">
         <div>倍数: </div>
         <AppNumberSide v-model="multiple "></AppNumberSide>
         <div class="odds ">
-          <!-- <div v-show="stateOdds ">
-            <span>赔率：</span>
-            <span>{{stateOdds}}</span>
-          </div> -->
         </div>
       </div>
       <div class="btn-group ">
@@ -52,13 +46,12 @@
   </div>
 </template>
 <script>
-import { mapState, mapActions, mapMutations } from "vuex";
-// import getField from "./field.js";
-import switchClass from "../utils/directiveClass.js";
-import betArea from "./betArea";
+import { mapState, mapActions, mapMutations } from 'vuex'
+import switchClass from '../utils/directiveClass.js'
+import betArea from './betArea'
 export default {
-  name: "pcddBet",
-  props: ["playConfig", "animateKey"],
+  name: 'pcddBet',
+  props: ['playConfig', 'animateKey'],
   directives: { switchClass },
   components: { betArea },
   data() {
@@ -67,88 +60,87 @@ export default {
       unitArr: [1, 0.1],
       unit: 0,
       multiple: 1,
-      selectedArr: [],
-    };
+      selectedArr: []
+    }
   },
   computed: {
-    ...mapState("userinfo", ["isLogin"]),
-    ...mapState("gameBet", ["playObj", "betting"]),
+    ...mapState('userinfo', ['isLogin']),
+    ...mapState('gameBet', ['playObj', 'betting']),
     total() {
-      let number = this.money * this.multiple;
-      return number.float("multiply", this.unitArr[this.unit]);
-    },
+      let number = this.money * this.multiple
+      return number.float('multiply', this.unitArr[this.unit])
+    }
   },
   methods: {
-    ...mapMutations("gameBet", ["setBetting", "changeField", "setShopCart"]),
-    ...mapActions("gameBet", ["quickUserSubmitTouzhu"]),
+    ...mapMutations('gameBet', ['setBetting', 'changeField', 'setShopCart']),
+    ...mapActions('gameBet', ['quickUserSubmitTouzhu']),
     selectedItem(arr) {
       this.money = arr.reduce((sum, item) => {
-        return item.money + sum;
-      }, 0);
+        return item.money + sum
+      }, 0)
       // console.log(money);
-      this.selectedArr = arr;
-      // this.setBetting({ betNum: arr.length });
+      this.selectedArr = arr
     },
     goAdd() {
-      let betted = this.addLine();
-      if (!betted) return;
-      this.setShopCart(betted);
-      this.$bus.$emit("resetBetArea");
-      this.$Message.success("成功添加至购物车");
+      let betted = this.addLine()
+      if (!betted) return
+      this.setShopCart(betted)
+      this.$bus.$emit('resetBetArea')
+      this.$Message.success('成功添加至购物车')
       // reset
-      this.selectedArr = [];
-      this.money = 0;
+      this.selectedArr = []
+      this.money = 0
     },
     async goSubmit() {
-      let betted = this.addLine(1);
-      if (!betted) return;
-      this.setShopCart();
+      let betted = this.addLine(1)
+      if (!betted) return
+      this.setShopCart()
       let [err, ret] = await this.quickUserSubmitTouzhu({
         request: betted,
-        multiple: this.multiple,
-      });
+        multiple: this.multiple
+      })
       if (ret) {
-        this.selectedArr = [];
-        this.money = 0;
-        this.$bus.$emit("resetBetArea");
-        this.$Message.success("投注成功，祝您好运！");
-        await this.$store.dispatch("userinfo/flushPrice");
+        this.selectedArr = []
+        this.money = 0
+        this.$bus.$emit('resetBetArea')
+        this.$Message.success('投注成功，祝您好运！')
+        await this.$store.dispatch('userinfo/flushPrice')
       }
     },
     addLine(type = 0) {
       if (!this.isLogin) {
-        this.$Message.warning("请先登录");
-        return;
+        this.$Message.warning('请先登录')
+        return
       }
       if (this.selectedArr.length === 0) {
-        this.$Message.warning("请选择号码球");
-        return;
+        this.$Message.warning('请选择号码球')
+        return
       }
-      return this.selectedArr.map(item =>
-        Object.assign(item, {
+      return this.selectedArr.map(item => {
+        return Object.assign(item, {
           multiple: this.multiple,
           money: type
-            ? item.money.float("multiply", this.unitArr[this.unit])
-            : item.money *
-              this.multiple.float("multiply", this.unitArr[this.unit]),
+            ? item.money.float('multiply', this.unitArr[this.unit])
+            : item.money
+                .float('multiply', this.unitArr[this.unit])
+                .float('multiply', this.multiple)
         })
-      );
-    },
+      })
+    }
   },
   mounted() {
-    this.$bus.$on("pcddReset", () => {
-      this.selectedArr = [];
-      this.money = 0;
-    });
+    this.$bus.$on('pcddReset', () => {
+      this.selectedArr = []
+      this.money = 0
+    })
   },
   destroyed() {
-    this.$bus.$off("pcddReset");
-  },
-};
+    this.$bus.$off('pcddReset')
+  }
+}
 </script>
 <style lang='scss' scoped>
 .pcdd-bet {
-  // padding-top: 8px;
   padding: 10px 20px;
   background-color: #fff;
   border-top: 1px solid #ededed;
@@ -162,18 +154,18 @@ export default {
     font-size: 14px;
     .title {
       padding: 0 20px;
-      background: url("~assets/img/game/bet-note-title.png") no-repeat left
+      background: url('~assets/img/game/bet-note-title.png') no-repeat left
         center;
     }
     .case {
       padding: 0 20px;
-      background: url("~assets/img/game/bet-note-case.png") no-repeat left
+      background: url('~assets/img/game/bet-note-case.png') no-repeat left
         center;
       cursor: pointer;
     }
     .describe {
       padding: 0 20px;
-      background: url("~assets/img/game/bet-note-describe.png") no-repeat left
+      background: url('~assets/img/game/bet-note-describe.png') no-repeat left
         center;
       cursor: pointer;
     }
@@ -181,7 +173,6 @@ export default {
   .bet-area {
     margin-top: 37px;
     margin-bottom: 37px;
-    // padding-right: 20px;
   }
   .bet-tool {
     height: 72px;
@@ -214,7 +205,6 @@ export default {
       }
       .unit {
         height: 37px;
-        // width: 110px;
         line-height: 25px;
         display: flex;
         flex: 1;

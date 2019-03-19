@@ -4,12 +4,11 @@
 
 <script>
 export default {
-  name: "userInfo",
+  name: 'userInfo',
 };
 </script>
 
 <style scoped>
-  
 </style>
 
 

@@ -2,31 +2,41 @@
   <component :is="currentView"></component>
 </template>
 <script>
-import { mapState, mapGetters, mapActions } from "vuex";
-import addBank from "~/components/user/agent/cashTransaction/addBank";
-import getcash from "~/components/user/property/getcash";
+import { mapState, mapGetters, mapActions } from 'vuex';
+import addBank from '~/components/user/agent/cashTransaction/addBank';
+import getcash from '~/components/user/property/getcash';
 export default {
-  name: "property-cash",
+  name: 'property-cash',
   data() {
-    return {};
+    return {
+      currentView: ''
+    };
   },
   components: {
     addBank,
     getcash
   },
   computed: {
-    ...mapState("userinfo", ["accountInfo"]),
-    currentView() {
-      let accountInfo = this.accountInfo;
-      let bank_typename = accountInfo && accountInfo.bank_typename;
-      let view = "getcash";
-      if (!bank_typename) view = "addBank";
-      return view;
-    }
+    ...mapState('userinfo', ['accountInfo']),
+    // currentView() {
+      // let accountInfo = this.accountInfo;
+      // let bank_typename = accountInfo && accountInfo.bank_typename;
+      // let view = 'getcash';
+      // if (!bank_typename) view = 'addBank';
+      // return view;
+    // }
   },
-  mounted() {},
+  async mounted() {
+      let isHasCard = await this.getCashState()
+      if (isHasCard){
+        this.currentView = 'getcash'
+      } else {
+        this.currentView = 'addBank'
+      }
+  },
   methods: {
     // ...mapActions("agent", ["modifyField"])
+    ...mapActions('property', ['getCashState']),
   }
 };
 </script>

@@ -17,11 +17,9 @@
       </Poptip>
     </div>
     <!-- 下注选择区域 -->
-    <!-- <transition :duration="{ enter: 500, leave: 800 }"> -->
     <div class="bet-area" v-switchClass="{key:animateKey,class:'fadeInRight',duration:0.5}">
       <slot name='area'></slot>
     </div>
-    <!-- </transition> -->
 
     <!-- 下注详情&下注 -->
     <div class="bet-tool">
@@ -38,7 +36,6 @@
         <div class="unit">
           <span :class="{active:unit==0}" @click="unit = 0">元</span>
           <span :class="{active:unit==1}" @click="unit = 1">角</span>
-          <!-- <span :class="{active:unit==2}" @click="unit = 2">分</span> -->
         </div>
       </div>
       <div class="multiple-group">
@@ -60,34 +57,34 @@
   </div>
 </template>
 <script>
-import { mapState, mapActions, mapMutations } from "vuex";
-import switchClass from "../utils/directiveClass.js";
+import { mapState, mapActions, mapMutations } from 'vuex';
+import switchClass from '../utils/directiveClass.js';
 export default {
-  name: "commonBetArea",
-  props: ["playObj", "animateKey"],
+  name: 'commonBetArea',
+  props: ['playObj', 'animateKey'],
   directives: { switchClass },
   computed: {
-    ...mapState("userinfo", ["isLogin"]),
-    ...mapState("gameBet", ["betting", "stateOdds", "lhc"]),
+    ...mapState('userinfo', ['isLogin']),
+    ...mapState('gameBet', ['betting', 'stateOdds', 'lhc']),
     isLhc() {
-      return this.$store.state.game.gameItem.js_tag === "lhc";
+      return this.$store.state.game.gameItem.js_tag === 'lhc';
     },
     total() {
       if (this.isLhc && this.betting.selected.length) {
         if (this.lhc.isBall) {
           // 如果是选球
           let number = this.money * this.betting.betNum * this.multiple;
-          return number.float("multiply", this.unitArr[this.unit]);
+          return number.float('multiply', this.unitArr[this.unit]);
         } else {
           // 如果是填数字
           let moneys = this.betting.selected.map(x => x.money);
           let total = 0;
           total = moneys.map(x => x * this.multiple).reduce((a, b) => a + b);
-          return total.float("multiply", this.unitArr[this.unit]);
+          return total.float('multiply', this.unitArr[this.unit]);
         }
       } else {
         let number = this.money * this.betting.betNum * this.multiple;
-        return number.float("multiply", this.unitArr[this.unit]);
+        return number.float('multiply', this.unitArr[this.unit]);
       }
     }
   },
@@ -97,24 +94,24 @@ export default {
       unitArr: [1, 0.1],
       unit: 0,
       multiple: 1,
-      ccc: "wrap-pop"
+      ccc: 'wrap-pop'
     };
   },
   methods: {
-    ...mapActions("gameBet", [
-      "submitBet",
-      "userSubmitTouzhu",
-      "quickUserSubmitTouzhu"
+    ...mapActions('gameBet', [
+      'submitBet',
+      'userSubmitTouzhu',
+      'quickUserSubmitTouzhu'
     ]),
-    ...mapMutations("gameBet", ["changeField", "setShopCart"]),
+    ...mapMutations('gameBet', ['changeField', 'setShopCart']),
     // 一键投注
     async goSubmit() {
       if (!this.isLogin) {
-        this.$Message.warning("请先登录");
+        this.$Message.warning('请先登录');
         return;
       }
       if (this.betting.betNum === 0) {
-        this.$Message.warning("请选择号码球");
+        this.$Message.warning('请选择号码球');
         return;
       }
       let betted = null;
@@ -130,35 +127,35 @@ export default {
         multiple: this.multiple
       });
       if (ret) {
-        this.$bus.$emit("resetBetArea");
-        this.$Message.success("投注成功，祝您好运！");
-        await this.$store.dispatch("userinfo/flushPrice");
+        this.$bus.$emit('resetBetArea');
+        this.$Message.success('投注成功，祝您好运！');
+        await this.$store.dispatch('userinfo/flushPrice');
       }
     },
     // 添加购物车
     goAdd() {
       if (!this.isLogin) {
-        this.$Message.warning("请先登录");
+        this.$Message.warning('请先登录');
         return;
       }
       if (this.betting.betNum === 0) {
-        this.$Message.warning("请选择号码球");
+        this.$Message.warning('请选择号码球');
         return;
       }
       let betted = this.addLhc();
       if (Array.isArray(betted) && betted.length) {
         this.setShopCart(betted);
-        this.$bus.$emit("resetBetArea");
-        this.$Message.success("成功添加至购物车");
+        this.$bus.$emit('resetBetArea');
+        this.$Message.success('成功添加至购物车');
       }
     },
     // 购物车详情数据拼接
     getOneInfo() {
-      let str = "",
+      let str = '',
         data = this.betting.oneBetDate;
       return data.name
-        .map((name, key) => `${name}(${data.label[key]})`.replace(/\s/g, ""))
-        .join(" ");
+        .map((name, key) => `${name}(${data.label[key]})`.replace(/\s/g, ''))
+        .join(' ');
     },
 
     addLhc(type = 0) {
@@ -177,11 +174,11 @@ export default {
             odds: this.stateOdds,
             // 一键投注 区分
             money: type
-              ? (this.money * 1).float("multiply", this.unitArr[this.unit])
+              ? (this.money * 1).float('multiply', this.unitArr[this.unit])
               : (this.multiple * this.money).float(
-                  "multiply",
-                  this.unitArr[this.unit]
-                ),
+                'multiply',
+                this.unitArr[this.unit]
+              ),
             value: this.betting.oneBetDate.value[k]
           }));
         } else {
@@ -195,10 +192,10 @@ export default {
               odds: this.stateOdds,
               // 一键投注 区分
               money: type
-                ? this.total.float("divide", this.multiple)
+                ? this.total.float('divide', this.multiple)
                 : this.total,
 
-              value: this.betting.oneBetDate.value.join("+")
+              value: this.betting.oneBetDate.value.join('+')
             }
           ];
         }
@@ -218,26 +215,26 @@ export default {
             odds: minPeilv,//this.stateOdds,
             // 一键投注 区分
             money: type
-              ? (this.money * 1).float("multiply", this.unitArr[this.unit])
+              ? (this.money * 1).float('multiply', this.unitArr[this.unit])
               : (this.multiple * this.money).float(
-                  "multiply",
-                  this.unitArr[this.unit]
-                ),
+                'multiply',
+                this.unitArr[this.unit]
+              ),
             value: this.betting.oneBetDate.value[k]
           }));
         }else{
          
-        betted = this.betting.selected.map((v, k) => ({
-          xiangqing: `${v.name}(${v.label})`,
-          playId: this.playObj.playid,
-          wanfa: this.playObj.wanfa,
-          multiple: this.multiple,
-          betNum: 1,
-          odds: v.odds,
-          // 一键投注 区分
-          money: this.processMoney(type, v),
-          value: v.value
-        }));
+          betted = this.betting.selected.map((v, k) => ({
+            xiangqing: `${v.name}(${v.label})`,
+            playId: this.playObj.playid,
+            wanfa: this.playObj.wanfa,
+            multiple: this.multiple,
+            betNum: 1,
+            odds: v.odds,
+            // 一键投注 区分
+            money: this.processMoney(type, v),
+            value: v.value
+          }));
         }
         
       }
@@ -246,33 +243,32 @@ export default {
     processMoney(type, v) {
       if ([3].includes(this.playObj.playid)) {
         return type
-          ? (this.money * 1).float("multiply", this.unitArr[this.unit])
+          ? (this.money * 1).float('multiply', this.unitArr[this.unit])
           : (this.multiple * this.money).float(
-              "multiply",
-              this.unitArr[this.unit]
-            );
+            'multiply',
+            this.unitArr[this.unit]
+          );
       } else {
         // type 0 为正常添加，1为将一键投注
         return type
-          ? (v.money * 1).float("multiply", this.unitArr[this.unit])
+          ? (v.money * 1).float('multiply', this.unitArr[this.unit])
           : (this.multiple * v.money).float(
-              "multiply",
-              this.unitArr[this.unit]
-            );
+            'multiply',
+            this.unitArr[this.unit]
+          );
       }
     }
   },
   watch: {
-    "playObj.playid"(val) {
-      // this.money = 2;
-      this.money = this.$store.state.gameBet.lhc.curPrice;
+    'playObj'(val) {
+      this.money = 2;
+      this.$store.commit('gameBet/setCurPrice',2)
       this.unit = 0;
       this.multiple = 1;
     },
-
     money(val) {
       if (val) {
-        this.$store.commit("gameBet/setCurPrice", val);
+        this.$store.commit('gameBet/setCurPrice', val);
       }
     }
   }
@@ -295,18 +291,18 @@ export default {
     font-size: 14px;
     .title {
       padding: 0 20px;
-      background: url("~assets/img/game/bet-note-title.png") no-repeat left
+      background: url('~assets/img/game/bet-note-title.png') no-repeat left
         center;
     }
     .case {
       padding: 0 20px;
-      background: url("~assets/img/game/bet-note-case.png") no-repeat left
+      background: url('~assets/img/game/bet-note-case.png') no-repeat left
         center;
       cursor: pointer;
     }
     .describe {
       padding: 0 20px;
-      background: url("~assets/img/game/bet-note-describe.png") no-repeat left
+      background: url('~assets/img/game/bet-note-describe.png') no-repeat left
         center;
       cursor: pointer;
     }
@@ -341,7 +337,6 @@ export default {
       }
       .unit {
         height: 37px;
-        // width: 100px;
         line-height: 25px;
         display: flex;
         flex: 1;

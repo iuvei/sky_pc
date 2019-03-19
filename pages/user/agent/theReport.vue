@@ -4,7 +4,8 @@
     <div class="top_content">
       <!-- top 部分 -->
       <div class="top_top">
-        时间:<statusGroup v-model="lasttime" :data="lasttimes"></statusGroup>
+        时间:
+        <statusGroup v-model="lasttime" :data="lasttimes"></statusGroup>
         <Input v-model="userName" class="the_search_box" placeholder="请输入下级账户" clearable size="small"></Input>
         <Button size="small" class="the_query" @click="queryClick">
           <span>查询</span>
@@ -16,6 +17,18 @@
         <div class="grids_pieces">
           <p>{{baseData.tz_price}}</p>
           <p>投注金额</p>
+        </div>
+        <div class="grids_pieces">
+          <p>{{baseData.cp_tz_price}}</p>
+          <p>彩票投注金额</p>
+        </div>
+        <div class="grids_pieces">
+          <p>{{baseData.ty_tz_price}}</p>
+          <p>体育投注金额</p>
+        </div>
+        <div class="grids_pieces">
+          <p>{{baseData.dz_tz_price}}</p>
+          <p>电子投注金额</p>
         </div>
         <div class="grids_pieces">
           <p>{{baseData.win_price}}</p>
@@ -74,50 +87,50 @@
   </div>
 </template>
 <script>
-import { mapActions } from "vuex";
-import statusGroup from "~/components/user/statusGroup";
+import { mapActions } from 'vuex'
+import statusGroup from '~/components/user/statusGroup'
 export default {
-  name: "userTheReport",
+  name: 'userTheReport',
   components: { statusGroup },
   data() {
     return {
       baseData: {},
       lasttimes: [
-        { label: "今日", value: 0 },
-        { label: "昨天", value: 1 },
-        { label: "本周", value: 2 },
-        { label: "本月", value: 3 },
-        { label: "上月", value: 4 }
+        { label: '今日', value: 0 },
+        { label: '昨天', value: 1 },
+        { label: '本周', value: 2 },
+        { label: '本月', value: 3 },
+        { label: '上月', value: 4 }
       ],
       lasttime: 0,
-      userName: "",
+      userName: '',
       pageid: 0
-    };
+    }
   },
-  watch:{
+  watch: {
     lasttime: 'initData'
   },
   mounted() {
-    this.initData();
+    this.initData()
   },
   methods: {
-    ...mapActions("agent", ["getDailiStaticData"]),
-    queryClick(){
-      this.initData();
+    ...mapActions('agent', ['getDailiStaticData']),
+    queryClick() {
+      this.initData()
     },
     async initData() {
       let params = {
         search: this.userName,
         pageid: this.pageid,
-        user_id: "",
+        user_id: '',
         lasttime: this.lasttime,
         count: 20
-      };
-      let data = (await this.getDailiStaticData(params)) || {};
-      this.baseData = data;
+      }
+      let data = (await this.getDailiStaticData(params)) || {}
+      this.baseData = data
     }
   }
-};
+}
 </script>
 <style lang="scss" scoped>
 .agent_that {

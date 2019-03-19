@@ -74,11 +74,10 @@
 
 <script>
 export default {
-  name: "lottery-3d",
-  props: ["game"]
+  name: 'lottery-3d',
+  props: ['game']
 };
 </script>
 
 <style>
-
 </style>

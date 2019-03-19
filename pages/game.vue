@@ -14,27 +14,30 @@
   </div>
 </template>
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions } from 'vuex';
 
-import gameSidebar from "~/components/game/sidebar";
+import gameSidebar from '~/components/game/sidebar';
+;
 export default {
-  layout: "gameCenter",
-  name: "gameCenter",
+  layout: 'gameCenter',
+  name: 'gameCenter',
+   
   data() {
     return {};
   },
   components: { gameSidebar },
   computed: {
-    // ...mapState("game", ["list"]),
   },
   methods: {
-    ...mapActions("game", ["getGameListAtin"])
+    ...mapActions('game', ['getGameListAtin'])
   },
-  // async created() {
-  //   await this.$store.dispatch("game/getGameListAtin");
-  // }
+  async created() {
+    if(!process.browser) return
+    if(process.env.static) await this.$store.dispatch("game/getGameListAtin");
+  },
   async asyncData({ store }) {
-    return await store.dispatch("game/getGameListAtin");
+    if(process.env.static) return
+    return await store.dispatch('game/getGameListAtin');
   }
 };
 </script>
@@ -59,7 +62,7 @@ export default {
       padding-left: 40px;
       border: 1px solid #cacaca;
       border-left: none;
-      background: url("~assets/img/game/broadcast.png") no-repeat 20px center;
+      background: url('~assets/img/game/broadcast.png') no-repeat 20px center;
       background-color: #fff5f5;
       color: #3a3a3a;
       font-size: 12px;
@@ -69,7 +72,7 @@ export default {
 </style>
 
 <style lang="scss">
-@import "~/components/game/style/animate.scss";
+@import '~/components/game/style/animate.scss';
 .main {
   .fadeInLeftBig {
     animation: fadeInLeftBig 1s ease-out;

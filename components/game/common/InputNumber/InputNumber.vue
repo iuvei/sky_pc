@@ -5,10 +5,10 @@
 </template>
 <script>
 export default {
-  name: "GameInputNumber",
+  name: 'GameInputNumber',
   model: {
-    prop: "value",
-    event: "input",
+    prop: 'value',
+    event: 'input',
   },
   props: {
     value: [Number, String],
@@ -27,9 +27,9 @@ export default {
   },
   methods: {
     input(event) {
-      if (this.needNull && event.target.value === "") {
-        this.$el.querySelector("input").value = "";
-        this.$emit("input", "");
+      if (this.needNull && event.target.value === '') {
+        this.$el.querySelector('input').value = '';
+        this.$emit('input', '');
         return;
       }
       let _val = Math.floor(Number(event.target.value));
@@ -39,11 +39,11 @@ export default {
       if (_val > this.max) {
         _val = this.max;
       }
-      this.$el.querySelector("input").value = _val;
-      this.$emit("input", _val);
+      this.$el.querySelector('input').value = _val;
+      this.$emit('input', _val);
     },
     change(event) {
-      this.$emit("change", event.target.value);
+      this.$emit('change', event.target.value);
     },
   },
 };
@@ -81,7 +81,7 @@ export default {
   input::-webkit-inner-spin-button {
     -webkit-appearance: none;
   }
-  input[type="number"] {
+  input[type='number'] {
     -moz-appearance: textfield;
   }
 }

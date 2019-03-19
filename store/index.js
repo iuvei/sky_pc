@@ -1,8 +1,8 @@
-import http from "~/api/http";
-import to from "~/api/await-to";
-import mcache from "memory-cache";
-// var cookie = require('cookie');
-import cookie from "cookie";
+import http from '~/api/http';
+import to from '~/api/await-to';
+import mcache from 'memory-cache';
+
+import cookie from 'cookie';
 
 function getFromCache(
   { commit, dispatch },
@@ -11,9 +11,15 @@ function getFromCache(
   action,
   actionParam
 ) {
+  // console.log(key);
+  // console.time('getFromCache');
   let obj = mcache.get(key);
+  if (key.includes('getSysInfo')) {
+    const _key = mcache.keys().find(x => x.includes('getSysInfo'));
+    if (_key) obj = mcache.get(_key);
+  }
   if (obj) {
-    obj = typeof obj === "string" ? JSON.parse(obj) : obj;
+    obj = typeof obj === 'string' ? JSON.parse(obj) : obj;
     obj.data && commit(mutationType, obj.data);
     obj = null;
   } else {
@@ -23,31 +29,24 @@ function getFromCache(
 
 export const state = () => ({});
 
-export const mutations = {
-  // [types.SET_USER_FLAG](state, flag) {
-  //    // 红包
-  //    state.userFlag.redGift = 1 & flag ? 1 : 0
-  // }
-};
+export const mutations = {};
 
 export const actions = {
-  async nuxtServerInit({ commit, dispatch }, { req, res }) {
-    // if (req.session && req.session.authUser) {
-    //   commit("userinfo/setUserInfo", req.session.authUser);
-    // } else {
-    //   commit("userinfo/setLogout");
-    //   commit("userinfo/logout");
-    // }
-    // if (req.session.authUser) {
-    //   dispatch("userinfo/encodeLogin", req.session.authUser);
-    // }
-    // const cookies = req.cookies;
-
+  async nuxtServerInit({ commit, dispatch, state }, { req, res }) {
+    if (process.env.static) return;
+    const sys_error = mcache.get('system_error');
+    if (
+      state.sysinfo.error &&
+      Object.keys(state.sysinfo.error).length === 0 &&
+      sys_error
+    ) {
+      await dispatch('sysinfo/setSysError', sys_error);
+    }
     if (req.headers.cookie) {
       const _cookie = cookie.parse(req.headers.cookie);
       // console.log("_cookie", _cookie);
       if (_cookie.vuex) {
-        if (typeof _cookie.vuex === "string") {
+        if (typeof _cookie.vuex === 'string') {
           const vuex = JSON.parse(_cookie.vuex);
           // console.log("vuex", vuex);
           if (vuex) {
@@ -57,13 +56,13 @@ export const actions = {
               userEncode &&
               userEncode.session_key &&
               userEncode.token &&
-              req.session.authUser
+              req.session.hasOwnProperty('authUser')
             ) {
               // console.log("_cookie.userEncode1", userEncode);
               req.session.authUser.sessionKey = userEncode.session_key;
               req.session.authUser.session_key = userEncode.session_key;
               req.session.authUser.token = userEncode.token;
-              res.cookie("vuex", "");
+              res.cookie('vuex', '');
             } else if (
               userEncode &&
               userEncode.session_key &&
@@ -72,34 +71,18 @@ export const actions = {
             ) {
               // console.log("_cookie.userEncode2", userEncode);
               let [err, result] = await to(
-                dispatch("userinfo/encodeLogin", userEncode)
+                dispatch('userinfo/encodeLogin', userEncode)
               );
-              res.cookie("vuex", "");
+              res.cookie('vuex', '');
             }
           }
         }
       }
     }
-    commit("userinfo/setUserInfo", req.session.authUser);
-    getFromCache(
-      { commit, dispatch },
-      "__express__getSysInfo",
-      "sysinfo/setSysInfo",
-      "sysinfo/getSysinfo",
-      req.headers.host
-    );
-
-    getFromCache(
-      { commit, dispatch },
-      "__express__getGameListAtin",
-      "game/setGameList",
-      "game/getGameListAtin"
-    );
-
-    if (req.session && req.session.inviteCode) {
-      // console.log("session.inviteCode", req.session.inviteCode);
-      commit("sysinfo/autoFillCode", req.session.inviteCode);
-      delete req.session.inviteCode;
-    }
+    commit('userinfo/setUserInfo', req.session.authUser);
+    try {
+      await dispatch('sysinfo/getSysinfo', req.headers.host);
+      await dispatch('game/getGameListAtin');
+    } catch (err) {}
   }
 };

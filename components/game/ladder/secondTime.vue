@@ -18,13 +18,24 @@ export default {
       showTpl: true
     };
   },
+  model: {
+    prop: 'leftTime',
+    event: 'update'
+  },
   props: {
+    leftTime: {
+      type: [String, Number]
+    },
+    showNum: {
+      type: Boolean,
+      default: false
+    },
     time: {
       type: [String, Number, Date]
     },
     format: {
       type: String,
-      default: "{%s}"
+      default: "{%h}:{%m}:{%s}"
     },
     timetype: {
       validator(value) {
@@ -65,9 +76,10 @@ export default {
     },
     doRun() {
       let leftTime = this.lastTime - Math.floor(new Date().getTime() / 1000);
+      // 将剩余时间传递到父级
+      if(this.leftTime !== undefined)this.$emit('update', leftTime)
       if (leftTime > 0) {
-        // this.str = this.timestampTotime(leftTime);
-        this.str = leftTime;
+        this.str = this.showNum ? leftTime : this.timestampTotime(leftTime);
         this.timer = requestAnimationFrame(this.doRun)
       } else {
         this.str = this.doneText;

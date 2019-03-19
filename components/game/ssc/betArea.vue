@@ -7,25 +7,10 @@
       <div class="option" :class="{'niuniu': playObj.playid == 131, 'has_width': hasWidth.includes(playObj.playid)}">
         <div v-for="(item,key) in group.option" :key="key" class="item">
           <div class="item-value" :class="[group.class,{'active':item.selected}]" @click="selectItem(item,idx)">{{item.label}}</div>
-          <!-- :style="{visibility:item.odds?'visible':'hidden'}" -->
           <div class="item-odd" v-show="item.odds">{{item.odds}}</div>
         </div>
       </div>
       <!--双面盘-->
-      <!-- <div class="option smp">
-        <div>
-          <div v-for="(item,key) in group.option" :key="key" v-if="[0,1,2,3].includes(key)" class="item">
-            <div class="item-value" :class="[group.class,{'active':item.selected}]" @click="selectItem(item,idx)">{{item.label}}</div>
-            <div class="item-odd" :style="{visibility:item.odds?'visible':'hidden'}">{{item.odds}}</div>
-          </div>
-        </div>
-        <div>
-          <div v-for="(item,key) in group.option" :key="key" v-if="[4,5].includes(key)" class="item">
-            <div class="item-value" :class="[group.class,{'active':item.selected}]" @click="selectItem(item,idx)">{{item.label}}</div>
-            <div class="item-odd" :style="{visibility:item.odds?'visible':'hidden'}">{{item.odds}}</div>
-          </div>
-        </div>
-      </div> -->
 
       <div class="actions" v-if="!noAction.includes(playObj.playid)">
         <div class="ball" v-for="(txt, index) in actionsArr" :key="index" @click="changeGroup(group, index)">
@@ -35,6 +20,7 @@
     </div>
     <div v-if="isDanshi">
       <Input v-model.trim="textarea" type="textarea" :autosize="{minRows: 3,maxRows: 5}" :placeholder="'例如：' + myPlaceholder" @on-blur="filterData" />
+      <div class="tiper">每个号码之间请用空格隔开，每一注号码之间请用一个逗号[,]隔开</div>
     </div>
   </div>
 </template>
@@ -117,7 +103,7 @@ export default {
     ...mapMutations('gameBet', ['setBetting', 'changeField']),
     // 下注数据组装
     async togetPeilv() {
-      console.log('this.playObj.playid', this.playObj)
+      // console.log('this.playObj.playid', this.playObj)
       if (!this.playObj.playid || this.isDanshi) {
         this.betSelectSet = []
         return
@@ -353,16 +339,15 @@ export default {
       this.clearSelect()
     })
     this.$bus.$on('randomBet', this.addData)
-    // if (!this.playObj.palayid) return;
     this.setBetting()
-    await this.togetPeilv()
+    // todo 后期删除 开发热更新兼容 开发时开启 上线时关闭
+    // this.togetPeilv()
   },
   watch: {
     playObj(obj) {
       this.setBetting()
       this.togetPeilv()
       this.textarea = ''
-      // var val = this.playObj.playid
       const val = obj.playid
       switch (val) {
         case 2:

@@ -1,42 +1,64 @@
 <template>
 
-  <div class="col-row lhc" v-if="isLhc">
+  <div class="col-row lhc"
+       v-if="isLhc && balls.length">
     <div v-if="item && item.openless"></div>
     <div v-if="item && item.openless">{{qishu}}</div>
-    <div class="showTimes red" v-if="item && item.openless">
-      <span v-if="openless > 0" style="color:#000">距离开奖还剩：</span>
-      <span v-if="openless > 0" style="color:red">{{timestampTotime(openless)}}秒</span>
-      <a v-if="openless > 0" @click.stop.prevent="gotoBet" class="betting">投注</a>
+    <div class="showTimes red"
+         v-if="item && item.openless">
+      <span v-if="openless > 0"
+            style="color:#000">距离开奖还剩：</span>
+      <span v-if="openless > 0"
+            style="color:red">{{timestampTotime(openless)}}秒</span>
+      <a v-if="openless > 0"
+         @click.stop.prevent="gotoBet"
+         class="betting">投注</a>
       <span v-if="item.openless === 0">正在开奖...</span>
     </div>
 
-    <div v-if="!item.openless" class="rq">{{item.opentime | date}}</div>
-    <div v-if="!item.openless">{{qishu}}</div>
-    <div v-if="!item.openless" class="pm">{{zm}}</div>
-    <div v-if="!item.openless">{{tm}}</div>
-    <div v-if="!item.openless">{{sx}}</div>
-    <div v-if="!item.openless">{{tmds}}</div>
-    <div v-if="!item.openless">{{bs}}</div>
-    <div v-if="!item.openless">{{tmdx}}</div>
-    <div v-if="!item.openless">{{wx}}</div>
-    <div v-if="!item.openless">{{jy}}</div>
-    <div v-if="!item.openless">{{yy}}</div>
-    <div v-if="!item.openless">{{td}}</div>
-    <div v-if="!item.openless">{{jx}}</div>
-    <div v-if="!item.openless">{{hb}}</div>
-    <div v-if="!item.openless">{{nn}}</div>
-    <div v-if="!item.openless">{{zhds}}</div>
+    <div v-if="!item.openless"
+         class="rq">{{item.opentime | date}}</div>
+    <div v-if="!item.openless"
+         class="qs">{{qishu}}</div>
+    <div v-if="!item.openless"
+         class="pm">{{calc_lhc.zm(balls)}}</div>
+    <div v-if="!item.openless"
+         class="tm">{{calc_lhc.tm(balls)}}</div>
+    <div v-if="!item.openless">{{calc_lhc.sxFromBalls(balls)}}</div>
+    <div v-if="!item.openless">{{calc_lhc.tmds(balls)}}</div>
+    <div v-if="!item.openless">{{calc_lhc.bs(balls)}}</div>
+    <div v-if="!item.openless">{{calc_lhc.tmdx(balls)}}</div>
+    <div v-if="!item.openless">{{calc_lhc.wx(balls)}}</div>
+    <div v-if="!item.openless">{{calc_lhc.jy(balls)}}</div>
+    <div v-if="!item.openless">{{calc_lhc.yy(balls)}}</div>
+    <div v-if="!item.openless">{{calc_lhc.td(balls)}}</div>
+    <div v-if="!item.openless">{{calc_lhc.jx(balls)}}</div>
+    <div v-if="!item.openless">{{calc_lhc.hb(balls)}}</div>
+    <div v-if="!item.openless">{{calc_lhc.nn(balls)}}</div>
+    <div v-if="!item.openless">{{calc_lhc.bh(balls)}}</div>
+    <div v-if="!item.openless">{{calc_lhc.zhds(balls)}}</div>
   </div>
 
-  <div class="col-row" v-else>
-    <div>{{qishu}}</div>
-    <div class="showTimes red" v-if="item && item.openless">
-      <span v-if="openless > 0" style="color:#000">距离开奖还剩：</span>
-      <span v-if="openless > 0" style="color:red">{{timestampTotime(openless)}}秒</span>
-      <a v-if="openless > 0" @click.stop.prevent="gotoBet" class="betting">投注</a>
+  <div class="col-row"
+       :class="{'qxc':isQxc,'xync':isNC,'tzyx':isTZ}"
+       v-else>
+    <div :class="{'qxc-qishu':isQxc}">{{qishu}}</div>
+    <div class="showTimes red"
+         v-if="item && item.openless">
+      <span v-if="openless > 0"
+            style="color:#000">距离开奖还剩：</span>
+      <span v-if="openless > 0"
+            style="color:red">{{timestampTotime(openless)}}</span>
+      <a v-if="openless > 0"
+         @click.stop.prevent="gotoBet"
+         class="betting">投注</a>
       <span v-if="openless === 0">正在开奖...</span>
     </div>
-    <div v-if="item && !item.openless" class="red null" :class="{long:long}">{{this.balls.join(" ")}}</div>
+    <!--号码球-->
+    <div v-if="item && !item.openless && !['xypk','tzyx'].includes(game.js_tag)"
+         class="red null"
+         :class="{long:long,'qxc-nums':isQxc}">{{this.balls.join(" ")}}</div>
+
     <div v-if="game && game.js_tag==='k3' && !item.openless">{{hz()}}</div>
     <div v-if="game && game.js_tag==='k3' && !item.openless">{{xt()}}</div>
 
@@ -46,40 +68,70 @@
 
     <div v-if="game && game.js_tag==='11x5' && !item.openless">{{dx()}}</div>
     <div v-if="game && game.js_tag==='11x5' && !item.openless">{{jo()}}</div>
+
+    <div class="sm"
+         v-if="game && game.js_tag==='pkniuniu' && !item.openless">{{calc_niu.niuniu(balls, 0)}}</div>
+    <div class="sm"
+         v-if="game && game.js_tag==='pkniuniu' && !item.openless">{{calc_niu.niuniu(balls, 1)}}</div>
+    <div class="sm"
+         v-if="game && game.js_tag==='pkniuniu' && !item.openless">{{calc_niu.niuniu(balls, 2)}}</div>
+    <div class="sm"
+         v-if="game && game.js_tag==='pkniuniu' && !item.openless">{{calc_niu.niuniu(balls, 3)}}</div>
+    <div class="sm"
+         v-if="game && game.js_tag==='pkniuniu' && !item.openless">{{calc_niu.niuniu(balls, 4)}}</div>
+    <div class="sm"
+         v-if="game && game.js_tag==='pkniuniu' && !item.openless">{{calc_niu.niuniu(balls, 5)}}</div>
+
+    <xypkitem v-if="game && game.js_tag==='xypk' && !item.openless && item.balls"
+              :number="balls"></xypkitem>
+    <div class=""
+         v-if="game && game.js_tag==='xypk' && !item.openless">{{calc_xypk.state(balls)}}</div>
+
+    <div class="sm"
+         v-if="isQxc && !item.openless && item.balls">{{calc_qxc.state(balls[0])}}</div>
+    <div class="sm"
+         v-if="isQxc && !item.openless && item.balls">{{calc_qxc.state(balls[1])}}</div>
+    <div class="sm"
+         v-if="isQxc && !item.openless && item.balls">{{calc_qxc.state(balls[2])}}</div>
+    <div class="sm"
+         v-if="isQxc && !item.openless && item.balls">{{calc_qxc.state(balls[3])}}</div>
+    <div v-if="game && game.js_tag==='qxc' && !item.openless && item.balls">{{`${calc_qxc.getSum(balls)} ${calc_qxc.state_big_small(balls)} ${calc_qxc.state_single_double(balls)}`}}</div>
+
+    <div class="state"
+         v-if="game && game.js_tag==='xync' && !item.openless && item.balls">{{`${calc_xync.all(balls)}`}}</div>
+
+    <div class="state"
+         v-if="game && game.js_tag==='tzyx' && !item.openless && item.balls">{{`${calc_ladder.all(balls)}`}}</div>
   </div>
 </template>
 
 <script>
 import dayjs from "dayjs";
-import {
-  BallToColorpcdd,
-  BallToColor2,
-  BallToColor,
-  BallToWuXing,
-  BallToHeiBai,
-  BallToTianDi,
-  BallToNanNv,
-  BallToDanShuang,
-  BallToYinYang,
-  BallToQinShou,
-  BallToJiXiong,
-  BallsToDaXiao,
-  ballToShengxiao
-} from "./xglhc.2017";
+import xypkitem from "../../plugins/App/Lottery/LotteryXypk";
+import calcqxc from "./calc_qxc";
+import calcxync from "./calc_xync";
+import calcxypk from "./calc_xypk";
+import calcladder from "./calc_ladder";
+import calclhc from "./calc_lhc";
+import calcpkniuniu from "./calc_pkniuniu";
+import { mapState } from "vuex";
 export default {
   name: "kjItem",
   props: ["item", "game", "day", "kjList"],
+  components: {
+    xypkitem
+  },
   data() {
     return {
       openless: 0,
-      beginUpdate: 0
+      beginUpdate: 0,
+      calc_qxc: calcqxc,
+      calc_xync: calcxync,
+      calc_xypk: calcxypk,
+      calc_ladder: calcladder,
+      calc_lhc: calclhc,
+      calc_niu: calcpkniuniu
     };
-  },
-  computed:{
-    isLhc(){
-      // 是否是六合彩
-      return this.game && this.game.js_tag!=='lhc'
-    }
   },
   filters: {
     date(opentime) {
@@ -88,11 +140,18 @@ export default {
     }
   },
   methods: {
-    //和值
+    //快三 和值 大小 单双
     hz() {
-      return this.balls && this.balls.length
-        ? this.balls.reduce((a, b) => a + b)
-        : "";
+      let balls = this.balls;
+      if (!balls || !balls.length) return "";
+      let sum = balls.reduce((a, b) => a + b);
+      return (
+        sum +
+        " " +
+        (sum > 10 ? "大" : "小") +
+        " " +
+        (sum % 2 == 0 ? "双" : "单")
+      );
     },
     //形态
     xt() {
@@ -218,10 +277,6 @@ export default {
         this.$Message.warning("该彩种正在维护中");
         return;
       }
-      // if (this.game.status === 0) {
-      //   this.$Message.warning("该彩种正在维护中");
-      //   return;
-      // }
       if (!this.$store.state.userinfo.isLogin) {
         this.$Message.warning("请先登录");
         return;
@@ -253,6 +308,40 @@ export default {
       str += `:${ment(t.s)}`;
       return str;
     }
+    //  // 牛牛算法
+    // result(arr){
+    //   // console.log(arr)
+    //   let _arr = arr
+    //   for(let i=0; i < _arr.length - 2; i++){
+    //     for(let j=i+1; j < _arr.length - 1; j++){
+    //       for(let k=j+1; k < _arr.length; k++){
+    //         if((_arr[i]+_arr[j]+_arr[k])%10 == 0){
+    //           _arr.splice(k,1)
+    //           _arr.splice(j,1)
+    //           _arr.splice(i,1)
+    //           for (let n = 0; n < _arr.length; n++) {
+    //             if((_arr[0]+_arr[1])%10 == 0) {
+    //               // console.log('牛牛')
+    //               return 10
+    //             }else{
+    //               // console.log('牛'+(_arr[0]+_arr[1])%10)
+    //               return (_arr[0]+_arr[1])%10
+    //             }
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    //   return 0
+    // },
+    // // 牛牛
+    // niuniu(n){
+    //   const data = this.balls
+    //   if(data && data.length){
+    //     let _data = data.slice(n, n + 5)
+    //   return this.niu[this.result(_data)]
+    //   }return ''
+    // },
   },
   mounted() {
     this.$nextTick(() => {
@@ -271,6 +360,23 @@ export default {
     window.clearInterval(window.___timer);
   },
   computed: {
+    ...mapState("game", ["gameList"]),
+    isTZ() {
+      // 是否是梯子游戏
+      return this.game && this.game.js_tag === "tzyx";
+    },
+    isQxc() {
+      // 是否是七星彩
+      return this.game && this.game.js_tag === "qxc";
+    },
+    isLhc() {
+      // 是否是六合彩
+      return this.game && this.game.js_tag === "lhc";
+    },
+    isNC() {
+      // 是否是幸运农场
+      return this.game && this.game.js_tag === "xync";
+    },
     qishu() {
       if (this.item && this.item.qishu) {
         let qishu = this.item.qishu.toString();
@@ -286,62 +392,18 @@ export default {
       }
     },
     long() {
-      return ["11x5", "pcdd", "ssc", "pk10", "k3"].includes(this.game.js_tag);
-    },
-    zm() {
-      if (this.balls.length > 5) {
-        return [
-          this.balls[0],
-          this.balls[1],
-          this.balls[2],
-          this.balls[3],
-          this.balls[4],
-          this.balls[5]
-        ].join(" ");
-      }
-      return "";
-    },
-    tm() {
-      return this.balls[this.balls.length - 1];
-    },
-    sx() {
-      return (this.tm && ballToShengxiao(this.tm)) || "";
-    },
-    tmds() {
-      return (this.tm && (this.tm % 2 === 0 ? "双" : "单")) || "";
-    },
-    bs() {
-      return (this.tm && BallToColor(this.tm) + "波") || "";
-    },
-    tmdx() {
-      return (this.tm && ballToShengxiao(this.tm)) || "";
-    },
-    wx() {
-      return (this.tm && BallToWuXing(this.tm)) || "";
-    },
-    jy() {
-      return (this.tm && BallToQinShou(this.tm)) || "";
-    },
-    yy() {
-      return (this.tm && BallToYinYang(this.tm)) || "";
-    },
-    td() {
-      return (this.tm && BallToTianDi(this.tm)) || "";
-    },
-    jx() {
-      return (this.tm && BallToJiXiong(this.tm)) || "";
-    },
-    hb() {
-      return (this.tm && BallToHeiBai(this.tm)) || "";
-    },
-    nn() {
-      return (this.tm && BallToNanNv(this.tm)) || "";
-    },
-    zhds() {
-      return (
-        (this.balls && this.balls.length && BallsToDaXiao(this.balls)) || ""
+      return ["11x5", "pcdd", "ssc", "pk10", "k3", "pkniuniu"].includes(
+        this.game.js_tag
       );
     }
+    // yearid() {
+    //   let yearID = this.gameList.filter(i => i.js_tag === "lhc")[0].yearid;
+    //   if (yearID == 0) {
+    //     return this.qishu > 2019014 ? yearID : 11;
+    //   } else {
+    //     return this.qishu > 2019014 ? yearID : yearID - 1;
+    //   }
+    // }
   },
   watch: {
     game: "handleGame",
@@ -360,7 +422,7 @@ export default {
   margin-bottom: -1px;
   margin-left: -1px;
   > div {
-    width: 60px;
+    width: 56px;
     // flex: 1;
     text-align: center;
   }
@@ -381,18 +443,57 @@ export default {
     align-items: center;
     flex: 1;
   }
+  .sm {
+    width: 26px;
+    flex: none;
+  }
+  .qxc-qishu {
+    width: 50px;
+  }
+  .qxc-nums {
+    width: 70px;
+  }
   &.lhc {
     .showTimes {
       flex: 6.5;
     }
     > div {
       flex: 1;
-      // &:first-child {
-      //   width: 150px;
-      // }
-      // &:nth-child(2) {
-      //   width: 50px;
-      // }
+    }
+    .qs {
+      width: 60px;
+      flex: none;
+    }
+  }
+  .th {
+    align-items: center;
+  }
+  &.qxc {
+    display: -webkit-box;
+    -webkit-box-pack: start;
+    .sm {
+      width: 42px;
+    }
+  }
+  &.xync {
+    .null {
+      flex: 1;
+    }
+    .state {
+      width: 100px;
+    }
+  }
+  &.tzyx {
+    .state {
+      flex: 1;
+    }
+  }
+  &.lhc {
+    .qs {
+      width: 60px;
+    }
+    .pm{
+      width: 120px !important;
     }
   }
 }
@@ -403,7 +504,7 @@ export default {
 }
 .rq {
   flex: none !important;
-  width: 150px !important;
+  width: 120px !important;
 }
 .pm {
   flex: none !important;

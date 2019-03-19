@@ -12,8 +12,8 @@
 </template>
 <script>
 export default {
-  name: "trendTableHead",
-  props: ["headerData"],
+  name: 'trendTableHead',
+  props: ['headerData'],
 };
 </script>
 <style lang='scss' scoped>

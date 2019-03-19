@@ -14,7 +14,8 @@
         <p>*提款需达有效投注:
           <i style="color: #e33939">{{basicData.price_rq}}</i>
           <Button type="primary" style="margin-left: 20px;" @click.native="freshData">刷新</Button>
-          *已达投注量<i style="color: #e33939">{{basicData.tz_count}}</i>
+          *已达投注量
+          <i style="color: #e33939">{{basicData.tz_count}}</i>
         </p>
         <p>
           *今日剩余免手续费次数:
@@ -29,14 +30,10 @@
         <Form :label-width="130" label-position="right" class="getcash_form">
           <FormItem label="请选择收款银行：">
             <Col :span="8">
-            <!-- <Input type="text" v-model="getForm.bankName" placeholder="银行名称"></Input> -->
             <Select class="r-block" v-model="bankid">
               <Option v-for="(item,key) in basicData.banklist" :value="item.id" :key="key">{{ item.bank_typename }}</Option>
             </Select>
             </Col>
-            <!-- <Col :span="4" :offset="1">
-            <Button type="primary">更换</Button>
-            </Col> -->
           </FormItem>
           <FormItem label="收款银行卡账号：">
             <Col :span="8">
@@ -63,38 +60,38 @@
   </div>
 </template>
 <script>
-import passwordInput from "~/components/user/passwordInput";
-import { mapState, mapActions } from "vuex";
-import { debounce } from "lodash";
+import passwordInput from '~/components/user/passwordInput';
+import { mapState, mapActions } from 'vuex';
+// import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 export default {
   components: {
     passwordInput
   },
   data() {
     return {
-      bankid: "",
-      bankCard: "",
-      bankName: "",
-      getNum: "",
+      bankid: '',
+      bankCard: '',
+      bankName: '',
+      getNum: '',
       getForm: {
-        bankid: "",
-        bankName: "",
-        getNum: ""
+        bankid: '',
+        bankName: '',
+        getNum: ''
       },
-      tk_pass: "",
+      tk_pass: '',
       basicData: {}
     };
   },
   async mounted() {
     this.freshData();
-    // console.log(this.basicData);
   },
   watch: {
     bankid(bankid) {
       if (!bankid) return;
       let banklist = this.basicData.banklist || [];
       let bank = banklist.filter(el => el.id === bankid)[0];
-      bank = (bank && bank.card) || "";
+      bank = (bank && bank.card) || '';
       this.bankCard = bank;
     },
     getNum(v) {
@@ -104,17 +101,17 @@ export default {
     }
   },
   methods: {
-    ...mapActions("property", ["getCashState", "getTkPrice"]),
+    ...mapActions('property', ['getCashState', 'getTkPrice']),
     okClick() {
       let tk_pass = this.tk_pass;
       if (this.getNum <= 0) {
         return this.$Message.info({
-          content: "请输入一个有效的提款金额!",
+          content: '请输入一个有效的提款金额!',
           closable: true
         });
-      } else if (tk_pass.split("").length < 4) {
+      } else if (tk_pass.split('').length < 4) {
         return this.$Message.info({
-          content: "提款密码不合法,请重新输入!",
+          content: '提款密码不合法,请重新输入!',
           closable: true
         });
       }
@@ -128,19 +125,19 @@ export default {
       };
       let data = await this.getTkPrice(params);
 
-      this.getNum = "";
-      this.$refs.pass.obj = ["", "", "", ""]
-      this.tk_pass = "";
+      this.getNum = '';
+      this.$refs.pass.obj = ['', '', '', '']
+      this.tk_pass = '';
       this.freshData();
       this.$Message.success({
-        content: "提款成功",
+        content: '提款成功',
         closable: true
       });
     }, 500),
     async freshData() {
       let data = (await this.getCashState()) || {};
       this.basicData = data;
-      this.bankid = data.bink_id + "";
+      this.bankid = data.bink_id + '';
       this.bankCard = data.card_num;
     }
   }
@@ -173,9 +170,6 @@ export default {
       width: 100%;
       font-size: 16px;
       padding: 20px 0;
-      .ivu-col {
-        // text-align: center;
-      }
     }
     .info_two {
       width: 100%;

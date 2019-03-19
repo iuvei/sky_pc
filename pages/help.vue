@@ -1,28 +1,30 @@
 <template>
-    <div class="main">
-        <helpSidebar class="sidebar"></helpSidebar>
-        <div class="agent_that">
-            <div class="top_content">
-                <h2>{{topIcon.label}}</h2>
-            </div>
-            <nuxt-child/>
-        </div>
+  <div class="main">
+    <helpSidebar class="sidebar"></helpSidebar>
+    <div class="agent_that">
+      <div class="top_content">
+        <h2>{{topIcon.label}}</h2>
+      </div>
+      <nuxt-child/>
     </div>
+  </div>
 </template>
 <script>
-import { mapState, mapActions } from "vuex";
-import helpSidebar from "~/components/help/helpSidebar.vue";
-import category from "~/components/help/helpSidebarData.js";
-import { find, compact } from "lodash";
+import { mapState, mapActions } from 'vuex';
+import helpSidebar from '~/components/help/helpSidebar.vue';
+import category from '~/components/help/helpSidebarData.js';
+// import { find, compact } from 'lodash';
+import find from 'lodash/find';
+import compact from 'lodash/compact';
 export default {
-  layout: "user",
-  name: "help",
-  data() {
-    return {};
-  },
+  layout: 'user',
+  name: 'help',
+  // data() {
+  //   return {};
+  // },
   computed: {
     topIcon() {
-      let s = compact(this.$route.path.split("/"));
+      let s = compact(this.$route.path.split('/'));
       let item = find(category, o => o.icon === s[1]);
       item = item || {};
       item = find(item.li, o => o.url === s[2]);
@@ -33,12 +35,12 @@ export default {
   components: {
     helpSidebar
   },
-  methods: {
-    test() {
-      this.$store.dispatch("http");
-    }
-  },
-  mounted() {}
+  // methods: {
+  //   test() {
+  //     this.$store.dispatch('http');
+  //   }
+  // },
+  // mounted() {}
 };
 </script>
 

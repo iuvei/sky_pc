@@ -11,13 +11,13 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from "vuex";
-import rebatePicture from "~/components/user/agent/lowerLevelAccount/rebatePicture";
-import rebateSetting from "~/components/user/agent/lowerLevelAccount/rebateSetting";
-import codeManage from "~/components/user/agent/lowerLevelAccount/codeManage";
-import domainManage from "~/components/user/agent/lowerLevelAccount/domainManage";
+import { mapState, mapActions, mapGetters } from 'vuex';
+import rebatePicture from '~/components/user/agent/lowerLevelAccount/rebatePicture';
+import rebateSetting from '~/components/user/agent/lowerLevelAccount/rebateSetting';
+import codeManage from '~/components/user/agent/lowerLevelAccount/codeManage';
+import domainManage from '~/components/user/agent/lowerLevelAccount/domainManage';
 export default {
-  name: "lowerLevelAccount",
+  name: 'lowerLevelAccount',
   data() {
     return {};
   },
@@ -32,14 +32,14 @@ export default {
     rebatePicture
   },
   computed: {
-    ...mapState("agent", ["lowerLevelAccount"]),
+    ...mapState('agent', ['lowerLevelAccount']),
     // ...mapGetters("agent", ["getLowerLevelView"]),
-    ...mapState("userinfo",["accountInfo"]),
+    ...mapState('userinfo',['accountInfo']),
     isMode(){
       const isMode = this.accountInfo.agent_mode
       if(this.lowerLevelAccount.view ==='rebateSetting' || this.lowerLevelAccount.view ==='rebatePicture'){
         let view = isMode === '1' ? 'rebatePicture' : 'rebateSetting'
-        let obj = { prefix: "lowerLevelAccount", params: { view } };
+        let obj = { prefix: 'lowerLevelAccount', params: { view } };
         this.modifyField(obj);
       }
       return isMode;
@@ -47,10 +47,10 @@ export default {
     currentView: {
       get() {
         // if(this.isMode*1 && this.lowerLevelAccount.view ==='rebateSetting')return 'rebatePicture'
-           return this.lowerLevelAccount.view;
+        return this.lowerLevelAccount.view;
       },
       set(view) {
-        let obj = { prefix: "lowerLevelAccount", params: { view } };
+        let obj = { prefix: 'lowerLevelAccount', params: { view } };
         this.modifyField(obj);
       }
     }
@@ -58,25 +58,25 @@ export default {
   watch: {
     currentView(v) {
       switch (v) {
-        case "rebateSetting":
+        case 'rebateSetting':
           this.getDomainList();
           break;
-        case "rebatePicture":
+        case 'rebatePicture':
           this.modifyDefault();
           break;
       }
     }
   },
   methods: {
-    ...mapActions("agent", [
-      "modifyField",
-      "getUsefulEnomList",
-      "modifyDefault"
+    ...mapActions('agent', [
+      'modifyField',
+      'getUsefulEnomList',
+      'modifyDefault'
     ]),
     async getDomainList() {
       let data = await this.getUsefulEnomList() || [];
-      data = [{ id: 0, enom: "使用默认" }, ...data];
-      data = { prefix: "lowerLevelAccount", params: { domainList: data } };
+      data = [{ id: 0, enom: '使用默认' }, ...data];
+      data = { prefix: 'lowerLevelAccount', params: { domainList: data } };
       this.modifyField(data);
       if(this.userStr){
         this.modifyDefault(data)
@@ -86,7 +86,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-
 </style>
 <style lang="scss">
 .lower-level-account {

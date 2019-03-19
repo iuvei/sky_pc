@@ -42,8 +42,8 @@
 					<input class="ivu-input" onkeyup="value=value.replace(/[^\d]/g,'') " ng-pattern="/[^a-zA-Z]/" v-model="cardNum" placeholder="请输入银行卡账号" clearable style="width: 175px" :disabled="!isShow"></input>
 				</div>
 				<div class="box">
-					<span class="tit">开户地省/市</span>
-					<Input v-model="province" placeholder="请输入省/市" clearable style="width: 175px"></Input>
+					<span class="tit">开户地省市</span>
+					<Input v-model="province" placeholder="请输入省市" clearable style="width: 175px"></Input>
 				</div>
 				<div class="box">
 					<span class="tit">开户行详细地址</span>

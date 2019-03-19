@@ -4,48 +4,47 @@
       <div class="icon">
         <img :src="item.icon" alt="">
       </div>
-      <div class="info">
-        <div class="info-name">{{item.game_name}}</div>
-        <div class="info-set">
-          总共
-          <span class="red">{{item && item.tip && item.tip.replace(/\D/ig,'')}}</span>
-          期 |
-          <span>走势图</span>
+        <div class="info">
+          <div class="info-name">{{item.game_name}}</div>
+          <div class="info-set">
+            总共
+            <span class="red">{{item && item.tip && item.tip.replace(/\D/ig,'')}}</span>
+            期 |
+            <span>走势图</span>
+          </div>
+          <div>
+            距离
+            <span v-if="openTime" class="red">{{openTime[0].qishu}}</span>
+            <span v-else>???</span>
+            期开奖
+          </div>
+          <div class="lottery">
+            <AppTimer :openTime="openTime" v-if="openTime.length" :callback="nextOpen" :repeat='openLength' offset="true">
+            </AppTimer>
+            <div v-else>欢迎下注</div>
+          </div>
         </div>
-        <div>
-          距离
-          <span v-if="openTime" class="red">{{openTime[0].qishu}}</span>
-          <span v-else>???</span>
-          期开奖
+      </div>
+      <div class="center fadeInDownBig" v-switchClass="{key:animateKey,class:'fadeInDownBig'}">
+        <div class="center-top">
+          <SelfCenterTopTxt :kjList='kjList' :openPrize='openPrize' :openTime="openTime"></SelfCenterTopTxt>
         </div>
-        <div class="lottery">
-          <AppTimer :openTime="openTime" v-if="openTime.length" :callback="nextOpen" :repeat='openLength' offset="true">
-          </AppTimer>
-          <div v-else>欢迎下注</div>
+        <div class="center-balls">
+          <AppLotteryNum v-if="kjList" :number="kjList[0].balls" :type="item.js_tag" :showZero="true"></AppLotteryNum>
+          <div class='balls-opening' v-else>正在开奖......</div>
+        </div>
+      </div>
+      <div class="right fadeInRightBig" v-switchClass="{key:animateKey,class:'fadeInRightBig'}">
+        <div class="tr th">
+          <div class="qh">期号</div>
+          <div class="kjhm">开奖号码</div>
+        </div>
+        <div v-for="(v,key) in kjList" :key="key" class="tr">
+          <div>{{v.qishu}}</div>
+          <AppLotteryNum :number="v.balls" :type="item.js_tag"></AppLotteryNum>
         </div>
       </div>
     </div>
-    <div class="center fadeInDownBig" v-switchClass="{key:animateKey,class:'fadeInDownBig'}">
-      <div class="center-top">
-        <SelfCenterTopTxt :kjList='kjList' :openPrize='openPrize' :openTime="openTime"></SelfCenterTopTxt>
-      </div>
-      <div class="center-balls">
-        <AppLotteryNum v-if="kjList" :number="kjList[0].balls" :type="item.js_tag" :showZero="true"></AppLotteryNum>
-        <div class='balls-opening' v-else>正在开奖......</div>
-      </div>
-      <!-- <div @click="nextOpen(20)">click</div> -->
-    </div>
-    <div class="right fadeInRightBig" v-switchClass="{key:animateKey,class:'fadeInRightBig'}">
-      <div class="tr th">
-        <div class="qh">期号</div>
-        <div class="kjhm">开奖号码</div>
-      </div>
-      <div v-for="(v,key) in kjList" :key="key" class="tr">
-        <div>{{v.qishu}}</div>
-        <AppLotteryNum :number="v.balls" :type="item.js_tag"></AppLotteryNum>
-      </div>
-    </div>
-  </div>
 </template>
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex'
@@ -78,19 +77,13 @@ export default {
         if (this.openPrize) {
           return (
             <div>
-              第
-              <span class="red">{this.kjList[0].qishu}</span>
-              期，正在开奖
+              第<span class="red">{this.kjList[0].qishu}</span>期，正在开奖
             </div>
           )
         }
         return (
           <div>
-            第
-            <span class="red">
-              {this.kjList ? this.kjList[0].qishu : '????'}
-            </span>
-            期，开奖号码
+            第<span class="red">{this.kjList ? this.kjList[0].qishu : '????'}</span>期，开奖号码
           </div>
         )
       }
@@ -200,7 +193,7 @@ export default {
       }
     },
     async nextOpen(length, long = 4) {
-      console.log(length, long)
+      // console.log(length, long);
       this.openPrize = true
       this.random()
       clearInterval(this.interval)
@@ -236,8 +229,21 @@ export default {
     this.getInitData()
     this.toTop()
   },
+  destroyed(){
+    clearTimeout(window.__nextTimer);
+  },
   watch: {
     '$route.params.id'(val) {
+      if(!val) return
+      this.toTop()
+      this.delShopCart()
+      this.setShopCart()
+      this.$bus.$emit('resetBetArea')
+      this.openPrize = false
+      this.getInitData()
+    },
+    '$route.query.id'(val) {
+      if(!val) return
       this.toTop()
       this.delShopCart()
       this.setShopCart()
@@ -254,7 +260,6 @@ export default {
 <style lang='scss' scoped>
 .game-head {
   display: flex;
-  // justify-content: ;
   align-items: center;
   height: 150px;
   background-color: #feffff;
@@ -383,24 +388,6 @@ export default {
       color: #e93248;
       text-align: center;
     }
-    // .default,
-    // .k3-balls {
-    //   height: 60px;
-    //   .td {
-    //     width: 70px;
-    //     height: 60px;
-    //     span {
-    //       height: 50px;
-    //       width: 50px;
-    //       line-height: 50px;
-    //       font-size: 24px;
-    //       background-size: 50px;
-    //     }
-    //     i {
-    //       line-height: 50px;
-    //     }
-    //   }
-    // }
     .waiting {
       text-align: center;
     }

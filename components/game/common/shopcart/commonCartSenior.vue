@@ -3,10 +3,8 @@
     <div class="cart-title">
       <div :class="{active:tabKey===0}" @click="switchTab(0)">普通追号</div>
       <div :class="{active:tabKey===1}" @click="switchTab(1)">高级追号</div>
-    </div>
-    <!-- <GameNumberSide v-model="auto"></GameNumberSide>期 -->
+    </div>>
     <div class="cart-body">
-      <!-- {{componentData.willWin}} {{componentData.sum}} -->
       <div class="cart-body-tool">
         <div>连续追号计划：</div>
         <div class="g-select">
@@ -40,17 +38,17 @@
   </div>
 </template>
 <script>
-import GameNumberSide from "../InputNumber/InputNumberSide";
-import GameNumber from "../InputNumber/InputNumber";
+import GameNumberSide from '../InputNumber/InputNumberSide';
+import GameNumber from '../InputNumber/InputNumber';
 export default {
-  name: "CartSenior",
-  props: ["componentData", "beforeClose", "visible"],
+  name: 'CartSenior',
+  props: ['componentData', 'beforeClose', 'visible'],
   data() {
     return {
       autoArr: [5, 10, 15, 20],
       auto: 5,
       multiple: 1,
-      stop: "1",
+      stop: '1',
       tabKey: 0,
       columns: [],
       tableList: [],
@@ -63,14 +61,14 @@ export default {
     },
     total() {
       return this.data.reduce((s, item) => {
-        return (s += item.multiple.float("multiply", item.money));
+        return (s += item.multiple.float('multiply', item.money));
       }, 0);
     },
   },
   methods: {
     switchTab(n) {
       if (n) {
-        this.$Message.info("高级功能，暂且关闭。");
+        this.$Message.info('高级功能，暂且关闭。');
       }
     },
     changeMultiple(n) {
@@ -87,27 +85,27 @@ export default {
   },
   mounted() {
     this.tableList = this.componentData.openTime.map((item, idx) => {
-      this.$set(item, "money", this.componentData.sum);
-      this.$set(item, "willWin", this.componentData.willWin);
-      this.$set(item, "multiple", 1);
+      this.$set(item, 'money', this.componentData.sum);
+      this.$set(item, 'willWin', this.componentData.willWin);
+      this.$set(item, 'multiple', 1);
       return item;
     });
     this.columns = [
       {
-        title: "序号",
-        key: "qishu",
+        title: '序号',
+        key: 'qishu',
         width: 80,
-        align: "center",
+        align: 'center',
         render: (h, { index }) => {
           return <span>{index + 1}</span>;
         },
       },
-      { title: "追号期数", key: "qishu", algin: "center" },
+      { title: '追号期数', key: 'qishu', algin: 'center' },
       {
-        title: "倍数",
-        key: "multiple",
+        title: '倍数',
+        key: 'multiple',
         width: 120,
-        align: "center",
+        align: 'center',
         render: (h, { row, index }) => {
           return (
             <div class="flex-center">
@@ -123,29 +121,29 @@ export default {
         },
       },
       {
-        title: "金额",
-        key: "money",
-        align: "center",
+        title: '金额',
+        key: 'money',
+        align: 'center',
         render: (h, { row }) => {
-          return <span>{row.multiple.float("multiply", row.money)}</span>;
+          return <span>{row.multiple.float('multiply', row.money)}</span>;
         },
       },
       {
-        title: "预期盈利",
-        key: "win",
-        align: "center",
+        title: '预期盈利',
+        key: 'win',
+        align: 'center',
         render: (h, { row }) => {
-          return <span>{row.multiple.float("multiply", row.willWin)}</span>;
+          return <span>{row.multiple.float('multiply', row.willWin)}</span>;
         },
       },
       {
-        title: "开奖时间",
-        align: "center",
+        title: '开奖时间',
+        align: 'center',
         width: 150,
-        key: "opentime",
+        key: 'opentime',
         render: (h, { row }) => (
           <span>
-            {new Date(row.opentime * 1000).format("yyyy-MM-dd hh:mm:ss")}
+            {new Date(row.opentime * 1000).format('yyyy-MM-dd hh:mm:ss')}
           </span>
         ),
       },
@@ -177,7 +175,7 @@ export default {
       color: #ff586d;
       position: relative;
       &::after {
-        content: "";
+        content: '';
         width: 100%;
         height: 3px;
         position: absolute;

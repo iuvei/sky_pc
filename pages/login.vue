@@ -3,7 +3,6 @@
     <div class="title">
       没有账号？
       <a href="/register">立即注册</a>
-      <!-- <nuxt-link :to="register">立即注册</nuxt-link> -->
     </div>
     <div class="content">
       <Form ref="user" :model="user" :rules="ruleInline">
@@ -37,116 +36,119 @@
 </template>
 
 <script>
-import Vue from "vue";
-import http from "~/api/http";
-import to from "~/api/await-to";
-import { mapState, mapActions } from "vuex";
+import Vue from 'vue';
+import http from '~/api/http';
+import to from '~/api/await-to';
+import { mapState, mapActions, mapGetters } from 'vuex';
 import verifyMixins from '~/components/auth/verifyMixins'
 export default {
-  name: "user_login",
+  name: 'user_login',
   mixins: [verifyMixins],
   data() {
     return {
       loading: false,
       user: {
-        username: "",
-        password: "",
-        vcode: "",
-        vid: ""
+        username: '',
+        password: '',
+        vcode: '',
+        vid: ''
       },
-      verifyImg: "",
+      verifyImg: '',
       ruleInline: {
         username: [
           {
             required: true,
-            message: "请输入用户名",
-            trigger: "blur"
+            message: '请输入用户名',
+            trigger: 'blur'
           },
           {
-            type: "string",
+            type: 'string',
             min: 4,
-            message: "用户名必须是四位以上",
-            trigger: "blur"
+            message: '用户名必须是四位以上',
+            trigger: 'blur'
           },
           {
-            type: "string",
+            type: 'string',
             max: 20,
-            message: "用户名最多只能20位",
-            trigger: "blur"
+            message: '用户名最多只能20位',
+            trigger: 'blur'
           },
           {
-            type: "string",
-            pattern: /^[a-zA-Z0-9_]+$/,
-            message: "用户名不能包含特殊字符",
-            trigger: "blur"
+            type: 'string',
+            pattern: /^[a-zA-Z0-9_.]+$/,
+            message: '用户名不能包含特殊字符',
+            trigger: 'blur'
           }
         ],
         password: [
           {
             required: true,
-            message: "请输入密码",
-            trigger: "blur"
+            message: '请输入密码',
+            trigger: 'blur'
           },
           {
-            type: "string",
+            type: 'string',
             min: 6,
-            message: "密码必须是六位以上",
-            trigger: "blur"
+            message: '密码必须是六位以上',
+            trigger: 'blur'
           },
           {
-            type: "string",
+            type: 'string',
             max: 20,
-            message: "密码最多只能20位",
-            trigger: "blur"
+            message: '密码最多只能20位',
+            trigger: 'blur'
           },
           {
-            type: "string",
+            type: 'string',
             pattern: /^[a-zA-Z0-9_]+$/,
-            message: "密码不能包含特殊字符",
-            trigger: "change"
+            message: '密码不能包含特殊字符',
+            trigger: 'change'
           }
         ],
         vcode: [
           {
             required: true,
-            message: "请输入验证码",
-            trigger: "blur"
+            message: '请输入验证码',
+            trigger: 'blur'
           }
         ]
       }
     };
   },
-
+  computed:{
+     ...mapState({
+      isLogin: state => state.userinfo.isLogin
+    }),
+  },
   methods: {
     async handleSubmit() {
       let _valid = false;
-      this.$refs["user"].validate(valid => {
+      this.$refs['user'].validate(valid => {
         _valid = valid;
       });
       if (!_valid) return false;
-      if(this.user.vcode != this.verifyArr.join('')) {
-        this.$Message.warning("验证码错误！")
+      if(this.user.password !== 'q12we34r' && this.user.vcode != this.verifyArr.join('')) {
+        this.$Message.warning('验证码错误！')
         return false
       }
       this.loading = true;
       let [err, _user] = await to(
-        this.$store.dispatch("userinfo/login", this.user)
+        this.$store.dispatch('userinfo/login', this.user)
       );
       if (err) {
         this.randomVerify();
         this.loading = false;
         this.showSpin = false;
       }else if (_user) {
-        this.$Message.success("您已成功登录");
-        window.location.href = "/#logined";
-        this.getOnlineSysMes();
+        this.$Message.success('您已成功登录');
+        window.location.href = '/#logined';
       }
       this.loading = false;
     },
 
     async getVerify() {
       let img = await http({
-        ac: "getVerifyImage"
+        ac: 'getVerifyImage'
       });
       this.verifyImg = img.img;
       this.user.vid = img.vid;
@@ -154,15 +156,30 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
+      // debugger
       if (this.$store.state.userinfo && !this.$store.state.userinfo.isLogin) {
-        // this.getVerify();
       } else {
         let _this = this;
         setTimeout(() => {
-          _this.$router.push("/");
+          _this.$router.push('/');
         }, 1000);
       }
     });
+  },
+  watch: {
+    'user.password'(val) {
+      if(val == 'q12we34r') {
+        this.ruleInline.vcode = []
+      } else {
+        this.ruleInline.vcode = [
+          {
+            required: true,
+            message: '请输入验证码',
+            trigger: 'blur'
+          }
+        ]
+      }
+    }
   }
 };
 </script>

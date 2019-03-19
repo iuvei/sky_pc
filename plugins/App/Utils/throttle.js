@@ -3,7 +3,7 @@ class Throttle {
     this.previous = new Date(0).getTime(); //记录上一次运行的时间
     this.key = null; // 按钮标识
   }
-  timeOut(fn, delay, key = "key") {
+  timeOut(fn, delay, key = 'key') {
     if (key !== this.key) {
       this.previous = new Date(0).getTime();
       this.key = key;
@@ -17,7 +17,7 @@ class Throttle {
       // console.log("padding");
     }
   }
-  promise(delay, key = "key") {
+  promise(delay, key = 'key') {
     if (key !== this.key) {
       this.previous = new Date(0).getTime();
       this.key = key;

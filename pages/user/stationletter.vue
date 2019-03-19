@@ -11,80 +11,80 @@
   </div>
 </template>
 <script>
-  export default {
-    data() {
-      return {
-        isShow: false,
-        showContent: '',
-        header: [
-          {
-            type: 'selection',
-            width: 60,
-            align: 'center'
-          },
-          {
-            "title": '留言内容',
-            "key": 'message',
-            'align': 'left',
-            'width': 220,
-            renderHeader: (h, params) => {
-              return h('div', [
-                h('Icon', {
-                  props: {
-                    type: ''
-                  }
-                }),
-                h('p', {}, '')
-              ])
-            }
-          },
-          {
-            "title": '回复',
-            "key": 'reply',
-            'align': 'left',
-            'width': 220,
-            render: (h, params) => {
-              return h('div', [
-                h('p', {
-                  on: {
-                    click: () => {
-                      this.isShow = true
-                      this.showContent = params.row.content
-                    }
-                  }
-                }, params.row.content),
-              ])
-            }
-          },
-          {
-            "title": '回复时间',
-            "key": 'reply_time',
-            'align': 'left',
-            'width': 160,
-            'sortable': true
-          },
-          {
-            "title": '留言时间',
-            "key": 'send_time',
-            'align': 'left',
-            'width': 160,
-            'sortable': true
+export default {
+  data() {
+    return {
+      isShow: false,
+      showContent: '',
+      header: [
+        {
+          type: 'selection',
+          width: 60,
+          align: 'center'
+        },
+        {
+          'title': '留言内容',
+          'key': 'message',
+          'align': 'left',
+          'width': 220,
+          renderHeader: (h, params) => {
+            return h('div', [
+              h('Icon', {
+                props: {
+                  type: ''
+                }
+              }),
+              h('p', {}, '')
+            ])
           }
-        ],
-        basicData: [
-          {
-            content: '网站并没有申请可信网站认证',
-            reply_time: '未回复',
-            send_time: '2018-05-03 14:31:08'
+        },
+        {
+          'title': '回复',
+          'key': 'reply',
+          'align': 'left',
+          'width': 220,
+          render: (h, params) => {
+            return h('div', [
+              h('p', {
+                on: {
+                  click: () => {
+                    this.isShow = true
+                    this.showContent = params.row.content
+                  }
+                }
+              }, params.row.content),
+            ])
           }
-        ]
-      }
-    },
-    methods: {
-      selectRows() {
-      }
+        },
+        {
+          'title': '回复时间',
+          'key': 'reply_time',
+          'align': 'left',
+          'width': 160,
+          'sortable': true
+        },
+        {
+          'title': '留言时间',
+          'key': 'send_time',
+          'align': 'left',
+          'width': 160,
+          'sortable': true
+        }
+      ],
+      basicData: [
+        {
+          content: '网站并没有申请可信网站认证',
+          reply_time: '未回复',
+          send_time: '2018-05-03 14:31:08'
+        }
+      ]
+    }
+  },
+  methods: {
+    selectRows() {
     }
   }
+}
 </script>
 <style lang="scss">
 .ivu-page {

@@ -2,7 +2,7 @@
   <div class="marquee">
     <span class="sprite-index_footer index_footer-gonggao"></span>
     <marquee scrollamount="3 " v-if="syscontent && syscontent.length">
-      <span v-for="(item, index) in syscontent" :key="index">{{item.content}}</span>
+      <span v-for="(item, index) in syscontent" :key="index" v-html="item.content"></span>
     </marquee>
     <div v-if="!syscontent || !syscontent.length" class="no_content">暂无公告</div>
   </div>
@@ -12,7 +12,7 @@
 import {mapState, mapActions} from 'vuex';
 import decodeFunc from '~/plugins/App/Utils/decode.js'
 export default {
-  name: "index-marqueue",
+  name: 'index-marqueue',
   serverCacheKey() {
     return Math.floor(Date.now() / 1000 * 60 * 60 * 24);
   },
@@ -25,15 +25,14 @@ export default {
     ...mapActions('user', ['getSystemNotice'])
   },
   async beforeMount() {
-    
     let temp = await this.getSystemNotice()
     let arr = Array.isArray(temp) && temp.length ? temp : []
     if(arr && arr.length){
-       arr.forEach(x=>{
-         x.content = decodeFunc(x.content) || ''
-       })
+      arr.forEach(x=>{
+        x.content = decodeFunc(x.content) || ''
+      })
     }
-    
+
     this.syscontent = arr;
   }
 };

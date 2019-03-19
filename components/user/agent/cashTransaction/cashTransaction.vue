@@ -20,33 +20,33 @@
   </div>
 </template>
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions } from 'vuex';
 export default {
-  name: "cashTransaction",
+  name: 'cashTransaction',
   data() {
     const validateUser = (rule, value, callback) => {
-      if (value.trim() === "") {
-        callback(new Error("您输入的账号不合法,请重新输入!"));
+      if (value.trim() === '') {
+        callback(new Error('您输入的账号不合法,请重新输入!'));
       } else if (value === this.accountInfo.username) {
-        callback(new Error("您不能给自己转账!"));
+        callback(new Error('您不能给自己转账!'));
       }
       callback();
     };
     return {
-      other: "",
+      other: '',
       formCustom: {
-        other: ""
+        other: ''
       },
       ruleCustom: {
-        other: [{ validator: validateUser, trigger: "blur" }]
+        other: [{ validator: validateUser, trigger: 'blur' }]
       }
     };
   },
   computed: {
-    ...mapState("userinfo", ["accountInfo"])
+    ...mapState('userinfo', ['accountInfo'])
   },
   methods: {
-    ...mapActions("agent", ["modifyField", "TradGetUserInfo"]),
+    ...mapActions('agent', ['modifyField', 'TradGetUserInfo']),
     nextClick(name) {
       // if (this.other.trim() === "") {
       //   return this.$Message.error({
@@ -73,9 +73,9 @@ export default {
       // console.error(data)
       if (data && data.real_name) {
         this.modifyField({
-          prefix: "cashTransaction",
+          prefix: 'cashTransaction',
           params: {
-            view: "confirmation",
+            view: 'confirmation',
             other: this.formCustom.other,
             otherInfo: data
           }

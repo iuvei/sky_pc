@@ -4,11 +4,8 @@
     <div>
       <div class="left fadeInLeftBig" v-switchClass="{key:animateKey,class:'fadeInLeftBig'}">
         <div class="icon">
-          <!-- <img :src="item.icon" alt=""> -->
-          <!-- <img src="../" alt=""> -->
         </div>
         <div class="info">
-          <!-- <div class="info-name">{{item.game_name}}</div> -->
           <div class="info-set">
             总共
             <span class="red">{{item && item.tip && item.tip.replace(/\D/ig,'')}}</span>
@@ -33,7 +30,7 @@
           <SelfCenterTopTxt :kjList='kjList' :openPrize='openPrize' :openTime="openTime"></SelfCenterTopTxt>
         </div>
         <div class="center-balls">
-          <AppLotteryNum v-if="kjList" :number="kjList[0].balls" :type="item.js_tag"></AppLotteryNum>
+          <AppLotteryNum v-if="kjList" :number="kjList[0].balls" :type="item.js_tag" :qishu="kjList[0].qishu"></AppLotteryNum>
           <div class='balls-opening' v-else>正在开奖......</div>
         </div>
       </div>
@@ -44,7 +41,7 @@
         </div>
         <div v-for="(v,key) in kjList" :key="key" class="tr">
           <div>{{v.qishu}}</div>
-          <AppLotteryNum :number="v.balls" :type="item.js_tag"></AppLotteryNum>
+          <AppLotteryNum :number="v.balls" :type="item.js_tag" :qishu="v.qishu"></AppLotteryNum>
         </div>
       </div>
     </div>
@@ -52,9 +49,9 @@
   </div>
 </template>
 <script>
-import { mapState, mapActions, mapMutations } from 'vuex'
-import { getTrendBallArr } from '../../watch/tableHeader'
-import switchClass from '../utils/directiveClass.js'
+import { mapState, mapActions, mapMutations } from 'vuex';
+import { getTrendBallArr } from '../../watch/tableHeader';
+import switchClass from '../utils/directiveClass.js';
 export default {
   name: 'PK10GameHead',
   data() {
@@ -66,7 +63,7 @@ export default {
       openPrize: false,
       reduceT: 0,
       interval: 0
-    }
+    };
   },
   directives: { switchClass },
   props: ['item'],
@@ -80,21 +77,15 @@ export default {
         if (this.openPrize) {
           return (
             <div>
-              第
-              <span class="red">{this.openTime[0].qishu}</span>
-              期，正在开奖
+              第<span class="red">{this.openTime[0].qishu}</span>期，正在开奖
             </div>
-          )
+          );
         }
         return (
           <div>
-            第
-            <span class="red">
-              {this.kjList ? this.kjList[0].qishu : '????'}
-            </span>
-            期，开奖号码
+            第<span class="red">{this.kjList ? this.kjList[0].qishu : '????'}</span>期，开奖号码
           </div>
-        )
+        );
       }
     }
   },
@@ -103,132 +94,134 @@ export default {
     ...mapMutations('gameBet', ['changeField', 'setShopCart', 'delShopCart']),
     toTop() {
       var timer = requestAnimationFrame(function fn() {
-        // ;
-        var s = document.documentElement.scrollTop
+        var s = document.documentElement.scrollTop;
         if (s > 0) {
-          s -= 100
-          document.documentElement.scrollTop = s
-          timer = requestAnimationFrame(fn)
+          s -= 100;
+          document.documentElement.scrollTop = s;
+          timer = requestAnimationFrame(fn);
         }
-      })
+      });
     },
     async getInitData() {
-      this.animateKey++
-      ;[this.kjList, this.openTime] = await Promise.all([
+      this.animateKey++;
+      [this.kjList, this.openTime] = await Promise.all([
         this.togetKjCpLog(),
         this.togetCplogList()
-      ])
+      ]);
     },
 
     async togetKjCpLog() {
-      return await this.getKjCpLog({ tag: this.item.tag, date: 0, pcount: 10 })
+      return await this.getKjCpLog({ tag: this.item.tag, date: 0, pcount: 10 });
     },
     async togetCplogList() {
-      let ret = await this.getCplogList({ tag: this.item.tag })
-      this.changeField({ periods: ret[0].next[0].qishu })
-      this.openLength = ret[0].next.length
-      return ret[0].next
+      let ret = await this.getCplogList({ tag: this.item.tag });
+      this.changeField({ periods: ret[0].next[0].qishu });
+      this.openLength = ret[0].next.length;
+      return ret[0].next;
     },
     // 洗牌
     shuffle(arr) {
       var result = [],
-        random
+        random;
       while (arr.length > 0) {
-        random = Math.floor(Math.random() * arr.length)
-        result.push(arr[random])
-        arr.splice(random, 1)
+        random = Math.floor(Math.random() * arr.length);
+        result.push(arr[random]);
+        arr.splice(random, 1);
       }
-      return result
+      return result;
     },
     // 随机数据
     random(t, i = 0) {
       if (!this.openPrize) {
-        clearInterval(this.interval)
-        return
+        clearInterval(this.interval);
+        return;
       }
       let balls = this.kjList[0].balls,
-        arr = getTrendBallArr[this.item.js_tag]
+        arr = getTrendBallArr[this.item.js_tag];
       switch (this.item.js_tag) {
         case 'pcdd':
           let pcdd = new Array(3)
             .fill(1)
-            .map((v, k) => arr[~~(Math.random() * arr.length)])
-          pcdd.push(pcdd.reduce((sum, val) => sum + val, 0))
-          balls = pcdd.join('+')
-          break
+            .map((v, k) => arr[~~(Math.random() * arr.length)]);
+          pcdd.push(pcdd.reduce((sum, val) => sum + val, 0));
+          balls = pcdd.join('+');
+          break;
         case 'pk10':
-          let pk10 = this.shuffle([...arr])
-          balls = pk10.join('+')
-          break
+          let pk10 = this.shuffle([...arr]);
+          balls = pk10.join('+');
+          break;
         case '11x5':
-          let x5 = this.shuffle([...arr])
-          balls = x5.slice(0, 5).join('+')
-          break
+          let x5 = this.shuffle([...arr]);
+          balls = x5.slice(0, 5).join('+');
+          break;
         default:
           balls = (balls || '').replace(/\d{1,2}/g, () => {
-            let item = arr[~~(Math.random() * arr.length)]
-            return item
-          })
-          break
+            let item = arr[~~(Math.random() * arr.length)];
+            return item;
+          });
+          break;
       }
       if (this.openTime[0].qishu == this.kjList[0].qishu) {
-        this.kjList[0].balls = balls
+        this.kjList[0].balls = balls;
       } else {
         this.kjList.unshift({
           balls: balls,
           qishu: this.openTime[0].qishu
-        })
+        });
       }
     },
     async nextOpen(length, long = 4) {
-      this.openPrize = true
-      this.random()
-      clearInterval(this.interval)
-      this.interval = setInterval(this.random, 400)
-      clearTimeout(window.__nextTimer)
+      this.openPrize = true;
+      this.random();
+      clearInterval(this.interval);
+      this.interval = setInterval(this.random, 400);
+      clearTimeout(window.__nextTimer);
       window.__nextTimer = setTimeout(async () => {
         if (!this.openPrize) {
-          clearInterval(this.interval)
-          return
+          clearInterval(this.interval);
+          return;
         }
 
-        let list = await this.togetKjCpLog()
-        clearInterval(this.interval)
+        let list = await this.togetKjCpLog();
+        clearInterval(this.interval);
 
         if (!this.openless) {
-          let open = await this.togetCplogList()
-          this.openTime = open
+          let open = await this.togetCplogList();
+          this.openTime = open;
         }
-        console.log('this.periods',this.periods,list[0].qishu + 1)
+        // console.log('this.periods', this.periods, list[0].qishu + 1);
         if (list[0].balls && list[0].qishu + 1 == this.periods) {
-          this.kjList = list
-          this.openPrize = false
-          this.openless = false
+          this.kjList = list;
+          this.openPrize = false;
+          this.openless = false;
         } else {
-          this.openless = true
-          this.nextOpen(length)
+          this.openless = true;
+          this.nextOpen(length);
         }
-      }, (long + 1) * 1000)
+      }, (long + 1) * 1000);
     }
   },
   mounted() {
-    this.getInitData()
-    this.toTop()
+    this.getInitData();
+    this.toTop();
+  },
+  destroyed(){
+    clearTimeout(window.__nextTimer);
   },
   watch: {
     '$route.params.id'(val) {
-      this.toTop()
-      this.delShopCart()
-      this.setShopCart()
-      this.$bus.$emit('resetBetArea')
-      this.openPrize = false
-      this.getInitData()
+      this.toTop();
+      this.delShopCart();
+      this.setShopCart();
+      this.$bus.$emit('resetBetArea');
+      this.openPrize = false;
+      this.getInitData();
     },
     openPrize(val) {
-      this.changeField({ isScrollBalls: this.openPrize })
+      this.changeField({ isScrollBalls: this.openPrize });
     }
   }
-}
+};
 </script>
 <style lang='scss' scoped>
 .game-head {
@@ -236,15 +229,11 @@ export default {
   position: relative;
 }
 .game-head > div {
-  // background: url(~/assets/img/game/pk10/car_bg2.png) no-repeat center left;
   max-width: 1000px;
-  // height: 250px;
   margin: 0 auto;
   display: flex;
-  // justify-content: ;
   align-items: center;
   height: 250px;
-  // background-color: #feffff;
   > div {
     height: 120px;
     flex: 1;
@@ -318,7 +307,6 @@ export default {
 }
 .game-head > div:first-child {
   background: url(~/assets/img/game/pk10/car_bg2.png) no-repeat center left;
-  // filter: opacity(0.7);
   opacity: 0.25;
   position: absolute;
   top: 0;

@@ -1,4 +1,4 @@
-import Collapse from "./Collapse";
+import Collapse from './Collapse';
 Collapse.install = Vue => {
   Vue.component(Collapse.name, Collapse);
 };

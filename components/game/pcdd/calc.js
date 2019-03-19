@@ -3,7 +3,7 @@ function checkArrIs(arr, regx) {
 }
 class calcPcdd {
   constructor() {
-    tag_js = "pcdd";
+    tag_js = 'pcdd';
   }
   calcBetNum(playid, ba) {
     switch (playid) {
@@ -64,7 +64,7 @@ class calcPcdd {
     } else {
       let zhushu = 0;
       for (let i = 1, len = ba.length; i < len; i += 1) {
-        const res = ba[i].split("|");
+        const res = ba[i].split('|');
         if (checkArrIs(res, /^([0-9])$/)) {
           zhushu += res.length;
         }
@@ -79,7 +79,7 @@ class calcPcdd {
     } else {
       let zhushu = 0;
       for (let i = 1, len = ba.length; i < len; i += 1) {
-        const res = ba[i].split("|");
+        const res = ba[i].split('|');
         if (checkArrIs(res, /^([0-3])$/)) {
           zhushu += res.length;
         }

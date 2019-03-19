@@ -8,16 +8,16 @@
   </div>
 </template>
 <script>
-import { mapState, mapActions } from "vuex";
-import commonMenu from "../common/commonMenu";
-import lhcBet from "./lhcBet";
-import commonCart from "../common/commonCart";
-import betArea from "./betArea";
-import { setBallList } from "./field.js";
+import { mapState, mapActions } from 'vuex';
+import commonMenu from '../common/commonMenu';
+import lhcBet from './lhcBet';
+import commonCart from '../common/commonCart';
+import betArea from './betArea';
+import { setBallList } from './field.js';
 
 export default {
-  name: "lhcMain",
-  props: ["item"],
+  name: 'lhcMain',
+  props: ['item'],
   components: { commonMenu, lhcBet, betArea, commonCart },
   data() {
     return {
@@ -25,16 +25,16 @@ export default {
     };
   },
   computed: {
-    ...mapState("gameBet", ["playObj"]),
+    ...mapState('gameBet', ['playObj']),
     betSelectSet() {
       return setBallList(this.playObj.playid || 1);
     }
   },
   methods: {
-    ...mapActions("game", ["getGamePlayConfig"]),
+    ...mapActions('game', ['getGamePlayConfig']),
     async getInitData() {
-      this.$store.commit("game/setGameId", this.$route.params.id);
-      this.$store.commit("game/setGameItem", this.item);
+      this.$store.commit('game/setGameId', this.$route.params.id || this.$route.query.id);
+      this.$store.commit('game/setGameItem', this.item);
       let ret = await this.getGamePlayConfig(this.item.js_tag);
       this.menuPlayConfig = ret.list;
     },
@@ -58,7 +58,7 @@ export default {
         34,
         35
       ].includes(this.playObj.playid);
-      this.$store.commit("gameBet/setLhcPlay", flag);
+      this.$store.commit('gameBet/setLhcPlay', flag);
       return flag;
     }
   },
@@ -67,10 +67,10 @@ export default {
     this.isBall();
   },
   watch: {
-    "$route.params.id"(val) {
+    '$route.params.id'(val) {
       this.getInitData();
     },
-    "playObj.playid"(val) {
+    'playObj.playid'(val) {
       this.isBall();
     }
   }

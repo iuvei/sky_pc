@@ -11,7 +11,7 @@
       <!-- <nuxt-link to="/">主页</nuxt-link> -->
     </div>
     <div v-else>
-      <h1>An error occurred</h1>
+      <h1>页面发生错误，请刷新重试。如还不能解决，请联系客服</h1>
       <nuxt-link to="/">主页</nuxt-link>
     </div>
 
@@ -20,8 +20,8 @@
 
 <script>
 export default {
-  props: ["error"],
-  layout: "index" // you can set a custom layout for the error page
+  props: ['error'],
+  layout: 'index'
 };
 </script>
 

@@ -1,40 +1,40 @@
 Date.prototype.format = function(fmt) {
-  const arr = ["周天", "周一", "周二", "周三", "周四", "周五", "周六"];
+  const arr = ['周天', '周一', '周二', '周三', '周四', '周五', '周六'];
   const week = [
-    "星期天",
-    "星期一",
-    "星期二",
-    "星期三",
-    "星期四",
-    "星期五",
-    "星期六",
+    '星期天',
+    '星期一',
+    '星期二',
+    '星期三',
+    '星期四',
+    '星期五',
+    '星期六'
   ];
   const o = {
-    "M+": this.getMonth() + 1, // 月份
-    "d+": this.getDate(), // 日
-    "h+": this.getHours(), // 小时
-    "m+": this.getMinutes(), // 分
-    "s+": this.getSeconds(), // 秒
-    "q+": Math.floor((this.getMonth() + 3) / 3), // 季度
-    S: this.getMilliseconds(), // 毫秒
+    'M+': this.getMonth() + 1, // 月份
+    'd+': this.getDate(), // 日
+    'h+': this.getHours(), // 小时
+    'm+': this.getMinutes(), // 分
+    's+': this.getSeconds(), // 秒
+    'q+': Math.floor((this.getMonth() + 3) / 3), // 季度
+    S: this.getMilliseconds() // 毫秒
   };
   if (/(y+)/.test(fmt)) {
     fmt = fmt.replace(
       RegExp.$1,
-      (this.getFullYear() + "").substr(4 - RegExp.$1.length)
+      (this.getFullYear() + '').substr(4 - RegExp.$1.length)
     );
   }
-  if (fmt === "w") {
+  if (fmt === 'w') {
     fmt = arr[this.getDay()];
   }
-  if (fmt === "W") {
+  if (fmt === 'W') {
     fmt = week[this.getDay()];
   }
   for (const k in o) {
-    if (new RegExp("(" + k + ")").test(fmt)) {
+    if (new RegExp('(' + k + ')').test(fmt)) {
       fmt = fmt.replace(
         RegExp.$1,
-        RegExp.$1.length === 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length)
+        RegExp.$1.length === 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length)
       );
     }
   }
@@ -61,8 +61,8 @@ Number.prototype.float = function(type, num) {
       ret.num = floatNum;
       return ret;
     }
-    var strfi = floatNum + "";
-    var dotPos = strfi.indexOf(".");
+    var strfi = floatNum + '';
+    var dotPos = strfi.indexOf('.');
     var len = strfi.substr(dotPos + 1).length;
     var times = Math.pow(10, len);
     var intNum = parseInt(floatNum * times + 0.5, 10);
@@ -90,7 +90,7 @@ Number.prototype.float = function(type, num) {
     var max = t1 > t2 ? t1 : t2;
     var result = null;
     switch (op) {
-      case "add":
+      case 'add':
         if (t1 === t2) {
           // 两个小数位数相同
           result = n1 + n2;
@@ -102,7 +102,7 @@ Number.prototype.float = function(type, num) {
           result = n1 * (t2 / t1) + n2;
         }
         return result / max;
-      case "subtract":
+      case 'subtract':
         if (t1 === t2) {
           result = n1 - n2;
         } else if (t1 > t2) {
@@ -111,27 +111,27 @@ Number.prototype.float = function(type, num) {
           result = n1 * (t2 / t1) - n2;
         }
         return result / max;
-      case "multiply":
-        result = n1 * n2 / (t1 * t2);
+      case 'multiply':
+        result = (n1 * n2) / (t1 * t2);
         return result;
-      case "divide":
-        result = n1 / n2 * (t2 / t1);
+      case 'divide':
+        result = (n1 / n2) * (t2 / t1);
         return result;
     }
   }
 
   switch (type) {
-    case "add":
-      return operation(this, num, "add");
+    case 'add':
+      return operation(this, num, 'add');
       break;
-    case "subtract":
-      return operation(this, num, "subtract");
+    case 'subtract':
+      return operation(this, num, 'subtract');
       break;
-    case "multiply":
-      return operation(this, num, "multiply");
+    case 'multiply':
+      return operation(this, num, 'multiply');
       break;
-    case "divide":
-      return operation(this, num, "divide");
+    case 'divide':
+      return operation(this, num, 'divide');
       break;
     default:
       break;

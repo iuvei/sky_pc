@@ -42,9 +42,9 @@
 </template>
 
 <script>
-import ColorBall from "./ColorBall";
+import ColorBall from './ColorBall';
 export default {
-  name: "lm",
+  name: 'lm',
   props: {
     dataSource: {
       type: Array,
@@ -55,13 +55,13 @@ export default {
     odd: {
       type: [Number, String],
       default() {
-        return "";
+        return '';
       }
     },
     playName: {
       type: String,
       default() {
-        return "";
+        return '';
       }
     }
   },
@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     selectItem(item) {
-      this.$emit("selectItem", item);
+      this.$emit('selectItem', item);
     }
   }
 };

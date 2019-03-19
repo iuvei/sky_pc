@@ -10,7 +10,7 @@
 
 <script>
 export default {
-    name: "poundage"
+  name: 'poundage'
 };
 </script>
 <style lang="scss" scoped>

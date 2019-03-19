@@ -3,16 +3,14 @@
     <div class="modal-mask"></div>
     <div class="modal-wrap" @click.self="clickMask">
       <div :class="[customClass,'modal']">
-        <a class="ivu-modal-close" @click="clickMask"><i class="ivu-icon ivu-icon-ios-close"></i></a>
-        <!-- <a class="ivu-modal-close" >
-          <i class="ivu-icon ivu-icon-ios-close-empty"></i>
-        </a> -->
+        <a class="ivu-modal-close" @click="clickMask">
+          <i class="ivu-icon ivu-icon-ios-close"></i>
+        </a>
         <div class="head">
           <span>{{title}}</span>
         </div>
         <component :is="component" v-if="component" class="body" :visible="visible" :componentData='componentData' :beforeClose='beforeClose'></component>
         <div v-else v-html="content" class="body"> </div>
-        <!-- <div>{{this.visible}}</div> -->
         <div class="footer" v-show="showFoot">
           <button class="ivu-btn ivu-btn-info confirm" v-show="confirmType" @click="beforeClose(true)">{{confirmText}}</button>
           <button class="ivu-btn ivu-btn-error cancel" v-show="cancelType" @click="beforeClose(false)"> {{cancelText}}
@@ -25,9 +23,9 @@
   </div>
 </template>
 <script>
-import { mapState, mapActions, mapMutations } from "vuex";
+import { mapState, mapActions, mapMutations } from 'vuex';
 export default {
-  name: "GameModal",
+  name: 'GameModal',
   computed: {},
   data() {
     return {
@@ -39,7 +37,7 @@ export default {
       // this.$el.parentNode.removeChild(this.modalInstance.$el);
       this.$el.parentNode && this.$el.parentNode.removeChild(this.$el);
       this.$destroy();
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = 'unset';
     },
     clickMask() {
       this.visible = false;

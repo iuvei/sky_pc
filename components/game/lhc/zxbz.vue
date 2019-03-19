@@ -49,9 +49,9 @@
 </template>
 
 <script>
-import ColorBall from "./ColorBall";
+import ColorBall from './ColorBall';
 export default {
-  name: "zxbz",
+  name: 'zxbz',
   props: {
     dataSource: {
       type: Array,
@@ -62,7 +62,7 @@ export default {
     odd: {
       type: [Number, String],
       default() {
-        return "";
+        return '';
       }
     },
     odds: {
@@ -83,7 +83,7 @@ export default {
   },
   methods: {
     selectItem(item) {
-      this.$emit("selectItem", item);
+      this.$emit('selectItem', item);
     }
   }
 };

@@ -23,27 +23,27 @@
   </div>
 </template>
 <script>
-import { mapState, mapActions, mapMutations } from "vuex";
+import { mapState, mapActions, mapMutations } from 'vuex';
 // import { setInterval } from "timers";
 export default {
-  name: "GameModal",
+  name: 'GameModal',
   computed: {
-    ...mapState("modal", [
-      "visible",
-      "customClass",
-      "title",
-      "content",
-      "component",
-      "componentData",
-      "showFoot",
-      "confirmText",
-      "confirmType",
-      "cancelText",
-      "cancelType",
-      "maskClosable",
-      "delay",
+    ...mapState('modal', [
+      'visible',
+      'customClass',
+      'title',
+      'content',
+      'component',
+      'componentData',
+      'showFoot',
+      'confirmText',
+      'confirmType',
+      'cancelText',
+      'cancelType',
+      'maskClosable',
+      'delay',
       // "onOk",
-      "beforeClose",
+      'beforeClose',
     ]),
   },
   data() {
@@ -53,7 +53,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations("modal", ["changeModal"]),
+    ...mapMutations('modal', ['changeModal']),
     clickMask() {
       this.changeModal({ visible: false });
     },

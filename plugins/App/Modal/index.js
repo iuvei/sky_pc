@@ -1,18 +1,18 @@
-import Vue from "vue";
-import AppModalVue from "./AppModal";
+import Vue from 'vue';
+import AppModalVue from './AppModal';
 let instance, curOpts;
 let initData = () => ({
   visible: true,
-  customClass: "game-modal",
-  title: "温馨提示",
-  confirmText: "确定",
+  customClass: 'game-modal',
+  title: '温馨提示',
+  confirmText: '确定',
   showFoot: true,
   confirmType: true,
-  cancelText: "取消",
+  cancelText: '取消',
   cancelType: true,
-  content: "",
-  component: "",
-  componentData: "",
+  content: '',
+  component: '',
+  componentData: '',
   maskClosable: true,
   delay: false,
   // onOk() {},
@@ -21,7 +21,7 @@ let initData = () => ({
 const AppModalVueConstructor = Vue.extend(AppModalVue);
 const initInstance = options => {
   instance = new AppModalVueConstructor({
-    el: document.createElement("div"),
+    el: document.createElement('div'),
     data() {
       return {
         ...options
@@ -34,10 +34,10 @@ const AppModal = function(options = {}, callback) {
   if (Vue.prototype.$isServer || process.server) return;
   curOpts = Object.assign(initData(), options);
   initInstance(curOpts);
-  console.log(curOpts);
-  instance.action = "";
+  // console.log(curOpts);
+  instance.action = '';
   document.body.appendChild(instance.$el);
-  document.body.style.overflow = "hidden";
+  document.body.style.overflow = 'hidden';
   Vue.nextTick(() => {
     instance.visible = curOpts.visible;
   });

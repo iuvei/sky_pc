@@ -1,18 +1,45 @@
 <template>
-  <div class="ladder-betting">
-    <div class="betting-end">
-      <div class="play-title">终点</div>
+  <div
+    class="ladder-betting"
+    @input="priceChange"
+  >
+
+    <div class="betting-start">
+      <div class="play-title">起点</div>
       <div class="betting-row">
-        <span class="ball background-blue">单</span>
-        <span class="ball background-red">双</span>
+        <span class="ball background-start">左
+          <span class="num background-black">
+            <i class="arrow-down-a"></i>
+          </span>
+        </span>
+        <span class="ball background-start">右
+          <span
+            class="num background-black"
+            style="left: 65%;"
+          >
+            <i class="arrow-down-a"></i>
+          </span>
+        </span>
       </div>
       <div class="betting-row">
-        <span class="color-red">1.97</span>
-        <span class="color-red">1.97</span>
+        <span class="color-red">{{bets[0].odds}}</span>
+        <span class="color-red">{{bets[1].odds}}</span>
       </div>
       <div class="betting-row">
-        <Input v-model="input1" @keyup.native="updateMoney($event, 'input1')" size="small" clearable :number="true" class="betting-input"></Input>
-        <Input v-model="input2" @keyup.native="updateMoney($event, 'input2')" size="small" clearable :number="true" class="betting-input"></Input>
+        <AppInputNumber
+          class="betting-input number"
+          v-model="bets[0].money"
+          :needNull='true'
+          @click.native="setDefaultPrice(0)"
+        ></AppInputNumber>
+        <AppInputNumber
+          class="betting-input number"
+          v-model="bets[1].money"
+          :needNull='true'
+          @click.native="setDefaultPrice(1)"
+        ></AppInputNumber>
+        <!-- <Input v-model="input1" @keyup.native="updateMoney($event, 'input1')" size="small" clearable :number="true" class="betting-input"></Input> -->
+        <!-- <Input v-model="input2" @keyup.native="updateMoney($event, 'input2')" size="small" clearable :number="true" class="betting-input"></Input> -->
       </div>
     </div>
 
@@ -23,36 +50,48 @@
         <span class="ball background-black">4</span>
       </div>
       <div class="betting-row">
-        <span class="color-red">1.97</span>
-        <span class="color-red">1.97</span>
+        <span class="color-red">{{bets[2].odds}}</span>
+        <span class="color-red">{{bets[3].odds}}</span>
       </div>
       <div class="betting-row">
-        <Input v-model="input3" @keyup.native="updateMoney($event, 'input3')" size="small" clearable :number="true" class="betting-input"></Input>
-        <Input v-model="input4" @keyup.native="updateMoney($event, 'input4')" size="small" clearable :number="true" class="betting-input"></Input>
+        <AppInputNumber
+          class="betting-input number"
+          v-model="bets[2].money"
+          :needNull='true'
+          @click.native="setDefaultPrice(2)"
+        ></AppInputNumber>
+        <AppInputNumber
+          class="betting-input number"
+          v-model="bets[3].money"
+          :needNull='true'
+          @click.native="setDefaultPrice(3)"
+        ></AppInputNumber>
       </div>
     </div>
 
-    <div class="betting-start">
-      <div class="play-title">起点</div>
+    <div class="betting-end">
+      <div class="play-title">终点</div>
       <div class="betting-row">
-        <span class="ball background-start">左
-          <span class="num background-black">
-            <Icon type="arrow-down-a"></Icon>
-          </span>
-        </span>
-        <span class="ball background-start">右
-          <span class="num background-black" style="left: 65%;">
-            <Icon type="arrow-down-a"></Icon>
-          </span>
-        </span>
+        <span class="ball background-blue">单</span>
+        <span class="ball background-red">双</span>
       </div>
       <div class="betting-row">
-        <span class="color-red">1.97</span>
-        <span class="color-red">1.97</span>
+        <span class="color-red">{{bets[4].odds}}</span>
+        <span class="color-red">{{bets[5].odds}}</span>
       </div>
       <div class="betting-row">
-        <Input v-model="input5" @keyup.native="updateMoney($event, 'input5')" size="small" clearable :number="true" class="betting-input"></Input>
-        <Input v-model="input6" @keyup.native="updateMoney($event, 'input6')" size="small" clearable :number="true" class="betting-input"></Input>
+        <AppInputNumber
+          class="betting-input number"
+          v-model="bets[4].money"
+          :needNull='true'
+          @click.native="setDefaultPrice(4)"
+        ></AppInputNumber>
+        <AppInputNumber
+          class="betting-input number"
+          v-model="bets[5].money"
+          :needNull='true'
+          @click.native="setDefaultPrice(5)"
+        ></AppInputNumber>
       </div>
     </div>
 
@@ -60,7 +99,10 @@
       <div class="play-title">终点X梯子</div>
       <div class="betting-row">
         <span class="ball background-blue">单
-          <span class="num background-black" style="left: 65%;">3</span>
+          <span
+            class="num background-black"
+            style="left: 65%;"
+          >3</span>
         </span>
         <span class="ball background-red">双
           <span class="num background-black">3</span>
@@ -69,86 +111,233 @@
           <span class="num background-black">4</span>
         </span>
         <span class="ball background-red">双
-          <span class="num background-black" style="left: 65%;">4</span>
+          <span
+            class="num background-black"
+            style="left: 65%;"
+          >4</span>
         </span>
       </div>
       <div class="betting-row">
-        <span class="color-red">1.97</span>
-        <span class="color-red">1.97</span>
-        <span class="color-red">1.97</span>
-        <span class="color-red">1.97</span>
+        <span class="color-red">{{bets[6].odds}}</span>
+        <span class="color-red">{{bets[7].odds}}</span>
+        <span class="color-red">{{bets[8].odds}}</span>
+        <span class="color-red">{{bets[9].odds}}</span>
       </div>
       <div class="betting-row">
-        <Input v-model="input7" @keyup.native="updateMoney($event, 'input7')" size="small" clearable :number="true" class="betting-input"></Input>
-        <Input v-model="input8" @keyup.native="updateMoney($event, 'input8')" size="small" clearable :number="true" class="betting-input"></Input>
-        <Input v-model="input9" @keyup.native="updateMoney($event, 'input9')" size="small" clearable :number="true" class="betting-input"></Input>
-        <Input v-model="input10" @keyup.native="updateMoney($event, 'input10')" size="small" clearable :number="true" class="betting-input"></Input>
+        <AppInputNumber
+          class="betting-input number"
+          v-model="bets[6].money"
+          :needNull='true'
+          @click.native="setDefaultPrice(6)"
+        ></AppInputNumber>
+        <AppInputNumber
+          class="betting-input number"
+          v-model="bets[7].money"
+          :needNull='true'
+          @click.native="setDefaultPrice(7)"
+        ></AppInputNumber>
+        <AppInputNumber
+          class="betting-input number"
+          v-model="bets[8].money"
+          :needNull='true'
+          @click.native="setDefaultPrice(8)"
+        ></AppInputNumber>
+        <AppInputNumber
+          class="betting-input number"
+          v-model="bets[9].money"
+          :needNull='true'
+          @click.native="setDefaultPrice(9)"
+        ></AppInputNumber>
       </div>
     </div>
     <div class="close-layer"></div>
-    <!-- <div class="history-content">
-      <div v-for="item in data" :key="item" class="history-item">
-        <div class="history-qishu">{{item.qishu}}</div>
-        <div class="history-icon">
-          <span :class="['ball', item.single ? 'background-blue' : 'background-red']">
-            {{item.single?'单':'双'}}
-            <span class="num background-black">{{item.num}}</span>
-          </span>
-        </div>
-      </div>
-    </div> -->
+
   </div>
 </template>
 <script>
+import { mapState, mapMutations, mapActions } from "vuex";
+const bets = [
+  {
+    name: "起点",
+    label: "左",
+    value: "0",
+    odds: "",
+    selected: false,
+    money: ""
+  },
+  {
+    name: "起点",
+    label: "右",
+    value: "1",
+    odds: "",
+    selected: false,
+    money: ""
+  },
+  {
+    name: "梯子",
+    label: "3",
+    value: "2",
+    odds: "",
+    selected: false,
+    money: ""
+  },
+  {
+    name: "梯子",
+    label: "4",
+    value: "3",
+    odds: "",
+    selected: false,
+    money: ""
+  },
+  {
+    name: "终点",
+    label: "单",
+    value: "4",
+    odds: "",
+    selected: false,
+    money: ""
+  },
+  {
+    name: "终点",
+    label: "双",
+    value: "5",
+    odds: "",
+    selected: false,
+    money: ""
+  },
+  {
+    name: "终点X梯子",
+    label: "单3",
+    value: "6",
+    odds: "",
+    selected: false,
+    money: ""
+  },
+  {
+    name: "终点X梯子",
+    label: "双3",
+    value: "7",
+    odds: "",
+    selected: false,
+    money: ""
+  },
+  {
+    name: "终点X梯子",
+    label: "单4",
+    value: "8",
+    odds: "",
+    selected: false,
+    money: ""
+  },
+  {
+    name: "终点X梯子",
+    label: "双4",
+    value: "9",
+    odds: "",
+    selected: false,
+    money: ""
+  }
+];
+
 export default {
   name: "ladder-betting",
   data() {
     return {
-      input1: "",
-      input2: "",
-      input3: "",
-      input4: "",
-      input5: "",
-      input6: "",
-      input7: "",
-      input8: "",
-      input9: "",
-      input10: "",
-      data: [
-        {
-          qishu: "201807100433",
-          single: true,
-          num: 3
-        },
-        {
-          qishu: "201807100432",
-          single: true,
-          num: 4
-        },
-        {
-          qishu: "201807100431",
-          single: false,
-          num: 3
-        },
-        {
-          qishu: "201807100430",
-          single: false,
-          num: 4
-        }
-      ]
+      bets: JSON.parse(JSON.stringify(bets))
     };
   },
-  computed: {},
-  watch: {},
-  activated() {},
-  deactivated() {},
-  mounted() {},
+  props:["gameItem"],
+  computed: {
+    ...mapState('userinfo', ['isLogin']),
+    // ...mapState("game", ["gameList", "gameItem"]),
+     ...mapState("game", ["gameList"]),
+    ...mapState("gameBet", ["playObj"]),
+    // item() {
+    //   let gameId = this.$route.params.id || this.$route.query.id;
+    //   debugger
+    //   return this.gameList.filter(item => item.game_id == gameId)[0] || {};
+    // }
+  },
+  watch: {
+    isLogin(){
+      this.handleOdds();
+    }
+  },
+  async mounted() {
+    // 初始化下注信息
+    this.$bus.$on("resetBetArea", this.clearSelect);
+    this.$bus.$on("randomBet", this.addData);
+    this.setBetting();
+    this.changeField({ stateOdds: false });
+    this.$store.commit('gameBet/setCurPrice', 2)
+    this.delShopCart();
+    this.setShopCart();
+
+    // 当前游戏
+    this.$store.commit("game/setGameId", this.$route.params.id || this.$route.query.id);
+    this.$store.commit("game/setGameItem", this.gameItem);
+    // 当前玩法
+    let arr = await this.getGamePlayConfig((this.gameItem).js_tag) || {};
+    arr = arr.list || [];
+    arr = (arr[0] && arr[0].submenu) || [];
+    arr = (arr[0] && arr[0].playlist) || [];
+
+    this.$store.commit(
+      "gameBet/setBetPlay",
+      arr.filter(item => item.playid == 1)[0]
+    );
+
+    // 赔率
+    this.handleOdds();
+  },
+  destroyed() {
+    this.$bus.$off("resetBetArea");
+    this.$bus.$off("randomBet");
+  },
   methods: {
-    updateMoney({ target }, input) {
-      let money = Math.round(target.value * 1) || "";
-      target.value = money;
-      this[input] = money;
-      // console.error(money,this[input])
+    ...mapActions("game", ["getPeilv", "getGamePlayConfig"]),
+    ...mapMutations("gameBet", ["setBetting", "changeField", 'delShopCart', 'setShopCart']),
+    setDefaultPrice(idx){
+      let price = this.$store.state.gameBet.lhc.curPrice;
+      this.bets[idx].money = this.bets[idx].money || price
+      this.priceChange()
+    },
+    priceChange() {
+      let filterData = this.bets.filter(el => el.money > 0);
+      filterData = JSON.parse(JSON.stringify(filterData))
+      // console.error(filterData);
+      this.setBetting({
+        selected: filterData,
+        // oneBetDate: obj,
+        betNum: filterData.length
+      });
+    },
+    // 随机加入购物车
+    addData(filterData, callback){
+      filterData = JSON.parse(JSON.stringify([this.bets[Math.floor(Math.random()*this.bets.length)]]))
+      callback({
+          selected: filterData
+          // oneBetDate: obj
+        });
+    },
+    async handleOdds() {
+      let odds = (await this.getPeilv()) || [];
+      odds = odds.filter(el => el.playid == this.playObj.playid)[0] || {};
+      odds = odds.peilv || "";
+      if (odds.includes("|")) {
+        odds = odds.split("|");
+      } else {
+        odds = new Array(10).fill(odds);
+      }
+      this.bets.map((el, idx) => (el.odds = odds[idx] || "-"));
+
+      // 保存 betSetSource 
+      this.changeField({
+        betSetSource: JSON.parse(JSON.stringify(this.bets))
+      });
+    },
+    clearSelect(){
+      this.bets.map(el => el.money='')
     }
   }
 };
@@ -169,6 +358,12 @@ export default {
     &:nth-child(n + 2) {
       border-left: 1px solid #dadada;
     }
+  }
+  .arrow-down-a {
+    width: 10px;
+    height: 10px;
+    background-image: url(~/assets/img/arrow-down-a.png);
+    background-size: 100%;
   }
   .betting-x {
     flex: 2;
@@ -193,7 +388,13 @@ export default {
     width: 100%;
   }
   .betting-input {
-    padding: 0 5px;
+    padding: 0 10px;
+  }
+  .betting-input.number {
+    border: 1px solid #dddee1;
+    border-radius: 3px;
+    line-height: 25px;
+    background-color: #f1ffff;
   }
   .betting-row {
     width: 80%;

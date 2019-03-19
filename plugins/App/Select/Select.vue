@@ -1,40 +1,35 @@
 <template>
   <div :class="['app-select',{expand:show}]" @click="toggle">
     <div class="value">{{value}}</div>
-    <!-- options -->
     <div class="options" v-show="show">
       <AppCollapse :open="show" class="app-collapse">
-        <!-- <ul > -->
         <li v-for="(v,k) in data " :key="k" class="li" @click="selected(v)" :class="{disabled:limit.includes(v.value)}">
           <span>{{v.label}}</span>
         </li>
-        <!-- </ul> -->
       </AppCollapse>
     </div>
   </div>
 </template>
 <script>
 export default {
-  name: "AppSelect",
+  name: 'AppSelect',
   model: {
-    prop: "value",
-    event: "select",
+    prop: 'value',
+    event: 'select',
   },
-  props: ["data", "value", "limit"],
+  props: ['data', 'value', 'limit'],
   data() {
     return {
       show: false,
-      // frist: false,
     };
   },
   methods: {
     toggle() {
       this.show = !this.show;
-      // this.frist = true;
     },
     selected(item) {
       if (this.limit.includes(item.value)) return;
-      this.$emit("select", item.value);
+      this.$emit('select', item.value);
     },
   },
 };
@@ -47,7 +42,7 @@ export default {
   cursor: pointer;
   &::after {
     transition: all 0.5s ease-in-out;
-    content: "";
+    content: '';
     display: inline-block;
     position: absolute;
     width: 10px;
@@ -97,8 +92,6 @@ export default {
   }
 }
 .expand {
-  // border-bottom-right-radius: 0px !important;
-  // border-bottom-left-radius: 0px !important;
   &::after {
     transition: all 0.5s ease-in-out;
     transform: rotate(225deg);

@@ -1,16 +1,22 @@
 <template>
   <div class='xypk'>
-    <gameHead :item='item'></gameHead>
-    <pcddMain :item="item"></pcddMain>
+    <gameHead
+      :item='item'
+      v-if="item"
+    ></gameHead>
+    <pkMain
+      :item="item"
+      v-if="item"
+    ></pkMain>
   </div>
 </template>
 <script>
 import { mapState, mapActions } from "vuex";
 import gameHead from "~/components/game/gameHead";
-import pcddMain from "~/components/game/puke/main";
+import pkMain from "~/components/game/puke/main";
 export default {
   name: "xypk",
-  components: { gameHead, pcddMain },
+  components: { gameHead, pkMain },
   computed: {
     ...mapState("game", ["gameList"]),
     item() {
@@ -20,8 +26,8 @@ export default {
   methods: {
     ...mapActions("game", ["getCplogList", "getKjCpLog"]),
     initItem() {
-      let gameId = this.$route.params.id;
-      return this.gameList.filter(item => item.game_id == gameId)[0] || {};
+      let gameId = this.$route.params.id || this.$route.query.id;
+      return this.gameList.find(item => item.game_id == gameId)
     }
   }
 };

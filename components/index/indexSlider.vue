@@ -11,20 +11,20 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex';
 //首页轮播图
 export default {
-  name: "IndexSlider",
+  name: 'IndexSlider',
   data() {
     return {
       value: 0,
       setting: {
         autoplay: true,
         autoplaySpeed: 2000,
-        dots: "inside",
+        dots: 'inside',
         radiusDot: true,
-        trigger: "click",
-        arrow: "hover"
+        trigger: 'click',
+        arrow: 'hover'
       }
     };
   },

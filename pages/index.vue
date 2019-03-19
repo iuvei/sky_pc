@@ -29,10 +29,12 @@ import WinList from "~/components/index/WinList";
 import IndexMarquee from "~/components/index/IndexMarquee";
 import IndexNotice from "~/components/index/IndexNotice";
 import fastBet from "~/components/index/fastBet";
-// import SysMessage from "./sysnotice";
 import SysMessage from "~/components/index/sysnotice";
+import to from "../api/await-to";
+import mcache from "memory-cache";
 export default {
   name: "index",
+
   components: {
     IndexSlider,
     SysMessage,
@@ -47,18 +49,64 @@ export default {
     return {};
   },
   methods: {},
-  async asyncData({ store, route, redirect, req }) {
-    if (route.query && route.query.vip && route.query.vip.length) {
-      req.session.inviteCode = route.query.vip;
-      redirect("/register");
+  async created() {
+    if (!process.browser) return;
+
+    if (process.env.static) {
+      await this.$store.dispatch("sysinfo/banner");
+
+      const query = this.$route.query;
+      localStorage.setItem("tgcode", query.vip);
+      if (query && query.vip && query.vip.length) {
+        if (this.$store.state.userinfo.isLogin)
+          this.$store.dispatch("userinfo/logout");
+        this.$router.push("/register" + "?inviteCode=" + query.vip);
+      }
     }
-    // console.log('asyncData_req.headers.host',req.headers.host)
-    // console.log("____req",req)
-    let result = await Promise.all([
-      store.dispatch("sysinfo/getSysinfo", req ? req.headers.host : window.location.host),
-      store.dispatch("game/getGameListAtin"),
-      store.dispatch("sysinfo/banner")
-    ]);
+  },
+  async asyncData({ store, route, redirect, req }) {
+    if (process.env.static) return;
+    let _result = [];
+    let [err, result] = await to(
+      Promise.all([
+        store.dispatch(
+          "sysinfo/getSysinfo",
+          req ? req.headers.host : window.location.host
+        )
+      ])
+    );
+    if (err) {
+      const sysErr = mcache.get("system_error");
+      // console.log(sysErr)
+      if (sysErr) {
+        store.dispatch("sysinfo/setSysError", sysErr);
+        if (sysErr.msg === 40020) redirect("/ipforbidden");
+        else if (sysErr.msg === 45000) redirect("/maintenance");
+      }
+    } else {
+      _result = await Promise.all([
+        store.dispatch(
+          "sysinfo/getSysinfo",
+          req ? req.headers.host : window.location.host
+        ),
+        store.dispatch("game/getGameListAtin"),
+        store.dispatch("sysinfo/banner")
+      ]);
+    }
+
+    if (route.query && route.query.vip && route.query.vip.length) {
+      // mcache.put('tgcode',route.query.vip)
+      // req.session.inviteCode = route.query.vip;
+      if (req.session.authUser) {
+        let result = await store.dispatch(
+          "userinfo/logout",
+          req.session.authUser
+        );
+        if (result) redirect("/register" + "?inviteCode=" + route.query.vip);
+      } else {
+        redirect("/register" + "?inviteCode=" + route.query.vip);
+      }
+    }
   }
 };
 </script>
@@ -73,6 +121,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   padding: 10px 0;
+  background: #fff;
 }
 
 .row {

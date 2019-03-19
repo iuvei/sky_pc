@@ -2,9 +2,9 @@
   <div class="day_list">
     <div class="day_con">
       <div class="detail-header" v-if="game.js_tag !=='lhc'">
-        <kjItemHead v-if="hideSpeed" :game="game"></kjItemHead>
-        <kjItemHead v-if="hideSpeed" :game="game"></kjItemHead>
-        <kjItemHead v-if="hideSpeed" :game="game"></kjItemHead>
+        <kjItemHead v-if="highSpeed" :game="game"></kjItemHead>
+        <kjItemHead v-if="highSpeed" :game="game"></kjItemHead>
+        <kjItemHead v-if="highSpeed" :game="game"></kjItemHead>
       </div>
       <div class="detail-header" v-else>
         <kjItemHead :game="game"></kjItemHead>
@@ -33,12 +33,12 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
-import kjItem from "./kjItem";
-import kjItemHead from "./kjItemHead";
+import { mapState, mapActions } from 'vuex'
+import kjItem from './kjItem'
+import kjItemHead from './kjItemHead'
 export default {
-  name: "lottery-table",
-  props: ["game", "data", "day"],
+  name: 'lottery-table',
+  props: ['game', 'data', 'day'],
   components: {
     kjItem,
     kjItemHead
@@ -48,120 +48,132 @@ export default {
       spinShow: true,
       kjList: [],
       list: []
-    };
+    }
   },
   watch: {
-    data: "handle"
+    data: 'handle'
   },
   methods: {
-    ...mapActions("game", ["getCplogList"]),
+    ...mapActions('game', ['getCplogList']),
     async handle(val) {
-      this.list = await this.calcList();
+      this.list = await this.calcList()
     },
     // 获取开奖倒计时
     async getKjlog(game) {
-      let ret = await this.getCplogList({ tag: game.tag });
+      let ret = await this.getCplogList({ tag: game.tag })
       if (ret && Array.isArray(ret) && ret.length) {
-        return ret[0].next;
+        return ret[0].next
       }
-      return [];
+      return []
     },
     colData(val) {
       let start = val * this.rowLength,
-        _d = [];
+        _d = []
       for (let i = start, len = this.rowLength + start; i < len; i++) {
         if (i < this.list.length) {
-          _d.push(this.list[i]);
+          _d.push(this.list[i])
         } else {
-          _d.push({});
+          _d.push({})
         }
       }
       if (val === 2) {
         this.$nextTick(() => {
           setTimeout(() => {
-            this.spinShow = false;
-          }, 100);
-        });
+            this.spinShow = false
+          }, 100)
+        })
       }
-      return _d;
+      return _d
     },
     async calcList() {
-      let _list = [];
-      let _qishu = this.data[0] ? this.data[0].qishu : 0;
+      let _list = []
+      let _qishu = this.data[0] ? this.data[0].qishu : 0
       if (this.data.length <= this.qishu) {
         for (let i = 0; i < this.qishu; i++) {
           if (this.data[i]) {
-            _list.push(this.data[i]);
+            _list.push(this.data[i])
+            _qishu = this.data[i].qishu
           } else {
-            _list.push({ qishu: _qishu });
+            _list.push({ qishu: _qishu })
           }
-          _qishu++;
+          _qishu++
         }
       }
 
-      this.kjList = await this.getKjlog(this.game);
+      this.kjList = await this.getKjlog(this.game)
 
       if (this.kjList && this.kjList.length) {
         for (let i = 0; i < this.kjList.length; i++) {
-          let c = this.kjList[i];
-          let _item = _list.find(y => y.qishu === c.qishu);
+          let c = this.kjList[i]
+          let _item = _list.find(y => y.qishu === c.qishu)
           if (_item) {
-            _item = Object.assign(_item, c);
-            break;
+            _item = Object.assign(_item, c)
+            break
           }
         }
       }
-      return _list;
+      return _list
     },
     reload() {
-      this.$emit("reload");
+      this.$emit('reload')
     }
   },
   computed: {
-    ...mapState("game", ["qishus"]),
-    hideSpeed() {
-      return ["k3", "11x5", "pcdd", "ssc", "pk10"].includes(this.game.js_tag);
+    ...mapState('game', ['qishus']),
+    highSpeed() {
+      return [
+        'k3',
+        '11x5',
+        'pcdd',
+        'ssc',
+        'pk10',
+        'pkniuniu',
+        'xypk',
+        'qxc',
+        'xync',
+        'tzyx'
+      ].includes(this.game.js_tag)
     },
     qishu() {
       if (this.game && this.qishus) {
         return this.qishus.find(
           x => x.gameid === (this.game.game_id || this.game.gameid)
-        ).qishu;
+        ).qishu
       }
-      return 0;
+      return 0
     },
     rowLength() {
       if (this.qishu) {
-        let qishu = Number(this.qishu);
+        let qishu = Number(this.qishu)
         if (qishu % 3 === 0) {
-          return qishu / 3;
+          return qishu / 3
         } else {
           while (qishu++) {
             if (qishu % 3 === 0) {
-              break;
+              break
             }
           }
-          return qishu / 3;
+          return qishu / 3
         }
       }
     },
     colData1() {
-      return this.colData(0);
+      return this.colData(0)
     },
     colData2() {
-      return this.colData(1);
+      return this.colData(1)
     },
     colData3() {
-      return this.colData(2);
+      return this.colData(2)
     }
   },
   updated() {
     this.$nextTick(() => {
-      let _this = this;
+      let _this = this
       setTimeout(() => {
-        _this.spinShow = false;
-      }, 2000);
-    });
+        _this.spinShow = false
+      }, 2000)
+    })
   }
   // mounted() {
   //   this.$nextTick(() => {
@@ -171,7 +183,7 @@ export default {
   //     }, 2000);
   //   });
   //}
-};
+}
 </script>
 
 <style scoped>

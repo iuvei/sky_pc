@@ -23,7 +23,6 @@
           <div class="number-cell ">
             <AppInputNumber class="number " v-model="item.money" :needNull='true' @input="inputChange"></AppInputNumber>
           </div>
-          <!-- <div></div> -->
         </div>
       </div>
     </div>
@@ -32,13 +31,11 @@
       <div class="title">
         <span>{{betSelectSet[0].name}}</span>
       </div>
-      <!-- <betAreaThree class="three-group" :data="betSelectSet[1].option" :numbers='[0,1,2]' @input="change"></betAreaThree> -->
       <div class="three-group">
         <AppSelect v-model="numbers[0]" :data="betSelectSet[0].option" :limit="numbers" class="select"></AppSelect>
         <AppSelect v-model="numbers[1]" :data="betSelectSet[0].option" :limit="numbers" class="select"></AppSelect>
         <AppSelect v-model="numbers[2]" :data="betSelectSet[0].option" :limit="numbers" class="select"></AppSelect>
       </div>
-      <!-- <div></div> -->
       <div class="three-money">
         <span>下注金额</span>
         <AppInputNumber class="number " v-model="id2Money" :needNull='true' @input="inputChange"></AppInputNumber>
@@ -129,44 +126,42 @@
   </div>
 </template>
 <script>
-import { mapState, mapActions, mapMutations } from "vuex";
-import getField from "./field.js";
-// import betAreaThree from "./betAreaThree";
+import { mapState, mapActions, mapMutations } from 'vuex'
+import getField from './field.js'
 export default {
-  name: "betArea",
+  name: 'betArea',
   data() {
     return {
       numbers: [0, 1, 2],
       betSelectSet: getField,
-      id2Money: "",
-    };
+      id2Money: ''
+    }
   },
-  // components: { betAreaThree },
   computed: {
-    ...mapState("gameBet", ["playObj"]),
+    ...mapState('gameBet', ['playObj'])
   },
   methods: {
-    ...mapActions("game", ["getPeilv"]),
-    ...mapMutations("gameBet", ["setBetting", "changeField", "setShopCart"]),
+    ...mapActions('game', ['getPeilv']),
+    ...mapMutations('gameBet', ['setBetting', 'changeField', 'setShopCart']),
     inputChange(val) {
-      console.log(val);
-      let arr = [];
+      // console.log(val)
+      let arr = []
       this.betSelectSet.forEach((group, idx) => {
-        let fd = [];
+        let fd = []
         if (group.playId === 2) {
           // 包三
-          if (!this.id2Money) return;
+          if (!this.id2Money) return
           fd = [
             {
               wanfa: group.name,
               playId: group.playId,
-              xiangqing: `${group.name}(${this.numbers.sort().join("+")})`,
+              xiangqing: `${group.name}(${this.numbers.sort().join(' ')})`,
               betNum: 1,
-              value: this.numbers.sort().join("+"),
+              value: this.numbers.sort().join('+'),
               money: this.id2Money,
-              odds: group.odds,
-            },
-          ];
+              odds: group.odds
+            }
+          ]
         } else {
           fd = group.option.filter(item => item.money).map(v =>
             Object.assign(
@@ -174,81 +169,79 @@ export default {
                 wanfa: group.name,
                 playId: group.playId,
                 xiangqing: `${group.name}(${v.label})`,
-                betNum: 1,
+                betNum: 1
               },
               v
             )
-          );
+          )
         }
-        arr = [...arr, ...fd];
-      });
+        arr = [...arr, ...fd]
+      })
       this.setBetting({
-        betNum: arr.length,
-      });
-      this.$emit("selectedItem", arr);
+        betNum: arr.length
+      })
+      this.$emit('selectedItem', arr)
     },
     // 下注数据组装 结构+赔率
     async togetPeilv() {
-      if (!this.playObj.playid) return;
+      if (!this.playObj.playid) return
       // 请求赔率
-      let ret = await this.getPeilv();
+      let ret = await this.getPeilv()
       if (!ret.length) {
-        return;
+        return
       }
-      let id1Arr = ret[0].peilv.split("|"),
-        id2Arr = ret[1].peilv.split("|"),
-        id3Arr = ret[2].peilv.split("|");
+      let id1Arr = ret[0].peilv.split('|'),
+        id2Arr = ret[1].peilv.split('|'),
+        id3Arr = ret[2].peilv.split('|')
       // 特码
       getField[1].option.map((v, k) => {
-        return Object.assign(v, { odds: id1Arr[k] });
-      });
+        return Object.assign(v, { odds: id1Arr[k] })
+      })
       // 包三
-      getField[0].odds = id2Arr[0];
+      getField[0].odds = id2Arr[0]
       // 混合多样
       for (let i = 2; i < 5; i++) {
         option: getField[i].option.map((v, k) => {
-          return Object.assign(v, { odds: id3Arr[k] });
-        });
-        id3Arr.splice(0, getField[i].option.length);
+          return Object.assign(v, { odds: id3Arr[k] })
+        })
+        id3Arr.splice(0, getField[i].option.length)
       }
 
       this.changeField({
-        betSetSource: JSON.parse(JSON.stringify(this.betSelectSet)),
-      });
+        betSetSource: JSON.parse(JSON.stringify(this.betSelectSet))
+      })
     },
     // 清空选择
     clearSelect() {
       this.betSelectSet.forEach((group, idx) => {
-        if (!idx) return;
+        if (!idx) return
         this.betSelectSet[idx].option = group.option.map((val, key) => {
-          val.money = "";
-          return val;
-        });
-      });
-      this.id2Money = "";
+          val.money = ''
+          return val
+        })
+      })
+      this.id2Money = ''
     },
     addData(betSelectSet, callback) {
       let group = betSelectSet[0],
-        betted = [];
-      // betSelectSet.forEach((group, idx) => {
-      // let fd = [];
+        betted = []
       if (group.playId === 2) {
         // 包三
         betted = [
           {
             wanfa: group.name,
             playId: group.playId,
-            xiangqing: `${group.name}(${this.numbers.sort().join("+")})`,
+            xiangqing: `${group.name}(${this.numbers.sort().join(' ')})`,
             value: group.option
               .filter(item => item.selected)
               .map(v => v.value)
-              .join("+"),
+              .join('+'),
             odds: group.odds,
             money: 2,
             multiple: 1,
-            betNum: 1,
-          },
-        ];
+            betNum: 1
+          }
+        ]
       } else {
         betted = group.option.filter(item => item.selected).map(v =>
           Object.assign(v, {
@@ -257,30 +250,30 @@ export default {
             xiangqing: `${group.name}(${v.label})`,
             multiple: 1,
             betNum: 1,
-            money: 2,
+            money: 2
           })
-        );
+        )
       }
-      this.setShopCart(betted);
-    },
+      this.setShopCart(betted)
+    }
   },
   mounted() {
-    this.$bus.$on("resetBetArea", this.clearSelect);
-    this.$bus.$on("randomBet", this.addData);
-    this.setBetting();
+    this.$bus.$on('resetBetArea', this.clearSelect)
+    this.$bus.$on('randomBet', this.addData)
+    this.setBetting()
     // 后期删除 开发热更新 兼容
-    this.togetPeilv();
+    this.togetPeilv()
   },
   destroyed() {
-    this.$bus.$off("randomBet");
+    this.$bus.$off('randomBet')
   },
   watch: {
-    "playObj"(val) {
-      this.setBetting();
-      this.togetPeilv();
-    },
-  },
-};
+    playObj(val) {
+      this.setBetting()
+      this.togetPeilv()
+    }
+  }
+}
 </script>
 <style lang='scss' scoped>
 .bet-area {

@@ -48,13 +48,10 @@
 
 <script>
 export default {
-  name: "lottery-k3",
-  props: ["game"],
-  created() {
-  }
+  name: 'lottery-k3',
+  props: ['game']
 };
 </script>
 
 <style>
-
 </style>

@@ -1,16 +1,22 @@
 <template>
-  <div class='qxc'>
-    <gameHead :item='item'></gameHead>
-    <!-- <sscMain :item="item"></sscMain> -->
+  <div class='xy-qxc'>
+    <gameHead
+      :item='item'
+      v-if="item"
+    ></gameHead>
+    <qxcMain
+      :item="item"
+      v-if="item"
+    ></qxcMain>
   </div>
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
 import gameHead from '~/components/game/gameHead'
-import sscMain from '~/components/game/ssc/main'
+import qxcMain from '~/components/game/qxc/main'
 export default {
-  name: 'ssc',
-  components: { gameHead, sscMain },
+  name: 'qxc',
+  components: { gameHead, qxcMain },
   computed: {
     ...mapState('game', ['gameList']),
     item() {
@@ -20,15 +26,13 @@ export default {
   methods: {
     ...mapActions('game', ['getCplogList', 'getKjCpLog']),
     initItem() {
-      return (
-        this.gameList.find(item => item.game_id == this.$route.params.id) || {}
-      )
+      return this.gameList.find(item => item.game_id == (this.$route.params.id || this.$route.query.id))
     }
   }
 }
 </script>
 <style lang='scss' scoped>
-.qxc {
+.xy-qxc {
   width: 1000px;
   margin: 20px auto 0;
   overflow-x: hidden;

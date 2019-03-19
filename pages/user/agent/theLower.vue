@@ -29,96 +29,139 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
-import statusGroup from "~/components/user/statusGroup";
+import { mapState, mapActions } from 'vuex'
+import statusGroup from '~/components/user/statusGroup'
 export default {
-  name: "userTheLower",
+  name: 'userTheLower',
   components: {
     statusGroup
   },
   data() {
     return {
+      superiorArr: [''], // 可返回的层级
       userType: 0,
       userTypes: [
         {
-          label: "全部",
+          label: '全部',
           value: 0
         },
         {
-          label: "会员",
+          label: '会员',
           value: 1
         },
         {
-          label: "代理",
+          label: '代理',
           value: 2
         }
       ],
       lasttimes: [
-        { label: "今日", value: 0 },
-        { label: "昨天", value: 1 },
-        { label: "本周", value: 2 },
-        { label: "本月", value: 3 },
-        { label: "上月", value: 4 }
+        { label: '今日', value: 0 },
+        { label: '昨天', value: 1 },
+        { label: '本周', value: 2 },
+        { label: '本月', value: 3 },
+        { label: '上月', value: 4 }
       ],
       lasttime: 0,
-      userName: "",
+      userName: '',
       tableColumns: [
-        { title: "用户名", key: "username" },
-        { title: "用户类型", key: "actype" },
-        { title: "投注金额", key: "tz_price" },
-        { title: "中奖金额", key: "win_price" },
-        { title: "返点金额", key: "fandian_price" },
-        { title: "充值金额", key: "pay_price" },
-        { title: "提款金额", key: "get_price" },
-        { title: "下级代理", key: "next_daili" },
-        { title: "下级会员", key: "next_user" }
+        { title: '用户名', width: 130, key: 'username' },
+        { title: '用户类型', key: 'actype' },
+        { title: '投注金额', key: 'tz_price' },
+        { title: '中奖金额', key: 'win_price' },
+        { title: '返点金额', key: 'fandian_price' },
+        { title: '充值金额', key: 'pay_price' },
+        { title: '提款金额', key: 'get_price' },
+        { title: '下级代理', key: 'next_daili' },
+        { title: '下级会员', key: 'next_user' },
+        {
+          title: '操作',
+          render: (h, params) => {
+            const row = params.row
+            return (
+              <div class="operation">
+                {this.superiorArr.length > 1 && (
+                  <a
+                    class="btn_log"
+                    title="查看上级"
+                    href="javascript:void(0)"
+                    onClick={() => this.lookUp(row)}
+                  >
+                    查看上级
+                  </a>
+                )}
+                {row.next_count > 0 && (
+                  <a
+                    class="btn_static"
+                    title="查看下级"
+                    href="javascript:void(0)"
+                    onClick={() => this.lookDown(row)}
+                  >
+                    查看下级
+                  </a>
+                )}
+              </div>
+            )
+          }
+        }
       ],
       tableData: [],
       loadMore: false
-    };
+    }
   },
   computed: {
-    ...mapState("userinfo", ["accountInfo"])
+    ...mapState('userinfo', ['accountInfo']),
+    uid() {
+      return this.accountInfo.uid
+    }
   },
   watch: {
-    userType: "queryClick",
-    lasttime: "queryClick"
+    userType: 'queryClick',
+    lasttime: 'queryClick'
   },
   mounted() {
-    this.initData();
+    this.initData()
   },
   methods: {
-    ...mapActions("agent", ["getChlidStatic", "getDailiStaticData"]),
+    ...mapActions('agent', ['getChlidStatic', 'getDailiStaticData']),
+    lookUp() {
+      this.superiorArr.splice(-1, 1)
+      this.queryClick()
+    },
+    lookDown({ uid }) {
+      this.superiorArr.push(uid)
+      this.queryClick()
+    },
     nextClick() {
-      this.loadMore = true;
-      this.pageid++;
-      this.initData();
+      this.loadMore = true
+      this.pageid++
+      this.initData()
     },
     queryClick() {
       this.loadMore = false
-      this.pageid=0
+      this.pageid = 0
       this.tableData = []
-      this.initData();
+      this.initData()
     },
     async initData() {
+      let user_id = this.superiorArr[this.superiorArr.length - 1]
       let params = {
         loading: true,
         username: this.userName,
         user_type: this.userType,
         pageid: this.pageid,
-        user_id: "", // this.accountInfo.uid,
+        user_id,
         lasttime: this.lasttime,
         count: 20
-      };
-      let data = (await this.getChlidStatic(params)) || [];
-      if (this.loadMore) {
-        data = [...this.tableData, ...data];
       }
-      this.tableData = data;
+      let data = (await this.getChlidStatic(params)) || []
+      if (this.loadMore) {
+        data = [...this.tableData, ...data]
+      }
+      this.tableData = data
       // console.error(data);
     }
   }
-};
+}
 </script>
 <style lang="scss" scoped>
 .agent_that {
@@ -215,6 +258,12 @@ export default {
     height: 40px;
     line-height: 40px;
   }
+
+  .operation {
+    line-height: 30px;
+    a {
+      display: inline-block;
+    }
+  }
 }
 </style>
-

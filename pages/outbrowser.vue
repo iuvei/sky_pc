@@ -200,7 +200,7 @@
 export default {
   
   name:'outbrowser',
-  layout: "index",
+  layout: 'index',
   head:{
     // script:['~plugins/checkBrowser.js']
     //  script: [{src:'http://apps.bdimg.com/libs/jquery/1.10.1/jquery.min.js'},{src:'/checkbrowser.js'}]
@@ -360,7 +360,7 @@ blockquote:after,
 blockquote:before,
 q:after,
 q:before {
-  content: "";
+  content: '';
   content: none;
 }
 
@@ -408,7 +408,7 @@ h5 {
 body {
   font-size: 16px;
   line-height: 16px;
-  font-family: "Gotham SSm A", "Gotham SSm B", Helvetica, Arial, sans-serif;
+  font-family: 'Gotham SSm A', 'Gotham SSm B', Helvetica, Arial, sans-serif;
   font-weight: 500;
   font-style: normal;
   color: #222;
@@ -416,18 +416,18 @@ body {
   -webkit-font-smoothing: antialiased;
   -ms-font-smoothing: antialiased;
   font-smoothing: antialiased;
-  -moz-font-feature-settings: "calt=1, liga=1, clig=1, kern=1";
-  -moz-font-feature-settings: "calt" 1, "liga" 1, "clig" 1, "kern" 1;
-  -ms-font-feature-settings: "calt", "liga", "clig", "kern";
-  -o-font-feature-settings: "calt", "liga", "clig", "kern";
-  -webkit-font-feature-settings: "calt", "liga", "clig", "kern";
-  font-feature-settings: "calt", "liga", "clig", "kern";
+  -moz-font-feature-settings: 'calt=1, liga=1, clig=1, kern=1';
+  -moz-font-feature-settings: 'calt' 1, 'liga' 1, 'clig' 1, 'kern' 1;
+  -ms-font-feature-settings: 'calt', 'liga', 'clig', 'kern';
+  -o-font-feature-settings: 'calt', 'liga', 'clig', 'kern';
+  -webkit-font-feature-settings: 'calt', 'liga', 'clig', 'kern';
+  font-feature-settings: 'calt', 'liga', 'clig', 'kern';
 }
 
 html:lang(zh-Hans) body,
 html:lang(zh-Hant) body {
-  font-family: "Microsoft Yahei UI", "Microsoft Yahei", "Gotham SSm A",
-    "Gotham SSm B", Helvetica, Arial, sans-serif;
+  font-family: 'Microsoft Yahei UI', 'Microsoft Yahei', 'Gotham SSm A',
+    'Gotham SSm B', Helvetica, Arial, sans-serif;
 }
 
 html:lang(ar) body {
@@ -439,7 +439,7 @@ html:lang(ar) .browser .center h2,
 html:lang(ar) .browser .statistic span,
 html:lang(ar) .browser h4,
 html:lang(ar) .title h1 {
-  font-family: "Gotham SSm A", "Gotham SSm B", Helvetica, Arial, sans-serif;
+  font-family: 'Gotham SSm A', 'Gotham SSm B', Helvetica, Arial, sans-serif;
 }
 
 ::-moz-selection {
@@ -965,7 +965,7 @@ html:lang(ar) .browser h4 {
   top: 0;
   width: 100%;
   height: 100%;
-  content: "";
+  content: '';
   opacity: 0;
   background: url(/imgs/shadow.png) center 35% no-repeat;
   -webkit-transition: opacity 0.3s linear;
@@ -976,7 +976,7 @@ html:lang(ar) .browser h4 {
 
 .main_menu:after,
 .pusher:after {
-  content: "";
+  content: '';
 }
 
 .allowHover .browser:hover:before {
@@ -1355,16 +1355,16 @@ html:lang(ar) .main_menu ul li.last a {
   background: 0 0;
 }
 
-.main_menu ul li a[rel="external"] {
+.main_menu ul li a[rel='external'] {
   padding-left: 11px;
 }
 
-.main_menu ul li a[rel="external"] span {
+.main_menu ul li a[rel='external'] span {
   padding-right: 11px;
   background: 0 0;
 }
 
-.main_menu ul li a[rel="external"]:hover span {
+.main_menu ul li a[rel='external']:hover span {
   background: url(/imgs/icon-link-external.png) top right no-repeat;
   background-size: 10px 9px;
 }
@@ -1444,7 +1444,7 @@ html:lang(ar) .main_menu ul li.last a {
 }
 
 .menu_open .lang-picker.scrolling:after {
-  content: " ";
+  content: ' ';
   width: 100%;
   height: 8px;
   position: absolute;
@@ -1852,7 +1852,7 @@ html {
 }
 
 .da-slide .da-txt h2 {
-  font-family: "Gotham SSm A", "Gotham SSm B", Helvetica, Arial, sans-serif;
+  font-family: 'Gotham SSm A', 'Gotham SSm B', Helvetica, Arial, sans-serif;
   font-weight: 800;
   font-style: normal;
   letter-spacing: -3px;
@@ -1886,7 +1886,7 @@ html:lang(ar) .da-slide .da-txt h2 img {
 
 .da-slide .da-txt .da-link,
 .da-slide .da-txt p.desc {
-  font-family: "Gotham SSm A", "Gotham SSm B", Helvetica, Arial, sans-serif;
+  font-family: 'Gotham SSm A', 'Gotham SSm B', Helvetica, Arial, sans-serif;
   font-weight: 800;
   font-style: normal;
 }
@@ -2185,7 +2185,7 @@ html:lang(ar) .da-slide .da-txt .da-link {
 }
 
 .da-arrows span:after {
-  content: "";
+  content: '';
   position: absolute;
   height: 30px;
   width: 18px;
@@ -2230,7 +2230,7 @@ html:lang(ar) .da-slide .da-txt .da-link {
 
 .cause .da-img p:before,
 .works .da-img p:before {
-  content: "";
+  content: '';
   height: 34px;
   display: block;
   margin: 0 auto 15px;
@@ -2251,7 +2251,7 @@ html:lang(ar) .da-slide .da-txt .da-link {
 .da-img p {
   display: block;
   position: absolute;
-  font: 600 italic 17px/17px "Chronicle Display A", "Chronicle Display B",
+  font: 600 italic 17px/17px 'Chronicle Display A', 'Chronicle Display B',
     Helvetica, arial, sans-serif;
   color: #fff;
 }
@@ -2290,7 +2290,7 @@ html:lang(ar) .da-slide .da-txt .da-link {
 
 .steps .da-img p:before,
 html:lang(ar) .steps .da-img p:after {
-  content: "";
+  content: '';
   width: 34px;
   height: 2px;
   display: block;
@@ -2769,7 +2769,7 @@ html:lang(ar) .steps .da-img p:after {
 .cause.slide-to .da-img .gif,
 .steps.slide-to .da-img .gif {
   opacity: 0;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=0)';
   filter: alpha(opacity=0);
 }
 

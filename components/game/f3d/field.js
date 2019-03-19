@@ -1,29 +1,32 @@
 function setBallList(playid, labels) {
-  labels = labels ?
-    Array.isArray(labels) ?
-    labels :
-    labels.length ?
-    labels.split("") :
-    [] :
-    null;
-    /******** 基础数据准备 **********/
-  const productNum = (max) => {
-    let arr = [], startNum = 0
-    max += 1
-    while(max--) {
-      arr.push(startNum++)
+  labels = labels
+    ? Array.isArray(labels)
+      ? labels
+      : labels.length
+        ? labels.split('')
+        : []
+    : null;
+  /******** 基础数据准备 **********/
+  const productNum = max => {
+    let arr = [],
+      startNum = 0;
+    max += 1;
+    while (max--) {
+      arr.push(startNum++);
     }
-    return arr
-  }
-  const assemRowName = (name) => {
-    return [{
-      name,
-      option: defaultFunc()
-    }]
-  }
-  const defaultArr = productNum(9)
-  const heZhiArr = productNum(27)
-  const erHeZhiArr = productNum(18)
+    return arr;
+  };
+  const assemRowName = name => {
+    return [
+      {
+        name,
+        option: defaultFunc()
+      }
+    ];
+  };
+  const defaultArr = productNum(9);
+  const heZhiArr = productNum(27);
+  const erHeZhiArr = productNum(18);
   const defaultFunc = (arr = defaultArr, type) => {
     return arr.map((item, index) => {
       return {
@@ -47,8 +50,8 @@ function setBallList(playid, labels) {
     {
       name: '个位',
       option: defaultFunc()
-    },
-  ]
+    }
+  ];
   const lhd = [
     {
       name: '百、十',
@@ -62,7 +65,7 @@ function setBallList(playid, labels) {
       name: '拾、个',
       option: ['龙', '虎', '和']
     }
-  ]
+  ];
   const template_smp = [
     {
       name: '总和值',
@@ -84,65 +87,71 @@ function setBallList(playid, labels) {
       name: '个位',
       option: ['大', '小', '单', '双']
     }
-  ]
-  const rowsLine = (arr) => {
-    let ballCount = 0
+  ];
+  const rowsLine = arr => {
+    let ballCount = 0;
     arr.forEach((item, index) => {
-      ballCount += item.option.length
+      ballCount += item.option.length;
       item.option = item.option.map((n, i) => {
         return {
           label: n,
           value: ballCount - item.option.length + i,
           selected: false,
           odds: false
-        }
-      })
+        };
+      });
     });
-    return arr
-  }
+    return arr;
+  };
 
   switch (playid) {
     case 1:
     case 2:
-      return severalRows
+      return severalRows;
     case 3:
-      return [{
-        name: '和值',
-        option: defaultFunc(heZhiArr, 1)
-      }]
+      return [
+        {
+          name: '和值',
+          option: defaultFunc(heZhiArr, 1)
+        }
+      ];
     case 4:
-      return assemRowName('组三')
+      return assemRowName('组三');
     case 5:
-      return assemRowName('组六')
+      return assemRowName('组六');
     case 6:
-      heZhiArr.pop()
-      heZhiArr.shift()
-      return [{
-        name: '和值',
-        option: defaultFunc(heZhiArr, 1)
-      }]
+      heZhiArr.pop();
+      heZhiArr.shift();
+      return [
+        {
+          name: '和值',
+          option: defaultFunc(heZhiArr, 1)
+        }
+      ];
     case 7:
-      return [{
-        name: '和值',
-        option: defaultFunc(heZhiArr.slice(3, 25), 1)
-      }]
+      return [
+        {
+          name: '和值',
+          option: defaultFunc(heZhiArr.slice(3, 25), 1)
+        }
+      ];
     case 8:
-      return severalRows.slice(0, 2)
+      return severalRows.slice(0, 2);
     case 9:
-      return severalRows.slice(1)
+      return severalRows.slice(1);
     case 10:
     case 11:
-      return assemRowName('组选')
+      return assemRowName('组选');
     case 12:
-      return severalRows
+      return severalRows;
     case 13:
-      return assemRowName('一码')
+      return assemRowName('一码');
     case 14:
-      return assemRowName('二码')
+      return assemRowName('二码');
     case 26:
-      return rowsLine(template_smp)
+      return rowsLine(template_smp);
     case 27:
-      return rowsLine(lhd)
+      return rowsLine(lhd);
   }
 }
 

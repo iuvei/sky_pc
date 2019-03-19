@@ -8,9 +8,10 @@
 
 </template>
 <script>
-import components from "~/components/index/";
+import components from '~/components/index/';
+import mixin from './setTitle.mixin';
 export default {
-  name: "user",
+  name: 'user',
   components: { ...components },
   created() {
     if (process.browser) {
@@ -18,18 +19,8 @@ export default {
         top: window.screen.availHeight / 3
       });
     }
-    
   },
-  beforeMount() {
-    if (process.browser) {
-      let web_title =
-        this.$store.state.sysinfo.sysinfo.web_title ||
-        window.localStorage.getItem("web_title") ||
-        " ";
-      web_title && window.localStorage.setItem("web_title", web_title);
-      window.document.title = web_title;
-    }
-  },
+  mixins:[mixin]
 };
 </script>
 

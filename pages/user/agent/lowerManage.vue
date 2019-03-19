@@ -14,70 +14,70 @@
 
     <Table :data="tableData" :columns="tableColumns"></Table>
     <Button class="the_query" @click="nextClick" v-if="tableData.length && tableData.length % 20 === 0" style="display: block;margin: 17px auto;">
-        <span>下一页</span>
-      </Button>
+      <span>下一页</span>
+    </Button>
   </div>
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions } from 'vuex'
 export default {
-  name: "lowerManage",
+  name: 'lowerManage',
   data() {
     return {
       pageid: 0,
       userType: 0,
       userTypes: [
         {
-          label: "全部",
+          label: '全部',
           value: 0
         },
         {
-          label: "代理",
+          label: '代理',
           value: 2
         },
         {
-          label: "会员",
+          label: '会员',
           value: 1
         }
       ],
-      userName: "",
+      userName: '',
       tableData: [],
       tableColumns: [
         {
-          title: "用户名",
+          title: '用户名',
           width: 120,
-          key: "username"
+          key: 'username'
         },
         {
-          title: "用户类型",
-          key: "actype",
+          title: '用户类型',
+          key: 'actype',
           width: 150
         },
         {
-          title: "下级代理",
-          key: "next_daili",
+          title: '下级代理',
+          key: 'next_daili',
           width: 100
         },
         {
-          title: "下级会员",
-          key: "next_user"
+          title: '下级会员',
+          key: 'next_user'
         },
         {
-          title: "余额",
-          key: "price"
+          title: '余额',
+          key: 'price'
         },
         {
-          title: "最后登录",
+          title: '最后登录',
           width: 160,
-          key: "last_login_time"
+          key: 'last_login_time'
         },
         {
-          title: "操作",
-          key: "action",
-          align: "center",
+          title: '操作',
+          key: 'action',
+          align: 'center',
           render: (h, params) => {
-            let row = params.row;
+            let row = params.row
             return (
               <div>
                 <a
@@ -93,40 +93,40 @@ export default {
                   onClick={() => this.lookTrade(row)}
                 />
               </div>
-            );
+            )
           }
         }
       ],
       loadMore: false
-    };
+    }
   },
   components: {},
   computed: {
-    ...mapState("agent", ["lowerLevelAccount"])
+    ...mapState('agent', ['lowerLevelAccount'])
   },
   mounted() {
-    this.initData();
+    this.initData()
   },
   methods: {
-    ...mapActions("agent", ["getChlidStatic"]),
+    ...mapActions('agent', ['getChlidStatic']),
     nextClick() {
-      this.loadMore = true;
-      this.pageid++;
-      this.initData();
+      this.loadMore = true
+      this.pageid++
+      this.initData()
     },
     queryClick() {
       this.loadMore = false
-      this.pageid=0
+      this.pageid = 0
       this.tableData = []
-      this.initData();
+      this.initData()
     },
-    lookBet(n) {
-      console.error(n);
-      this.$router.push('/user/agent/devotethedetail');
+    lookBet({ username }) {
+      // console.error(username)
+      this.$router.push('/user/agent/devotethedetail?username=' + username)
     },
-    lookTrade(n) {
-      console.error(n);
-      this.$router.push('/user/agent/trading');
+    lookTrade({ username }) {
+      // console.error(username)
+      this.$router.push('/user/agent/trading?username=' + username)
     },
     async initData() {
       let params = {
@@ -134,18 +134,18 @@ export default {
         username: this.userName,
         user_type: this.userType,
         pageid: this.pageid,
-        user_id: "",
+        user_id: '',
         lasttime: 0
-      };
-      let data = (await this.getChlidStatic(params)) || [];
-      if (this.loadMore) {
-        data = [...this.tableData, ...data];
       }
-      this.tableData = data;
+      let data = (await this.getChlidStatic(params)) || []
+      if (this.loadMore) {
+        data = [...this.tableData, ...data]
+      }
+      this.tableData = data
       // console.error(data);
     }
   }
-};
+}
 </script>
 <style lang="scss">
 .lower-manage {

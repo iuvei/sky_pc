@@ -1,44 +1,53 @@
 <template>
   <div class='cp11x5-main'>
-    <commonMenu :playConfig="menuPlayConfig" class="cp11x5"></commonMenu>
-    <commonBet :playObj="playObj" :hideDouble='true'>
+    <commonMenu
+      :playConfig="menuPlayConfig"
+      class="cp11x5"
+    ></commonMenu>
+    <commonBet
+      :playObj="playObj"
+      :hideDouble='true'
+    >
       <betArea slot='area'></betArea>
     </commonBet>
     <commonCart></commonCart>
   </div>
 </template>
 <script>
-import { mapState, mapActions } from "vuex";
-import commonMenu from "../common/commonMenu";
-import commonBet from "../common/commonBet";
-import commonCart from "../common/commonCart";
-import betArea from "./betArea";
-import getField from "./field.js";
+import { mapState, mapActions } from 'vuex'
+import commonMenu from '../common/commonMenu'
+import commonBet from '../common/commonBet'
+import commonCart from '../common/commonCart'
+import betArea from './betArea'
+import getField from './field.js'
 
 export default {
-  name: "cp11x5Main",
-  props: ["item"],
+  name: 'cp11x5Main',
+  props: ['item'],
   components: { commonMenu, commonBet, betArea, commonCart },
   data() {
     return {
       menuPlayConfig: []
-    };
+    }
   },
   computed: {
-    ...mapState("gameBet", ["playObj"]),
+    ...mapState('gameBet', ['playObj']),
     betSelectSet() {
-      return getField(this.playObj.playid || 1);
+      return getField(this.playObj.playid || 1)
     }
   },
   methods: {
-    ...mapActions("game", ["getGamePlayConfig"]),
+    ...mapActions('game', ['getGamePlayConfig']),
     async getInitData() {
-      this.$store.commit("game/setGameId", this.$route.params.id);
-      this.$store.commit("game/setGameItem", this.item);
-      let ret = await this.getGamePlayConfig(this.item.js_tag);
-      // this.menuPlayConfig = ret.list
-      // this.menuPlayConfig = ret.list.filter(item => item.showofficial == 1);
-      this.menuPlayConfig = ret.list;
+      this.$store.commit('game/setGameId', this.$route.params.id || this.$route.query.id)
+      this.$store.commit('game/setGameItem', this.item)
+      let ret = await this.getGamePlayConfig(this.item.js_tag)
+
+      // 默认 menuid =4 为定位胆
+      let config = ret.list
+      let idx = config.findIndex(item => item.menuid === 4)
+      if (idx) config.unshift(config.splice(idx, 1)[0])
+      this.menuPlayConfig = config
       // 日后有用，不要删
       // let item = this.menuPlayConfig.filter(item => item.menuid == 53);
       // let arr = ['万、千', '万、百', '万、拾', '万、个', '千、百', '千、十', '千、个', '百、十', '百、个', '拾、个']
@@ -51,14 +60,14 @@ export default {
     }
   },
   mounted() {
-    this.getInitData();
+    this.getInitData()
   },
   watch: {
-    "$route.params.id"(val) {
-      this.getInitData();
+    '$route.params.id'(val) {
+      this.getInitData()
     }
   }
-};
+}
 </script>
 <style lang='scss' scoped>
 .cp11x5-main {

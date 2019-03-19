@@ -9,13 +9,14 @@
       </div>
     </div>
     <div class="history-content">
-      <div v-for="item in data" :key="item.qishu" class="history-item">
+      <div v-for="item in kjData" :key="item.qishu" class="history-item">
         <div class="history-qishu">{{item.qishu}}</div>
         <div class="history-icon">
-          <span :class="['ball', item.single ? 'background-blue' : 'background-red']">
-            {{item.single?'单':'双'}}
-            <span class="num background-black">{{item.num}}</span>
+          <span v-if="item.balls.length === 3" :class="['ball', item.balls[2] ? 'background-red' : 'background-blue']">
+            {{item.balls[2]?'双':'单'}}
+            <span class="num background-black">{{item.balls[1]?4:3}}</span>
           </span>
+          <span v-else>开奖中</span>
         </div>
       </div>
     </div>
@@ -23,47 +24,23 @@
 </template>
 <script>
 export default {
-  name: "history-wrap",
+  name: "history-content",
+  props:['kjList'],
   data() {
     return {
-      data: [
-        {
-          qishu: "201807100433",
-          single: true,
-          num: 3
-        },
-        {
-          qishu: "201807100432",
-          single: true,
-          num: 4
-        },
-        {
-          qishu: "201807100431",
-          single: false,
-          num: 3
-        },
-        {
-          qishu: "201807100430",
-          single: false,
-          num: 4
-        },
-        {
-          qishu: "201807100431",
-          single: false,
-          num: 3
-        },
-        {
-          qishu: "201807100430",
-          single: false,
-          num: 4
-        }
-      ]
     };
   },
-  computed: {},
+  computed: {
+    kjData(){
+      let data = JSON.parse(JSON.stringify(this.kjList || []))
+      data = data.map(el => {
+        el.balls = el.balls.split('+').map(ball=>ball*1)
+        return el
+      })
+      return data
+    }
+  },
   watch: {},
-  activated() {},
-  deactivated() {},
   mounted() {},
   methods: {}
 };
@@ -116,7 +93,7 @@ export default {
       color: #000000;
     }
     .history-icon {
-      min-width: 60px;
+      min-width: 80px;
     }
     .ball {
       position: relative;

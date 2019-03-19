@@ -2,13 +2,13 @@
   <component :is="getCashView"></component>
 </template>
 <script>
-import { mapState, mapGetters, mapActions } from "vuex";
-import addBank from "~/components/user/agent/cashTransaction/addBank";
-import cashTransaction from "~/components/user/agent/cashTransaction/cashTransaction";
-import confirmation from "~/components/user/agent/cashTransaction/confirmation";
-import success from "~/components/user/agent/cashTransaction/success";
+import { mapState, mapGetters, mapActions } from 'vuex';
+import addBank from '~/components/user/agent/cashTransaction/addBank';
+import cashTransaction from '~/components/user/agent/cashTransaction/cashTransaction';
+import confirmation from '~/components/user/agent/cashTransaction/confirmation';
+import success from '~/components/user/agent/cashTransaction/success';
 export default {
-  name: "user-cash-trade",
+  name: 'user-cash-trade',
   data() {
     return {};
   },
@@ -19,28 +19,28 @@ export default {
     success
   },
   computed: {
-    ...mapState("userinfo", ["accountInfo"]),
-    ...mapState("agent", ["cashTransaction"]),
-    ...mapGetters("agent", ["getCashView"]),
+    ...mapState('userinfo', ['accountInfo']),
+    ...mapState('agent', ['cashTransaction']),
+    ...mapGetters('agent', ['getCashView']),
     currentView: {
       get() {
         return this.cashTransaction.view;
       },
       set(v) {
-        let obj = { prefix: "cashTransaction", params: { view: v } };
+        let obj = { prefix: 'cashTransaction', params: { view: v } };
         this.modifyField(obj);
       }
     }
   },
   mounted() {
     let obj = {
-      prefix: "cashTransaction",
-      params: { view: "cashTransaction" }
+      prefix: 'cashTransaction',
+      params: { view: 'cashTransaction' }
     };
     this.modifyField(obj);
   },
   methods: {
-    ...mapActions("agent", ["modifyField"]),
+    ...mapActions('agent', ['modifyField']),
   }
 };
 </script>

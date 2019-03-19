@@ -1,51 +1,102 @@
 <template>
   <section class="sidebar-c">
-    <div v-for="(item,key) in category" :key="key" class="item">
-      <div class="item-title" @click="toggle(key)">
-        <div class="icon" :class="item.icon"></div>
+    <div
+      v-for="(item,key) in category"
+      :key="key"
+      class="item"
+    >
+      <div
+        class="item-title"
+        @click="toggle(key)"
+      >
+        <div
+          class="icon"
+          :class="item.icon"
+        ></div>
         <div>{{item.title}}</div>
-        <div class="arrow" :class="{'close':!collapse[key]}"></div>
+        <div
+          class="arrow"
+          :class="{'close':!collapse[key]}"
+        ></div>
       </div>
       <ul v-toggle="collapse[key]">
-        <nuxt-link v-for="(v,k) in item.li" :key="k" :to="'/user/'+item.icon+'/'+v.url">
+        <div
+          v-for="(v,k) in item.li"
+          :key="k"
+          @click="toGo(item,v)"
+          v-damon="[v.label, profit_status]"
+        >
           <li :class="{active:liActive===('/user/'+item.icon+'/'+v.url)}">{{v.label}}</li>
-        </nuxt-link>
+        </div>
       </ul>
     </div>
   </section>
 </template>
 
 <script>
-import category from "./userSidebarData.js";
-import { toggle } from "~/directives/user/index";
+import { mapState } from 'vuex'
+import category from './userSidebarData.js'
+import { toggle } from '~/directives/user/index'
 export default {
-  name: "userSidebar",
+  name: 'userSidebar',
   data() {
     return {
       category,
-      collapse: new Array(category.length).fill(true),
-    };
+      collapse: new Array(category.length).fill(true)
+    }
   },
-  directives: { toggle: toggle },
+  directives: {
+    toggle: toggle,
+    damon: {
+      bind(el, { value }) {
+        if (value[0] === '今日盈亏' && !value[1]) {
+          el.style.display = 'none'
+        }
+      },
+      update(el, { value }) {
+        if (value[0] === '今日盈亏' && !value[1]) {
+          el.style.display = 'none'
+        }
+      }
+    }
+  },
   computed: {
-    liActive() {
-      return this.$route.path;
+    ...mapState('sysinfo', ['sysinfo']),
+    // 判断是否显示今日盈亏
+    profit_status() {
+      const profit_status =
+        this.sysinfo[0] && this.sysinfo[0].profit_status == 1
+      return profit_status
     },
+    liActive() {
+      return this.$route.path
+    },
+    rebate() {
+      return this.$store.state.userinfo.accountInfo.rebate ? 1 : 0
+    }
   },
   methods: {
     toggle(key) {
-      this.$set(this.collapse, key, !this.collapse[key]);
+      this.$set(this.collapse, key, !this.collapse[key])
       // if (this.keyActive.includes(key)) {
       //   this.keyActive.splice(this.keyActive.indexOf(key), 1);
       // } else {
       //   this.keyActive.push(key);
       // }
     },
+    toGo(i, v) {
+      if (v.url == 'backwater' && this.rebate != 1) {
+        this.$Message.warning('该活动暂未开放，敬请期待！')
+        return
+      } else {
+        this.$router.push({
+          name: 'user-' + i.icon + '-' + v.url
+        })
+      }
+    }
   },
-  mounted() {
-    
-  },
-};
+  mounted() {}
+}
 </script>
 
 <style lang="scss" scoped>
@@ -56,6 +107,7 @@ export default {
 .sidebar-c {
   border: 1px solid #ddd;
   .item {
+    width: 148px;
     // height: 31px;
     .item-title {
       display: flex;
@@ -75,12 +127,12 @@ export default {
       .icon {
         width: 30px;
         height: 30px;
-        background: url("~assets/img/user_center_icons.png") no-repeat;
+        background: url('~assets/img/user_center_icons.png') no-repeat;
       }
       .arrow {
         width: 30px;
         height: 24px;
-        background: url("~assets/img/select_arrow.png") center center no-repeat;
+        background: url('~assets/img/select_arrow.png') center center no-repeat;
         background-size: 10px 10px;
         transition: all 0.5s;
       }
@@ -114,10 +166,16 @@ export default {
       font-size: 14px;
       justify-content: center;
       align-items: center;
+      color: #2c99e5;
     }
     .active {
       background: url(~assets/img/user_center_icons.png) no-repeat 15px -155px;
       color: #f13131;
+    }
+    ul {
+      div {
+        cursor: pointer;
+      }
     }
   }
 }

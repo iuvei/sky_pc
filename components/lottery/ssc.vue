@@ -86,11 +86,10 @@
 
 <script>
 export default {
-  name: "lottery-ssc",
-  props: ["game"]
+  name: 'lottery-ssc',
+  props: ['game']
 };
 </script>
 
 <style>
-
 </style>

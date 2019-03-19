@@ -7,10 +7,10 @@
 <script>
 
 export default {
-  name: "statusGroup",
+  name: 'statusGroup',
   model: {
-    prop: "value",
-    event: "update"
+    prop: 'value',
+    event: 'update'
   },
   props: {
     data: Array,
@@ -27,7 +27,7 @@ export default {
   },
   methods: {
     toggleTime(n) {
-      this.$emit("update", n);
+      this.$emit('update', n);
     }
   }
 };

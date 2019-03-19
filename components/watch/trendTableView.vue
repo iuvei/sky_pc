@@ -14,16 +14,16 @@
 </template>
 <script>
 export default {
-  name: "tableView",
-  props: ["viewData", "change"],
+  name: 'tableView',
+  props: ['viewData', 'change'],
   data() {
     return {
       data: [],
       map: {
-        total: "总出现次数",
-        omitAvg: "平均遗漏值",
-        omitMax: "最大遗漏值",
-        togetherMax: "最大连出",
+        total: '总出现次数',
+        omitAvg: '平均遗漏值',
+        omitMax: '最大遗漏值',
+        togetherMax: '最大连出',
       },
     };
   },

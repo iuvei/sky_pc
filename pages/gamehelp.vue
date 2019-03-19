@@ -1,21 +1,21 @@
 <template>
-    <div class="gamehelp wrap">
-        <!-- 主体内容 -->
-        <sidebarplay class="left_list"></sidebarplay>
-        <div class="right_top">
-            <div class="right_top_top">
-                <span class="right_top_icon"></span>
-                <span class="right_top_title">{{$route.query.game_name}}</span>
-            </div>
-            <nuxt-child/>
-        </div>
+  <div class="gamehelp wrap">
+    <!-- 主体内容 -->
+    <sidebarplay class="left_list"></sidebarplay>
+    <div class="right_top">
+      <div class="right_top_top">
+        <span class="right_top_icon"></span>
+        <span class="right_top_title">{{$route.query.game_name}}</span>
+      </div>
+      <nuxt-child/>
     </div>
+  </div>
 </template>
 <script>
-import { mapState, mapActions } from "vuex";
-import sidebarplay from "~/components/gamehelp/sidebarplay.vue";
+import { mapState, mapActions } from 'vuex';
+import sidebarplay from '~/components/gamehelp/sidebarplay.vue';
 export default {
-  name: "gamehelp",
+  name: 'gamehelp',
   serverCacheKey() {
     return Math.floor(Date.now() / 1000 * 60 * 60 * 24);
   },
@@ -52,7 +52,7 @@ export default {
       .right_top_icon {
         width: 163px;
         height: 78px;
-        background-image: url("~/assets/img/game_help_title.jpg");
+        background-image: url('~/assets/img/game_help_title.jpg');
       }
       .right_top_title {
         font-size: 30px;

@@ -13,21 +13,29 @@
   </section>
 </template>
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex'
 export default {
-  name: "trendHot",
+  name: 'trendHot',
   computed: {
-    ...mapState("game", ["gameList"]),
+    ...mapState('game', ['gameList']),
     hotData() {
-      return this.gameList.filter(v => v.hot === 1);
-    },
+      //  为热门标识 且不为体彩 且 不是扑克、梯子, 电子
+      let excludeArr = ['xypk', 'tzyx']
+      return this.gameList.filter(
+        v =>
+          v.hot === 1 &&
+          v.js_tag !== 'sport_key' &&
+          !excludeArr.includes(v.js_tag) &&
+          v.tag !== 'mg'
+      )
+    }
   },
   methods: {
     click(item) {
-      this.$emit("callback", item);
-    },
-  },
-};
+      this.$emit('callback', item)
+    }
+  }
+}
 </script>
 <style lang='scss' scoped>
 .trend-hot {

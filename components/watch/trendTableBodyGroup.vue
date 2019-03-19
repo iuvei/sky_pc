@@ -9,18 +9,18 @@
   </div>
 </template>
 <script>
-import trendCanvas from "./tablecanvas";
+import trendCanvas from './tablecanvas';
 export default {
-  name: "trendGroup",
-  props: ["head", "data", "k", "viewOption"],
+  name: 'trendGroup',
+  props: ['head', 'data', 'k', 'viewOption'],
   computed: {
     trendLine() {
       return {
         data: this.data,
         size: this.head,
         start: this.head[0],
-        cell: "30",
-        color: this.k % 2 ? "#ea721a" : "#11b35e",
+        cell: '30',
+        color: this.k % 2 ? '#ea721a' : '#11b35e',
       };
     },
     data1() {

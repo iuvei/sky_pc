@@ -28,23 +28,21 @@
 
         <FormItem>
           <Button type="primary" @click="handleSubmit('formValidate')">确认添加</Button>
-          <!-- <Button type="ghost" @click="handleReset('formValidate')" style="margin-left: 8px">Reset</Button> -->
         </FormItem>
       </Form>
     </div>
     <div slot="footer" style="text-align:center">
-      <!-- <Button type="error" :loading="modal_loading" @click="okClick">确定</Button> -->
     </div>
   </Modal>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions } from 'vuex';
 export default {
-  name: "remarkModal",
+  name: 'remarkModal',
   model: {
-    prop: "modal",
-    event: "updateModelValue"
+    prop: 'modal',
+    event: 'updateModelValue'
   },
   props: {
     modal: {
@@ -63,17 +61,17 @@ export default {
       modal_loading: false,
       IPS: [],
       formValidate: {
-        enom: "",
-        ptype: "0",
-        ip: "-1",
-        remark: ""
+        enom: '',
+        ptype: '0',
+        ip: '-1',
+        remark: ''
       },
       ruleValidate: {
         enom: [
           {
             required: true,
-            message: "请输入域名地址",
-            trigger: "blur"
+            message: '请输入域名地址',
+            trigger: 'blur'
           }
           // { type: "url", message: "Incorrect url format", trigger: "blur" }
         ]
@@ -84,13 +82,13 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("agent", ["rateSetting"]),
+    ...mapGetters('agent', ['rateSetting']),
     show: {
       get() {
         return this.modal;
       },
       set(v) {
-        this.$emit("updateModelValue", v);
+        this.$emit('updateModelValue', v);
       }
     }
   },
@@ -98,7 +96,7 @@ export default {
     this.initData();
   },
   methods: {
-    ...mapActions("agent", ["modifyField", "getEnomLIplist", "addNewUserEnom"]),
+    ...mapActions('agent', ['modifyField', 'getEnomLIplist', 'addNewUserEnom']),
     handleSubmit(name) {
       console.error(this.formValidate);
       this.$refs[name].validate(valid => {

@@ -29,9 +29,9 @@
 </template>
 
 <script>
-import ColorBall from "./ColorBall";
+import ColorBall from './ColorBall';
 export default {
-  name: "OneCol",
+  name: 'OneCol',
   props: {
     dataSource: {
       type: Array,
@@ -50,7 +50,7 @@ export default {
         if (isNaN(item.money)) {
           item.seleced = false;
         }
-        this.$emit("setPrice", item);
+        this.$emit('setPrice', item);
       }, 100);
     }
   }

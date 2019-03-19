@@ -1,12 +1,12 @@
-const key = "0";
+const key = '0';
 export default str => {
   const isEncode = /^[0-9a-zA-Z]+$/.test(str);
   // console.log(isEncode)
   if (isEncode) {
-    const valArr = str.split(""),
-      keyArr = key.split(""); // 固定‘0’
+    const valArr = str.split(''),
+      keyArr = key.split(''); // 固定‘0’
     if (valArr.length % 2 !== 0) {
-      return "";
+      return '';
     }
     const tempArr = valArr.map(item => parseInt(item, 16));
     const resArr = [];
@@ -19,7 +19,7 @@ export default str => {
       }
     }
     const final = resArr.map(item => String.fromCharCode(item));
-    return decodeURIComponent(escape(final.join("")));
+    return decodeURIComponent(escape(final.join('')));
   } else {
     return str;
   }

@@ -8,33 +8,76 @@
       <div class="navs" ref="nav">
         <ul>
           <li v-for="(item,idx) in data" :key="idx">
-            <a v-if="item.label" :href="item.to" :class="{active:item.to===active}">{{item.label}}</a>
+            <a v-if="item.label=='聊天室'" href="javascript:void(0)" target="_blank" @click="toChatroom" :class="[{active:item.to===active}, 'chat-room']">{{item.label}}</a>
+            <a :href="item.to" :class="{active:item.to===active}" v-else-if="['体育','竞彩'].includes(item.label)">{{item.label}}</a>
+            <nuxt-link href="" :to="item.to" :class="{active:item.to===active}" v-else>{{item.label}}</nuxt-link>
+          </li>
+          <li class="dh_more">
+            <Dropdown placement="bottom-end">
+              <a href="javascript:void(0)">
+                更多
+                <Icon size="26" type="md-arrow-dropdown" style="margin-left:-8px" />
+              </a>
+              <DropdownMenu slot="list" style="flex-direction: column;background-color: #e93248;">
+                <DropdownItem v-for="(el, index) in datalist" :key="index" style="color: #fff; font-size: 18">
+                  <div @click="clickList(el, index)">{{el.name}}</div>
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
           </li>
         </ul>
       </div>
     </div>
-    <IndexSidebar v-if="!isIndex" :notIndex="true" v-show="showSidebar"></IndexSidebar>
   </nav>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import IndexSidebar from "./IndexSidebar";
+import qs from "qs";
 export default {
   name: "IndexNav",
   data() {
     return {
       showSidebar: false,
       active: "",
+      showRoom: false,
+      roomPassword: "",
+      childWin: null,
+      showLastRoom: false,
+      lastRoomNumber: "",
       data: [
         { label: "首页", to: "/" },
         { label: "购彩大厅", to: "/game" },
-        { label: "体育投注", to: "/sport" },
-        { label: "手机购彩", to: "/mobile" },
-        { label: "优惠活动", to: "/activity" },
-        { label: "开奖公告", to: "/notice" },
-        // { label: "走势图表", to: "/trend" },
-        { label: "帮助中心", to: "/help/helplist/registered" }
+        { label: "皇冠体育", to: "/sport" },
+        { label: "竞彩", to: "/jingcai" },
+        { label: "电子", to: "/thegame" },
+        { label: "棋牌", to: "/boardGames" },
+        { label: "捕鱼", to: "/hishingGame" }
+        // { label: '手机购彩', to: '/mobile' },
+        // { label: "优惠活动", to: "/activity" }
+      ],
+      datalist: [
+        {
+          name: "手机购彩",
+          path: "/mobile"
+        },
+        {
+          name: "开奖公告",
+          path: "/notice"
+        },
+        {
+          name: "优惠活动",
+          path: "/activity"
+        },
+        {
+          name: "走势图表",
+          path: "/trend"
+        },
+        {
+          name: "帮助中心",
+          path: "/help/helplist/registered"
+        }
       ]
     };
   },
@@ -50,6 +93,10 @@ export default {
     }
   },
   methods: {
+    ...mapActions("userinfo", ["getChatState"]),
+    clickList(n, i) {
+      this.$router.push(n.path);
+    },
     enter() {
       this.showSidebar = true;
     },
@@ -59,10 +106,24 @@ export default {
   },
   mounted() {
     this.active = this.$route.path;
+  },
+  watch: {
+    "$route.path"() {
+      this.active = this.$route.path;
+    }
   }
 };
 </script>
-
+<style lang="scss">
+.dh_more {
+  .ivu-dropdown-item {
+    font-size: 18px !important;
+  }
+  .ivu-dropdown-item:hover {
+    background-color: #000;
+  }
+}
+</style>
 <style lang="scss" scoped>
 .container {
   width: 1000px;
@@ -117,11 +178,15 @@ nav {
     }
     li {
       list-style: none;
+      .chat-room {
+        background: url("../../assets/img/hot_new.gif") no-repeat top right;
+        background-size: 20px 15px;
+      }
     }
     a {
       color: #fff;
       display: block;
-      width: 110px;
+      width: 95px;
       height: 40px;
       text-align: center;
       line-height: 38px;

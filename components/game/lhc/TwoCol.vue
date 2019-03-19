@@ -27,9 +27,9 @@
 </template>
 
 <script>
-import ColorBall from "./ColorBall";
+import ColorBall from './ColorBall';
 export default {
-  name: "TwoCol",
+  name: 'TwoCol',
   props: {
     dataSource: {
       type: Array,
@@ -51,7 +51,7 @@ export default {
     setPrice(item) {
       window._________timer = setTimeout(() => {
         window.clearTimeout(window._________timer);
-        this.$emit("setPrice", item);
+        this.$emit('setPrice', item);
       }, 100);
     }
   }

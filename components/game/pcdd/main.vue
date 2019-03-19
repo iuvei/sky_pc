@@ -1,18 +1,21 @@
 <template>
   <div class='pcdd-main'>
-    <pcddBet :playConfig="menuPlayConfig" :animateKey='animateKey'></pcddBet>
+    <pcddBet
+      :playConfig="menuPlayConfig"
+      :animateKey='animateKey'
+    ></pcddBet>
     <commonCart></commonCart>
   </div>
 </template>
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions } from 'vuex';
 
-import commonCart from "../common/commonCart";
-import pcddBet from "./pcddBet";
+import commonCart from '../common/commonCart';
+import pcddBet from './pcddBet';
 
 export default {
-  name: "pcddMain",
-  props: ["item"],
+  name: 'pcddMain',
+  props: ['item'],
   data() {
     return {
       menuPlayConfig: [],
@@ -20,34 +23,37 @@ export default {
   },
 
   computed: {
-    ...mapState("gameBet", ["playObj"]),
+    ...mapState('gameBet', ['playObj']),
     animateKey() {
-      return this.$route.params.id + this.playObj.playid;
+      return (this.$route.params.id || this.$route.query.id) + this.playObj.playid;
     },
   },
   components: { commonCart, pcddBet },
   methods: {
-    ...mapActions("game", ["getGamePlayConfig"]),
+    ...mapActions('game', ['getGamePlayConfig']),
     async getInitData() {
-      this.$store.commit("game/setGameId", this.$route.params.id);
-      this.$store.commit("game/setGameItem", this.item);
+      this.$store.commit('game/setGameId', this.$route.params.id || this.$route.query.id);
+      this.$store.commit('game/setGameItem', this.item);
       let ret = await this.getGamePlayConfig(this.item.js_tag);
-      this.menuPlayConfig = ret.list;
-      this.$store.commit(
-        "gameBet/setBetPlay",
-        ret.list[0].submenu[0].playlist[0]
-      );
+      if(ret){
+        this.menuPlayConfig = ret.list;
+        this.$store.commit(
+          'gameBet/setBetPlay',
+          ret.list[0].submenu[0].playlist[0]
+        );
+      }
     },
   },
   created() {
-    this.$store.commit("gameBet/setBetPlay", {});
+    if(!process.browser) return
+    this.$store.commit('gameBet/setBetPlay', {});
   },
   mounted() {
     this.getInitData();
   },
   watch: {
     // 监控路由变化
-    "$route.params.id"(val) {
+    '$route.params.id'(val) {
       this.getInitData();
     },
   },

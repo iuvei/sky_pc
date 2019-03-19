@@ -1,6 +1,6 @@
 class calcK3 {
   constructor() {
-    this.tag_js = "k3";
+    this.tag_js = 'k3';
   }
   calcBetNum(playid, ba) {
     switch (playid) {
@@ -34,18 +34,18 @@ class calcK3 {
   }
   // 和值 1
   calc_sum(ba) {
-    if (ba.length < 1 || ba[0] === "") {
+    if (ba.length < 1 || ba[0] === '') {
       return 0;
     }
     return ba.length;
   }
   // 三不同号 胆拖 5
   calc_3bthdt(ba) {
-    if (ba.length < 2 || ba[1] === "") {
+    if (ba.length < 2 || ba[1] === '') {
       return 0;
     }
-    const danma = ba[0].split("|"); // 胆码
-    const tuoma = ba[1].split("|"); // 拖码
+    const danma = ba[0].split('|'); // 胆码
+    const tuoma = ba[1].split('|'); // 拖码
     if (!this.checkArrIs(danma, /[1-6]/) || !this.checkArrIs(tuoma, /[1-6]/)) {
       return 0;
     }
@@ -59,14 +59,14 @@ class calcK3 {
   }
   // 三同号 通选
   calc_3thtx(ba) {
-    if (ba.length < 1 || ba[0] === "") {
+    if (ba.length < 1 || ba[0] === '') {
       return 0;
     }
     return ba.length;
   }
   // 三同号 复选
   calc_3thdx(ba) {
-    if (ba.length < 1 || ba[0] === "") {
+    if (ba.length < 1 || ba[0] === '') {
       return 0;
     }
     return ba.length;
@@ -92,7 +92,7 @@ class calcK3 {
 
   // 三连号 通选
   calc_3lhtx(ba) {
-    if (ba.length < 1 || ba[0] === "") {
+    if (ba.length < 1 || ba[0] === '') {
       return 0;
     }
     return ba.length;
@@ -112,13 +112,13 @@ class calcK3 {
       return 0;
     }
 
-    const tonghao = ba[0].split("|");
+    const tonghao = ba[0].split('|');
     if (!this.checkArrIs(tonghao, /[1-6][1-6]/)) {
       return 0;
     }
 
     const th_length = tonghao.length;
-    const btonghao = ba[1].split("|");
+    const btonghao = ba[1].split('|');
     if (!checkArrIs(btonghao, /[1-6]/)) {
       return 0;
     }
@@ -143,11 +143,11 @@ class calcK3 {
     if (ba.length < 2) {
       return 0;
     }
-    const ba0 = ba[0].split("|");
+    const ba0 = ba[0].split('|');
     if (!this.checkArrIs(ba0, /^[1-6]$/)) {
       return 0;
     }
-    const ba1 = ba[1].split("|");
+    const ba1 = ba[1].split('|');
     if (!this.checkArrIs(ba1, /^[1-6]$/)) {
       return 0;
     }
@@ -165,7 +165,7 @@ class calcK3 {
 
   // 总大小单双
   calc_hz_dxds(ba) {
-    if (ba.length < 1 || ba[0] === "") {
+    if (ba.length < 1 || ba[0] === '') {
       return 0;
     } else {
       return ba.length;
@@ -178,7 +178,7 @@ class calcK3 {
     }
     let zhushu = 0;
     for (let i = 0; i < ba.length; i++) {
-      if (ba[i] !== "?") {
+      if (ba[i] !== '?') {
         const res = ba[i].split(/[\|\/]/);
         if (this.checkArrIs(res, /^([0-9]|[0][0-9])$/)) {
           zhushu += res.length;

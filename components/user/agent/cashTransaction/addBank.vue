@@ -43,23 +43,23 @@
   </div>
 </template>
 <script>
-import { mapState, mapActions } from "vuex";
-import passwordInput from "~/components/user/passwordInput";
+import { mapState, mapActions } from 'vuex';
+import passwordInput from '~/components/user/passwordInput';
 export default {
-  name: "addBank",
+  name: 'addBank',
   data() {
     return {
-      real_name: "",
-      cardId: "",
+      real_name: '',
+      cardId: '',
       bankList: [],
-      cardNo: "",
-      province: "",
-      region: "",
-      tk_pass: ""
+      cardNo: '',
+      province: '',
+      region: '',
+      tk_pass: ''
     };
   },
   computed: {
-    ...mapState("userinfo", ["accountInfo"])
+    ...mapState('userinfo', ['accountInfo'])
   },
   components: {
     passwordInput
@@ -68,25 +68,25 @@ export default {
     this.getBanks();
   },
   methods: {
-    ...mapActions("user", ["getBankCardList", "addUserBankCard"]),
-    ...mapActions("agent", ["modifyField"]),
+    ...mapActions('user', ['getBankCardList', 'addUserBankCard']),
+    ...mapActions('agent', ['modifyField']),
     async getBanks() {
       let data = (await this.getBankCardList()) || [];
       this.bankList = data;
     },
     async addBankCard() {
       let realname = this.accountInfo.real_name || this.real_name;
-      if (realname.trim() === "") {
+      if (realname.trim() === '') {
         return this.$Message.info({
-          content: "请输入真实的姓名",
+          content: '请输入真实的姓名',
           closable: true
         });
       }
 
       let tk_pass = this.tk_pass;
-      if (tk_pass.split("").length < 4) {
+      if (tk_pass.split('').length < 4) {
         return this.$Message.info({
-          content: "设置安全密码长度不对",
+          content: '设置安全密码长度不对',
           closable: true
         });
       }
@@ -110,7 +110,7 @@ export default {
       //   }
       // });
       this.$Message.success({
-        content: "添加成功",
+        content: '添加成功',
         closable: true
       });
     }

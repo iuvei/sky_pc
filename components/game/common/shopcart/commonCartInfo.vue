@@ -25,28 +25,28 @@
 // import { mapState } from "vuex";
 
 export default {
-  name: "cartRowInfo",
-  props: ["componentData", "beforeClose", "visible"],
+  name: 'cartRowInfo',
+  props: ['componentData', 'beforeClose', 'visible'],
   data() {
     return {
       head: [
         // { title: "注单号：", key: "zhudan" },
         // { title: "下注时间：", key: "tz_time" },
-        { title: "期号：", key: "qishu" },
-        { title: "赔率：", key: "peilv" },
-        { title: "彩种：", key: "game_name" },
-        { title: "投注注数：", key: "zhushu" },
-        { title: "注单金额：", key: "per_price" },
-        { title: "投注金额：", key: "pay_money" },
-        { title: "玩法：", key: "wanfa" },
-        { title: "中奖金额：", key: "win" },
-        { title: "状态：", key: "statusTxt" },
-        { title: "盈亏：", key: "is_win" },
-        { title: "下注号码：", key: "xiangqing" },
-        { title: "开奖号码：", key: "kj_balls" },
+        { title: '期号：', key: 'qishu' },
+        { title: '赔率：', key: 'peilv' },
+        { title: '彩种：', key: 'game_name' },
+        { title: '投注注数：', key: 'zhushu' },
+        { title: '注单金额：', key: 'per_price' },
+        { title: '投注金额：', key: 'pay_money' },
+        { title: '玩法：', key: 'wanfa' },
+        { title: '中奖金额：', key: 'win' },
+        { title: '状态：', key: 'statusTxt' },
+        { title: '盈亏：', key: 'is_win' },
+        { title: '下注号码：', key: 'xiangqing' },
+        { title: '开奖号码：', key: 'kj_balls' },
       ],
-      statusTxt: ["待开奖", "已中奖", "未中奖", "已撤单"],
-      backBtnTxt: "撤销注单",
+      statusTxt: ['待开奖', '已中奖', '未中奖', '已撤单'],
+      backBtnTxt: '撤销注单',
     };
   },
   computed: {
@@ -55,28 +55,32 @@ export default {
       let data = { ...this.componentData };
       data.statusTxt = this.statusTxt[this.componentData.status];
       data.pay_money = (this.componentData.zhushu * 1).float(
-        "multiply",
+        'multiply',
         this.componentData.per_price * 1
       );
       if (!this.componentData.kj_balls && !this.componentData.status) {
-        data.kj_balls = "正在开奖...";
-        data.win = "敬请期待";
-        data.is_win = "敬请期待";
+        data.kj_balls = '正在开奖...';
+        data.win = '敬请期待';
+        data.is_win = '敬请期待';
+      }
+      else if(data.game_name === '经典梯子' && data.kj_balls){
+        const kj_balls = data.kj_balls.split(' ')
+        data.kj_balls = (kj_balls[0] == 0 ? '左' : '右') +' '+ (kj_balls[1] == 0 ? 3 : 4) +' '+ (kj_balls[2] == 0 ? '单' : '双')
       }
       return data;
     },
   },
   methods: {
     rollBack() {
-      if (this.backBtnTxt === "正在撤单") return;
-      this.backBtnTxt = "正在撤单";
+      if (this.backBtnTxt === '正在撤单') return;
+      this.backBtnTxt = '正在撤单';
       this.beforeClose(true);
     },
   },
   watch: {
     visible(val) {
       if (val) {
-        this.backBtnTxt = "撤销注单";
+        this.backBtnTxt = '撤销注单';
       }
     },
   },

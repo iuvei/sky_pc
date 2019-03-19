@@ -8,45 +8,46 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
-import dayjs from "dayjs";
-import AppLotteryNum from "~/plugins/App/Lottery";
+import { mapActions, mapState } from 'vuex';
+import dayjs from 'dayjs';
+import AppLotteryNum from '~/plugins/App/Lottery';
 export default {
-  name: "lottery-all",
+  name: "lottery-notice-all",
   components: {
     AppLotteryNum
   },
-  props: ["jstag"],
+  props: ['jstag'],
   data() {
     return {
       columns: [
         {
-          title: "彩种",
-          align: "center",
-          key: "game_name"
+          title: '彩种',
+          align: 'center',
+          key: 'game_name'
         },
         {
-          title: "期号",
-          align: "center",
+          title: '期号',
+          align: 'center',
           width: 90,
-          key: "qishu"
+          key: 'qishu'
         },
         {
-          title: "开奖时间",
-          align: "center",
+          title: '开奖时间',
+          align: 'center',
           width: 120,
-          key: "_opentime"
+          key: '_opentime'
         },
         {
-          title: "开奖号码",
-          align: "center",
+          title: '开奖号码',
+          align: 'center',
           width: 400,
-          key: "balls",
+          key: 'balls',
           render: (h, params) => {
-            let pk10 = params.row.js_tag === "pk10" ? "big" : "";
+            let pk10 = params.row.js_tag === 'pk10' ? 'big' : '';
             return (
               <AppLotteryNum
-                class={"num " + pk10}
+                class={'num ' + pk10}
+                qishu={params.row.qishu}
                 number={params.row.balls}
                 type={params.row.js_tag}
               />
@@ -54,18 +55,18 @@ export default {
           }
         },
         {
-          title: "期数（每天）",
-          align: "center",
-          key: "total"
+          title: '期数（每天）',
+          align: 'center',
+          key: 'total'
         },
         {
-          title: "开奖频率",
-          align: "center",
-          key: "pinlv"
+          title: '开奖频率',
+          align: 'center',
+          key: 'pinlv'
         },
         {
-          title: "详情",
-          align: "center",
+          title: '详情',
+          align: 'center',
           width: 50,
           render: (h, params) => {
             return (
@@ -77,8 +78,8 @@ export default {
           }
         },
         {
-          title: "走势",
-          align: "center",
+          title: '走势',
+          align: 'center',
           width: 50,
           render: (h, { row }) => {
             return (
@@ -93,9 +94,9 @@ export default {
           }
         },
         {
-          title: "购买彩票",
-          align: "center",
-          key: "openless",
+          title: '购买彩票',
+          align: 'center',
+          key: 'openless',
           render: (h, { row }) => {
             return (
               <div>
@@ -120,6 +121,7 @@ export default {
     };
   },
   async created() {
+    if(!process.browser) return
     let data = await this.getKjCpLog();
     await this.getQishus(data);
     if (data && Array.isArray(data)) {
@@ -140,37 +142,41 @@ export default {
   },
   methods: {
     ...mapActions({
-      getKjCpLog: "game/getKjCpLog",
-      getQishus: "game/getQishus"
+      getKjCpLog: 'game/getKjCpLog',
+      getQishus: 'game/getQishus'
     }),
     goTrend(row) {
+       if(['tzyx','xypk'].includes(row.js_tag)){
+        this.$Message.warning("该彩种暂无走势")
+        return false
+      }
       row.game_id = row.gameid;
-      this.$router.push({ name: "trend", params: row });
+      this.$router.push({ name: 'trend', params: row });
     },
     handleClick(params) {
-      this.$emit("gotoDetail", params.row);
+      this.$emit('gotoDetail', params.row);
     },
     //格式化时间
     formatTime(opentime) {
-      return dayjs(opentime * 1000).format("YYYY-MM-DD HH:mm");
+      return dayjs(opentime * 1000).format('YYYY-MM-DD HH:mm');
     },
     //每天开奖期数
     calcTotal(item) {
-      if (item.xglhc === "xglhc") {
-        item.total = "";
+      if (item.xglhc === 'xglhc') {
+        item.total = '';
       } else if (this.game && Array.isArray(this.game.gameList)) {
         let game = this.game.gameList.find(x => x.tag === item.tag);
         if (game && game.tip) {
-          item.total = game.tip.replace("全天", "").replace("期", "");
+          item.total = game.tip.replace('全天', '').replace('期', '');
         }
       }
     }
   },
   watch: {
     jstag(val) {
-      if (val === "total") {
+      if (val === 'total') {
         this.data = this.allData;
-      } else if (val === "lows") {
+      } else if (val === 'lows') {
         const gamenames = this.$store.state.game.gameList
           .filter(x => x.speed === 0)
           .map(x => x.game_name);
@@ -182,7 +188,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(["game"])
+    ...mapState(['game'])
   }
 };
 </script>

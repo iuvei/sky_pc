@@ -5,8 +5,8 @@
       <Avatar icon="md-person" :src="userinfo && userinfo.head_icon" />
       <span>{{userinfo.username}}</span>
     </div>
-    <span :class="{'pd':isGuest}">账户余额:&nbsp;&nbsp;{{userinfo && userinfo.price}} 元</span>
-    <i class="refresh" @click="flushPrice">
+    <span class="balance" :class="{'pd':isGuest}">账户余额:&nbsp;&nbsp;{{userinfo && userinfo.forced || userinfo.price}} 元</span>
+    <i class="refresh" @click="flushPrice(true)">
     </i>
     <div class="gift" v-show="isLogin && !isGuest && redGift" @click="getGifs">
       <img :class="{'active':redGift}" src="~/assets/img/hongbao.png" alt="">
@@ -15,19 +15,19 @@
     <ul>
       <li v-if="!isGuest">|</li>
       <li v-if="!isGuest">
-        <a href="/user/property/getcash">提现</a>
+        <nuxt-link to="/user/property/getcash">提现</nuxt-link>
       </li>
       <li v-if="!isGuest">|</li>
       <li v-if="!isGuest">
-        <a href="/user/property/recharge">充值</a>
+        <nuxt-link to="/user/property/recharge">充值</nuxt-link>
       </li>
       <li v-if="!isGuest">|</li>
       <li v-if="!isGuest">
-        <a href="/user/promotion/sign">签到</a>
+        <nuxt-link to="/user/promotion/sign">签到</nuxt-link>
       </li>
       <li>|</li>
       <li>
-        <router-link :to="'/user/account/info'">我的账户</router-link>
+        <nuxt-link to="/user/account/info">我的账户</nuxt-link>
       </li>
       <li>|</li>
       <li>
@@ -38,16 +38,15 @@
       <p slot="header"></p>
       <div class="content">
         <p class="head">恭喜您</p>
-        <p class="cent">
-          <span>获得{{title}}</span>
-          <span class="price">{{price}}元</span>
-        </p>
-        <p class="foot">请注意查收！</span>
+        <div class="cent">
+          <div>获得{{title}}</div>
+          <div class="price">{{price}}元</div>
+        </div>
+        <p class="foot">请注意查收!
         </p>
         <img src="~/assets/img/gethongbao.png" alt="">
       </div>
       <div class="intro">
-        <p>10.10-10.11 忠实会员优秀代理大回馈代理越多反馈越多，一起共创辉煌！</p>
         <button @click="modal3=false">确定</button>
       </div>
       <p slot="footer"></p>
@@ -58,13 +57,13 @@
 <script>
 import { mapState, mapActions } from "vuex";
 export default {
-  data(){
-    return{
-      price:"",
-      title:"",
-      model:"",
-      modal3:false,
-    }
+  data() {
+    return {
+      price: "",
+      title: "",
+      model: "",
+      modal3: false
+    };
   },
   name: "userInfo",
   computed: {
@@ -73,34 +72,57 @@ export default {
       isLogin: state => state.userinfo.isLogin,
       user_flag: state => state.userinfo.user_flag
     }),
-    redGift(){
-      return  1 & this.user_flag ? 1 : 0;
+    ...mapState("thegame", ["forceTag"]),
+    redGift() {
+      return 1 & this.user_flag ? 1 : 0;
     },
-    isGuest(){
+    isGuest() {
       return this.userinfo && this.userinfo.test === 2;
     }
   },
-  mounted() {
-    this.flushPrice();
+  async mounted() {
+    await this.flushPrice();
   },
   methods: {
-    async flushPrice() {
-      let price = await this.$store.dispatch("userinfo/flushPrice");
+    ...mapActions("userinfo", ["ForceRunPrice"]),
+    // 强制刷新
+    async flushPrice(action) {
+      if (this.forceTag) {
+        let forced = await this.ForceRunPrice({ tag: this.forceTag });
+        if (action) {
+          this.$Message.success("强制刷新金额成功");
+          // this.$Message.info({
+          //   content: "强制刷新金额成功",
+          //   duration: 10
+          // });
+        }
+      } else {
+        let price = await this.$store.dispatch("userinfo/flushPrice", action);
+        if (action) {
+          this.$Message.success("金额刷新成功");
+        }
+      }
     },
 
     async userLogout() {
       if (this.userinfo.uid) {
+        this.showSpin();
         let logoutResult = await this.$store.dispatch(
           "userinfo/logout",
           this.userinfo
         );
-          this.$Message.success("您已成功退出");
-          this.$router.push("/");
+        this.$Message.success("您已成功退出");
+        this.$Spin.hide();
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1000);
+        // this.$router.push('/');
       }
     },
 
     async getGifs() {
-      if(this.redGift){
+      if (this.redGift) {
+        this.flushPrice();
         let res = await this.$store.dispatch("userinfo/getGifs");
         this.price = res.price;
         this.title = res.title;
@@ -110,10 +132,27 @@ export default {
           this.modal3 = true;
         }
         return res;
-      }else{
+      } else {
         this.$Message.warning("您的红包奖励已经领完！");
-        return '';
+        return "";
       }
+    },
+    // 显示spin/loading
+    showSpin() {
+      this.$Spin.show({
+        render: h => {
+          return h("div", [
+            h("Icon", {
+              class: "demo-spin-icon-load",
+              props: {
+                type: "ios-loading",
+                size: 18
+              }
+            }),
+            h("div", "正在退出，请稍候")
+          ]);
+        }
+      });
     }
   }
 };
@@ -121,10 +160,18 @@ export default {
 
 <style lang="scss" scoped>
 .user-info {
-  min-width: 600px;
+  min-width: 510px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
+  .avator {
+    margin-right: 20px;
+  }
+  .balance,
+  .refresh,
+  .gift {
+    margin-right: 10px;
+  }
   > img {
     border-radius: 50%;
     width: 50px;
@@ -135,7 +182,8 @@ export default {
     cursor: pointer;
     width: 20px;
     height: 20px;
-    background: url(~/assets/img/icon_refresh.jpg) no-repeat top center;
+    // background: url(~/assets/img/icon_refresh.jpg) no-repeat top center;
+    background: url(~/assets/img/icon_refresh.png) no-repeat top center;
     background-size: 20px 20px;
     transition: transform 0.3s ease;
     &:hover {
@@ -147,17 +195,7 @@ export default {
     cursor: pointer;
     width: 26px;
     height: 26px;
-    // background: url(~/assets/img/hongbao.png) no-repeat top center;
     background-size: 26px 26px;
-    // .aler_point{
-    //   position: absolute;
-    //   width: 5px;
-    //   height:5px;
-    //   border-radius: 50%;
-    //   background-color: red;
-    //   top: -2px;
-    //   right: -2px;
-    // }
     img {
       display: inline-block;
       width: 26px;
@@ -266,6 +304,7 @@ export default {
       }
       .cent {
         position: absolute;
+        height: 100px;
         width: 270px;
         color: #000;
         font-size: 16px;
@@ -273,7 +312,11 @@ export default {
         top: 250px;
         left: 165px;
         z-index: 100;
-        text-align: center;
+        div {
+          width: 100%;
+          height: 24px;
+          text-align: center;
+        }
         .price {
           color: red;
           font-size: 18px;
@@ -282,11 +325,13 @@ export default {
       .foot {
         position: absolute;
         width: 270px;
+        height: 30px;
         color: #000;
         font-size: 16px;
         font-weight: bold;
-        top: 280px;
-        left: 265px;
+        text-align: center;
+        top: 310px;
+        left: 165px;
         z-index: 100;
       }
     }
@@ -325,12 +370,9 @@ export default {
 </style>
 
 <style lang="scss">
-// .user-info{
 .gift_pop_win {
   .ivu-modal-content {
     background-color: #878787 !important;
-    // position: relative;
-    // background-color: #fff;
     border: 0;
     border-radius: 6px;
     background-clip: padding-box;

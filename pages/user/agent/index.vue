@@ -1,6 +1,10 @@
 <template>
   <div class="apply-agent">
-    <div v-if="!checking" class="one-block">
+    <div v-if="!isAgent" class="one-block">
+      <h3>什么是代理？</h3>
+      <p>可获得的返点,等于自身返点与下级返点的差值,如自身返点5,下级返点3,你将能获得下级投注金额2%的返点,如下级投注100元,你将获得2元.点击下级开户,可查看自身返点,也可为下级设置返点.</p>
+      <h3>申请代理有什么好处？</h3>
+      <p>可获得的返点,等于自身返点与下级返点的差值,如自身返点5,下级返点3,你将能获得下级投注金额2%的返点,如下级投注100元,你将获得2元.点击下级开户,可查看自身返点,也可为下级设置返点.</p>
       <Button type="error" @click="applyAgent">申请代理</Button>
     </div>
     <div v-else class="two-block">
@@ -14,45 +18,48 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions } from 'vuex'
+import { setTimeout } from 'timers'
 export default {
-  name: "applyAgent",
+  name: 'applyAgent',
   data() {
-    return {
-      checking: false
-    };
+    return {}
   },
   components: {},
   computed: {
-    // ...mapState("agent", ["isAgent"])
+    ...mapState('agent', ['isAgent'])
   },
   fetch({ store }) {
     // 代理是否审核
-    store.dispatch("agent/isDailiVerify");
+    store.dispatch('agent/isDailiVerify')
   },
   mounted() {
-    this.isDailiVerify();
+    this.isDailiVerify()
   },
   methods: {
-    ...mapActions("agent", ["ApplyDaili", "isDailiVerify"]),
+    ...mapActions('agent', ['ApplyDaili', 'isDailiVerify']),
     async applyAgent() {
       await this.ApplyDaili()
-      this.checking = true
+      setTimeout(this.isDailiVerify, 3000)
     },
     async initData() {
-      let data = (await this.getChlidStatic(params)) || [];
-      this.tableData = data;
+      let data = (await this.getChlidStatic(params)) || []
+      this.tableData = data
       // console.error(data);
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
 .apply-agent {
+  line-height: 23px;
   .one-block {
     text-align: center;
     padding: 20px;
+    p {
+      text-align: left;
+    }
   }
 
   .box1_head {

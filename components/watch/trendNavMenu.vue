@@ -8,8 +8,8 @@
 </template>
 <script>
 export default {
-  name: "navMenu",
-  props: ["data", "active"],
+  name: 'navMenu',
+  props: ['data', 'active'],
 };
 </script>
 <style lang='scss' scoped>
@@ -52,28 +52,28 @@ export default {
     }
   }
   ._ssc {
-    background: url("~assets/img/touzhu_ssc.png") no-repeat;
+    background: url('~assets/img/touzhu_ssc.png') no-repeat;
   }
   ._pk10 {
-    background: url("~assets/img/touzhu_pk10.png") no-repeat;
+    background: url('~assets/img/touzhu_pk10.png') no-repeat;
   }
   ._k3 {
-    background: url("~assets/img/touzhu_k3.png") no-repeat;
+    background: url('~assets/img/touzhu_k3.png') no-repeat;
   }
   ._11x5 {
-    background: url("~assets/img/touzhu_11x5.png") no-repeat;
+    background: url('~assets/img/touzhu_11x5.png') no-repeat;
   }
   ._3d {
-    background: url("~assets/img/touzhu_3d.png") no-repeat;
+    background: url('~assets/img/touzhu_3d.png') no-repeat;
   }
   ._lhc {
-    background: url("~assets/img/touzhu_lhc.png") no-repeat;
+    background: url('~assets/img/touzhu_lhc.png') no-repeat;
   }
   ._pcdd {
-    background: url("~assets/img/touzhu_pcdd.png") no-repeat;
+    background: url('~assets/img/touzhu_pcdd.png') no-repeat;
   }
   ._lows {
-    background: url("~assets/img/touzhu_low.png") no-repeat;
+    background: url('~assets/img/touzhu_low.png') no-repeat;
   }
   ._sport_key {
     // background: url("~assets/img/touzhu_sport_key.png") no-repeat;

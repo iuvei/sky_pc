@@ -3,7 +3,7 @@
   </div>
 </template>
 <script>
-import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
 import NoticeConent from './noticeContent';
 export default {
   name:'sysnotice',
@@ -11,37 +11,85 @@ export default {
     NoticeConent
   },
   data () {
-      return {
-        title: []
-      }
+    return {
+      title: []
+    }
   },
   computed:{
-      ...mapGetters("sysinfo",["syStyleGetting"]),
-      ...mapState({
-        islogin: state=> state.userinfo.isLogin,
-        logout: state=> state.userinfo.logout,
-        sysNotice:state=> state.sysinfo.sysNotice
-      }),
-      syStyle: {
-        get(){
-          let syStyle = this.syStyleGetting;
-          return  syStyle;
-        },
-        set(style){
-          this.setSyStyle(style);
-        }
+    ...mapGetters('sysinfo',['syStyleGetting']),
+    ...mapState({
+      islogin: state => state.userinfo.isLogin,
+      logout: state => state.userinfo.logout,
+      sysNotice:state => state.sysinfo.sysNotice,
+      userinfo: state => state.userInfo.accountInfo
+    }),
+    syStyle: {
+      get(){
+        let syStyle = this.syStyleGetting;
+        return  syStyle;
+      },
+      set(style){
+        this.setSyStyle(style);
+      }
     },
   },
   async mounted(){
-    if(this.islogin){
-      await this.getNoticeAppForOffline();
-      if(this.sysNotice !== ""){
+    await this.showModal()
+  },
+  methods:{
+    ...mapActions('sysinfo',['getOfflineSysMes', 'getOnlineSysMes']),
+    ...mapMutations('sysinfo',['setSyStyle','setSysNotice']),
+    //获取离线公告
+    async getNoticeAppForOffline(){
+      let res = await this.getOfflineSysMes();
+      this.title = res
+      if (res && Array.isArray(res) && res.length) {
+        // let a = res == 0 ? 0 : res
+        let arr = res.map(n => {
+          var temp = document.createElement('div')
+          temp.innerHTML = this.decode(n.content)
+          var output = temp.innerText || temp.textContent
+          temp = null
+          n.content = output
+          return n
+        })
+        this.setSysNotice(arr)
+        this.setSyStyle(true);
+      }
+    },
+    // 获取会员在线公告
+    async getOnlineMes() {
+      let res = await this.getOnlineSysMes();
+      if (res && Array.isArray(res) && res.length) {
+        // let a = res == 0 ? 0 : res
+        let arr = res.map(n => {
+          var temp = document.createElement('div')
+          temp.innerHTML = this.decode(n.content)
+          var output = temp.innerText || temp.textContent
+          temp = null
+          n.content = output
+          return n
+        })
+        this.setSysNotice(arr)
+        this.setSyStyle(true);
+      }
+    },
+    // 显示
+    async showModal(){
+      if(this.islogin){
+        // await this.getNoticeAppForOffline();
+        await this.getOnlineMes();
+      }
+      else{
+        await this.getNoticeAppForOffline();
+      }
+      if(this.sysNotice !== ''){
         this.setSyStyle(true);
         let noticeModal = this.$AppModal({
           visible: true,
-          title: "系统公告",
+          title: '系统公告',
           showFoot: false,
-          customClass: "sys-notice",
+          customClass: 'sys-notice',
           component: NoticeConent,
           componentData: JSON.parse(JSON.stringify(this.sysNotice)),
           beforeClose: b => {
@@ -51,26 +99,10 @@ export default {
       }
     }
   },
-  methods:{
-    ...mapActions("sysinfo",["getOfflineSysMes"]),
-    ...mapMutations("sysinfo",["setSyStyle","setSysNotice"]),
-
-    async getNoticeAppForOffline(){
-      let res = await this.getOfflineSysMes();
-      this.title = res
-      if (res && Array.isArray(res) && res.length) {
-          // let a = res == 0 ? 0 : res
-          let arr = res.map(n => {
-            var temp = document.createElement('div')
-            temp.innerHTML = this.decode(n.content)
-            var output = temp.innerText || temp.textContent
-            temp = null
-            n.content = output
-            return n
-          })
-          this.setSysNotice(arr)
-          this.setSyStyle(true);
-      }
+  watch:{
+    async '$store.state.userinfo.isLogin'(newVal, oldVal){
+      if(newVal && !oldVal)
+        await this.showModal()
     }
   }
 };

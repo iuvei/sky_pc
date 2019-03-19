@@ -7,39 +7,39 @@ website:    http://www.burocratik.com
 -----------------------------------------------------------------------*/
 var outdatedBrowser = function(options) {
   //Variable definition (before ajax)
-  var outdated = document.getElementById("outdated");
+  var outdated = document.getElementById('outdated');
 
   // Default settings
   this.defaultOpts = {
-    bgColor: "#f25648",
-    color: "#ffffff",
-    lowerThan: "transform",
-    languagePath: "../outdatedbrowser/lang/en.html"
+    bgColor: '#f25648',
+    color: '#ffffff',
+    lowerThan: 'transform',
+    languagePath: '../outdatedbrowser/lang/en.html'
   };
 
   if (options) {
     //assign css3 property or js property to IE browser version
-    if (options.lowerThan == "IE8" || options.lowerThan == "borderSpacing") {
-      options.lowerThan = "borderSpacing";
-    } else if (options.lowerThan == "IE9" || options.lowerThan == "boxShadow") {
-      options.lowerThan = "boxShadow";
+    if (options.lowerThan == 'IE8' || options.lowerThan == 'borderSpacing') {
+      options.lowerThan = 'borderSpacing';
+    } else if (options.lowerThan == 'IE9' || options.lowerThan == 'boxShadow') {
+      options.lowerThan = 'boxShadow';
     } else if (
-      options.lowerThan == "IE10" ||
-      options.lowerThan == "transform" ||
-      options.lowerThan == "" ||
-      typeof options.lowerThan === "undefined"
+      options.lowerThan == 'IE10' ||
+      options.lowerThan == 'transform' ||
+      options.lowerThan == '' ||
+      typeof options.lowerThan === 'undefined'
     ) {
-      options.lowerThan = "transform";
+      options.lowerThan = 'transform';
     } else if (
-      options.lowerThan == "IE11" ||
-      options.lowerThan == "borderImage"
+      options.lowerThan == 'IE11' ||
+      options.lowerThan == 'borderImage'
     ) {
-      options.lowerThan = "borderImage";
+      options.lowerThan = 'borderImage';
     } else if (
-      options.lowerThan == "Edge" ||
-      options.lowerThan == "js:Promise"
+      options.lowerThan == 'Edge' ||
+      options.lowerThan == 'js:Promise'
     ) {
-      options.lowerThan = "js:Promise";
+      options.lowerThan = 'js:Promise';
     }
 
     //all properties
@@ -64,7 +64,7 @@ var outdatedBrowser = function(options) {
 
   function function_opacity(opacity_value) {
     outdated.style.opacity = opacity_value / 100;
-    outdated.style.filter = "alpha(opacity=" + opacity_value + ")";
+    outdated.style.filter = 'alpha(opacity=' + opacity_value + ')';
   }
 
   // function function_fade_out(opacity_value) {
@@ -78,7 +78,7 @@ var outdatedBrowser = function(options) {
   function function_fade_in(opacity_value) {
     function_opacity(opacity_value);
     if (opacity_value == 1) {
-      outdated.style.display = "block";
+      outdated.style.display = 'block';
     }
     if (opacity_value == 100) {
       done = true;
@@ -91,8 +91,8 @@ var outdatedBrowser = function(options) {
   // }
 
   var supports = (function() {
-    var div = document.createElement("div");
-    var vendors = "Khtml Ms O Moz Webkit".split(" ");
+    var div = document.createElement('div');
+    var vendors = 'Khtml Ms O Moz Webkit'.split(' ');
     var len = vendors.length;
 
     return function(prop) {
@@ -115,37 +115,37 @@ var outdatedBrowser = function(options) {
 
   // browser check by js props
   if (/^js:+/g.test(cssProp)) {
-    var jsProp = cssProp.split(":")[1];
+    var jsProp = cssProp.split(':')[1];
     if (!jsProp) return;
 
     switch (jsProp) {
-      case "Promise":
+      case 'Promise':
         validBrowser =
           window.Promise !== undefined &&
           window.Promise !== null &&
           Object.prototype.toString.call(window.Promise.resolve()) ===
-            "[object Promise]";
+            '[object Promise]';
         break;
       default:
         validBrowser = false;
     }
   } else {
     // check by css3 property (transform=default)
-    validBrowser = supports("" + cssProp + "");
+    validBrowser = supports('' + cssProp + '');
   }
   // 世界之窗浏览器
-  if (window.navigator.userAgent.toLowerCase().includes("theworld")) {
+  if (window.navigator.userAgent.toLowerCase().includes('theworld')) {
     validBrowser = false;
   }
   // IE11 浏览器
   //Trident/7.0
-  if (window.navigator.userAgent.toLowerCase().includes("trident/7.0")) {
+  if (window.navigator.userAgent.toLowerCase().includes('trident/7.0')) {
     validBrowser = false;
   }
   if (!validBrowser) {
     done = false;
-    console.log(window.outdatedBrowser);
-    window.location.href = "/outbrowser";
+    // console.log(window.outdatedBrowser);
+    window.location.href = '/outbrowser';
     return false;
     // if (done && outdated.style.opacity !== '1') {
     // 	done = false;
@@ -162,7 +162,7 @@ var outdatedBrowser = function(options) {
   } //end if
 
   //Check AJAX Options: if languagePath == '' > use no Ajax way, html is needed inside <div id="outdated">
-  if (languagePath === " " || languagePath.length == 0) {
+  if (languagePath === ' ' || languagePath.length == 0) {
     startStylesAndEvents();
   } else {
     grabFile(languagePath);
@@ -170,8 +170,8 @@ var outdatedBrowser = function(options) {
 
   //events and colors
   function startStylesAndEvents() {
-    var btnClose = document.getElementById("btnCloseUpdateBrowser");
-    var btnUpdate = document.getElementById("btnUpdateBrowser");
+    var btnClose = document.getElementById('btnCloseUpdateBrowser');
+    var btnUpdate = document.getElementById('btnUpdateBrowser');
 
     //check settings attributes
     outdated.style.backgroundColor = bkgColor;
@@ -190,7 +190,7 @@ var outdatedBrowser = function(options) {
 
     //close button
     btnClose.onmousedown = function() {
-      outdated.style.display = "none";
+      outdated.style.display = 'none';
       return false;
     };
 
@@ -207,7 +207,7 @@ var outdatedBrowser = function(options) {
 
   // IF AJAX with request ERROR > insert english default
   var ajaxEnglishDefault =
-    "<h6>Your browser is out-of-date!</h6>" +
+    '<h6>Your browser is out-of-date!</h6>' +
     '<p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update my browser now </a></p>' +
     '<p class="last"><button id="btnCloseUpdateBrowser" title="Close">&times;</button></p>';
 
@@ -218,10 +218,10 @@ var outdatedBrowser = function(options) {
       xhr = new XMLHttpRequest();
     } else if (window.ActiveXObject) {
       try {
-        xhr = new ActiveXObject("Msxml2.XMLHTTP");
+        xhr = new ActiveXObject('Msxml2.XMLHTTP');
       } catch (e) {
         try {
-          xhr = new ActiveXObject("Microsoft.XMLHTTP");
+          xhr = new ActiveXObject('Microsoft.XMLHTTP');
         } catch (e) {
           xhr = false;
         }
@@ -236,14 +236,14 @@ var outdatedBrowser = function(options) {
       request.onreadystatechange = function() {
         displayResponse(request);
       };
-      request.open("GET", file, true);
+      request.open('GET', file, true);
       request.send(null);
     }
     return false;
   } //end grabFile
 
   function displayResponse(request) {
-    var insertContentHere = document.getElementById("outdated");
+    var insertContentHere = document.getElementById('outdated');
     if (request.readyState == 4) {
       if (request.status == 200 || request.status == 304) {
         insertContentHere.innerHTML = request.responseText;

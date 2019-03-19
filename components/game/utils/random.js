@@ -1,104 +1,138 @@
+// 与h5 数据结构不一致
+// item.data => item.option
+// .checked=> .selected
+
 //  随机一注主程序
-function randomNum(dataSource, max, str, type) {
+
+function randomNum(dataSource, max, str, type, playid) {
   dataSource.forEach(item => {
     item.option.forEach(ele => {
-      //  全部置为未选中
-      ele.selected = false;
-    });
-  });
-  const arr = str.split("|"),
-    arr3 = [];
+      if (playid) {
+        // 扑克数据不一致(包选))
+        if([1].includes(playid)&&!ele[0].selected){
+          ele[0].selected = false
+        }
+        if(playid && [2,3,4,5,6,7,8,9,10,11,12].includes(playid)){
+          ele.forEach(v=>{
+            v.selected = false
+          })
+        }
+      }else{
+        //  全部置为未选中
+        ele.selected = false
+      }
+    })
+  })
+  const arr = str.split('|'),
+    arr3 = []
   dataSource.forEach((item, index) => {
     if (type === 1) {
       // 可重复 且包含了计算双面玩法多行不同max
       for (let i = 0; i < arr[index]; i++) {
-        const a = parseInt(Math.random() * max, 10);
-        item.option[a].selected = true;
+        const a = parseInt(Math.random() * max, 10)
+        if (playid) {
+          if([2,3,4,5,6].includes(playid)) item.option[playid-2][a].selected = true;
+
+          if([1].includes(playid)) item.option[a][0].selected = true;
+
+          if([7,8,9,10,11,12].includes(playid)) item.option[0][a].selected = true
+
+        } else {
+          item.option[a].selected = true
+        }
       }
     } else if (type === 2) {
       // 不重复
-      const arr2 = [];
+      const arr2 = []
       while (arr2.length < arr[index]) {
-        const a = parseInt(Math.random() * max, 10);
+        const a = parseInt(Math.random() * max, 10)
         if (arr3.indexOf(a) === -1) {
-          arr3.push(a);
-          arr2.push(a);
+          arr3.push(a)
+          arr2.push(a)
         }
       }
       arr2.forEach(i => {
-        item.option[i].selected = true;
-      });
+        if (playid) {
+          item.option[0][i].selected = true
+        } else {
+          item.option[i].selected = true
+        }
+      })
     }
-  });
-  return dataSource;
+  })
+  return dataSource
 }
 //  针对双面玩法多行不同max值
 function assemStr(str) {
-  const arr = str.split("|");
-  const a = parseInt(Math.random() * arr.length, 10);
-  let b;
+  const arr = str.split('|')
+  const a = parseInt(Math.random() * arr.length, 10)
+  let b
   const newArr = arr.map((item, index) => {
     if (index === a) {
-      b = item;
-      return 1;
+      b = item
+      return 1
     } else {
-      return 0;
+      return 0
     }
-  });
+  })
   return {
-    str: newArr.join("|"),
+    str: newArr.join('|'),
     max: b
-  };
+  }
 }
 // 单式专用
 function singleCalc(arr, type, num) {
   // type 1为多行可重复，2为不重复
-  const dataArr = [];
+  const dataArr = []
   if (type === 1) {
     arr.forEach(item => {
-      const a = parseInt(Math.random() * item.option.length, 10);
-      dataArr.push(item.option[a].value);
-    });
-    return dataArr.sort((a, b) => a - b).join(" ");
+      const a = parseInt(Math.random() * item.option.length, 10)
+      dataArr.push(item.option[a].name)
+    })
+    return dataArr.sort((a, b) => a - b).join('|')
   } else {
     const arr2 = [],
-      arr3 = [];
+      arr3 = []
     if (arr.length > 1) {
       arr.forEach((item, index) => {
         while (arr2.length < index + 1) {
-          const a = parseInt(Math.random() * item.option.length, 10);
+          const a = parseInt(Math.random() * item.option.length, 10)
           if (arr2.indexOf(a) === -1) {
-            arr2.push(a);
-            arr3.push(item.option[a].value);
+            arr2.push(a)
+            arr3.push(item.option[a].name)
           }
         }
-      });
-      return arr3.sort((a, b) => a - b).join(" ");
+      })
+      return arr3.sort((a, b) => a - b).join('|')
     } else {
       while (arr2.length < num) {
-        const a = parseInt(Math.random() * arr[0].option.length, 10);
+        const a = parseInt(Math.random() * arr[0].option.length, 10)
         if (arr2.indexOf(a) === -1) {
-          arr2.push(a);
+          arr2.push(a)
         }
       }
       arr2.forEach(item => {
-        arr3.push(arr[0].option[item].value);
-      });
-      return arr3.sort((a, b) => a - b).join(" ");
+        arr3.push(arr[0].option[item].name)
+      })
+      return arr3.sort((a, b) => a - b).join('|')
     }
   }
 }
 function randomBet(betData) {
-  const cart = Object.assign({}, betData);
-  cart.dataSource = JSON.parse(JSON.stringify(cart.dataSource));
-  let dataArr = [];
+  const cart = Object.assign({}, betData)
+  cart.dataSource = JSON.parse(JSON.stringify(cart.dataSource))
+  cart.gameid *= 1
+  let dataArr = []
   const sscArr = [1, 4, 5, 18, 23, 33],
     lhcArr = [14, 39, 48, 49],
     k3Arr = [6, 7, 8, 9, 20, 25, 35, 41, 42, 43, 44, 45, 46],
     pk10Arr = [2, 19, 24, 34, 47],
     syxwArr = [10, 11, 12, 13, 21, 26, 36],
     sandiArr = [3, 15, 16, 40],
-    pcddArr = [17, 22, 27, 37, 38];
+    pcddArr = [17, 22, 27, 37, 38],
+    xyqxArr = [56],
+    xypkArr = [54],
+    xyncArr = [52]
   if (sscArr.includes(cart.gameid)) {
     const arr1 = [1], // 1|1|1|1|1
       arr2 = [83], // 5
@@ -141,58 +175,58 @@ function randomBet(betData) {
       arr20 = [129], // 1 3|3|3|3|3|3|3|3|3|3
       arr21 = [2, 4, 6, 20, 34, 95, 102, 116], // 单式
       arr22 = [11, 25, 107, 38, 120], // 组三 2
-      arr23 = [13, 27, 109]; // 组六 3
+      arr23 = [13, 27, 109] // 组六 3
     if (arr1.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 10, "1|1|1|1|1", 1);
+      dataArr = randomNum(cart.dataSource, 10, '1|1|1|1|1', 1)
     } else if (arr2.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 10, "5", 2);
+      dataArr = randomNum(cart.dataSource, 10, '5', 2)
     } else if (arr3.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 10, "1|3", 2);
+      dataArr = randomNum(cart.dataSource, 10, '1|3', 2)
     } else if (arr4.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 10, "2|1", 2);
+      dataArr = randomNum(cart.dataSource, 10, '2|1', 2)
     } else if (arr5.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 10, "1|2", 2);
+      dataArr = randomNum(cart.dataSource, 10, '1|2', 2)
     } else if (arr6.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 10, "1|1", 2);
+      dataArr = randomNum(cart.dataSource, 10, '1|1', 2)
     } else if (arr7.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 10, "1|1|1|1", 1);
+      dataArr = randomNum(cart.dataSource, 10, '1|1|1|1', 1)
     } else if (arr8.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 10, "4", 2);
+      dataArr = randomNum(cart.dataSource, 10, '4', 2)
     } else if (arr9.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 10, "2", 2);
+      dataArr = randomNum(cart.dataSource, 10, '2', 2)
     } else if (arr10.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 10, "1|1|1", 1);
+      dataArr = randomNum(cart.dataSource, 10, '1|1|1', 1)
     } else if (arr11.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 28, "1", 1);
+      dataArr = randomNum(cart.dataSource, 28, '1', 1)
     } else if (arr12.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 10, "1", 1);
+      dataArr = randomNum(cart.dataSource, 10, '1', 1)
     } else if (arr13.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 3, "1", 1);
+      dataArr = randomNum(cart.dataSource, 3, '1', 1)
     } else if (arr14.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 10, "3", 2);
+      dataArr = randomNum(cart.dataSource, 10, '3', 2)
     } else if (arr15.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 19, "1", 1);
+      dataArr = randomNum(cart.dataSource, 19, '1', 1)
     } else if (arr16.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 17, "1", 1);
+      dataArr = randomNum(cart.dataSource, 17, '1', 1)
     } else if (arr17.includes(cart.playid)) {
-      const myObj = assemStr("4|5|4|4|4|4|4");
-      dataArr = randomNum(cart.dataSource, myObj.max, myObj.str, 1);
+      const myObj = assemStr('4|5|4|4|4|4|4')
+      dataArr = randomNum(cart.dataSource, myObj.max, myObj.str, 1)
     } else if (arr18.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 16, "1", 1);
+      dataArr = randomNum(cart.dataSource, 16, '1', 1)
     } else if (arr19.includes(cart.playid)) {
-      const myObj = assemStr("10|10|10|10|10");
-      dataArr = randomNum(cart.dataSource, 10, myObj.str, 1);
+      const myObj = assemStr('10|10|10|10|10')
+      dataArr = randomNum(cart.dataSource, 10, myObj.str, 1)
     } else if (arr20.includes(cart.playid)) {
-      const myObj = assemStr("3|3|3|3|3|3|3|3|3|3");
-      dataArr = randomNum(cart.dataSource, 3, myObj.str, 1);
+      const myObj = assemStr('3|3|3|3|3|3|3|3|3|3')
+      dataArr = randomNum(cart.dataSource, 3, myObj.str, 1)
     } else if (arr21.includes(cart.playid)) {
-      dataArr = singleCalc(cart.dataSource, 1);
+      dataArr = singleCalc(cart.dataSource, 1)
     } else if (arr22.includes(cart.playid)) {
-      const tempArr = singleCalc(cart.dataSource, 2, 2).split("|");
-      tempArr.push(tempArr[1]);
-      dataArr = tempArr.join("|");
+      const tempArr = singleCalc(cart.dataSource, 2, 2).split('|')
+      tempArr.push(tempArr[1])
+      dataArr = tempArr.join('|')
     } else if (arr23.includes(cart.playid)) {
-      dataArr = singleCalc(cart.dataSource, 2, 3);
+      dataArr = singleCalc(cart.dataSource, 2, 3)
     }
   } else if (lhcArr.includes(cart.gameid)) {
     const arr1 = [1, 36, 10, 11, 12, 13, 14, 15, 16], // 1
@@ -216,75 +250,75 @@ function randomBet(betData) {
       arr19 = [29], // 5 max10
       arr20 = [30, 31], // 3
       arr21 = [32, 33, 34], // 2
-      arr22 = [35]; // 4
+      arr22 = [35] // 4
     if (arr1.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 49, "1", 1);
+      dataArr = randomNum(cart.dataSource, 49, '1', 1)
     } else if (arr2.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 20, "1", 1);
+      dataArr = randomNum(cart.dataSource, 20, '1', 1)
     } else if (arr3.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 15, "1", 1);
+      dataArr = randomNum(cart.dataSource, 15, '1', 1)
     } else if (arr4.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 3, "1", 1);
+      dataArr = randomNum(cart.dataSource, 3, '1', 1)
     } else if (arr5.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 12, "1", 1);
+      dataArr = randomNum(cart.dataSource, 12, '1', 1)
     } else if (arr6.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 5, "1", 1);
+      dataArr = randomNum(cart.dataSource, 5, '1', 1)
     } else if (arr7.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 10, "1", 1);
+      dataArr = randomNum(cart.dataSource, 10, '1', 1)
     } else if (arr8.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 4, "1", 1);
+      dataArr = randomNum(cart.dataSource, 4, '1', 1)
     } else if (arr9.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 8, "1", 1);
+      dataArr = randomNum(cart.dataSource, 8, '1', 1)
     } else if (arr10.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 49, "6", 2);
+      dataArr = randomNum(cart.dataSource, 49, '6', 2)
     } else if (arr11.includes(cart.playid)) {
       dataArr = randomNum(
         cart.dataSource,
         12,
-        parseInt(Math.random() * 9 + 2, 10) + "",
+        parseInt(Math.random() * 9 + 2, 10) + '',
         2
-      );
+      )
     } else if (arr12.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 12, "2", 2);
+      dataArr = randomNum(cart.dataSource, 12, '2', 2)
     } else if (arr13.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 12, "3", 2);
+      dataArr = randomNum(cart.dataSource, 12, '3', 2)
     } else if (arr14.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 12, "4", 2);
+      dataArr = randomNum(cart.dataSource, 12, '4', 2)
     } else if (arr15.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 12, "5", 2);
+      dataArr = randomNum(cart.dataSource, 12, '5', 2)
     } else if (arr16.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 10, "2", 2);
+      dataArr = randomNum(cart.dataSource, 10, '2', 2)
     } else if (arr17.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 10, "3", 2);
+      dataArr = randomNum(cart.dataSource, 10, '3', 2)
     } else if (arr18.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 10, "4", 2);
+      dataArr = randomNum(cart.dataSource, 10, '4', 2)
     } else if (arr19.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 10, "5", 2);
+      dataArr = randomNum(cart.dataSource, 10, '5', 2)
     } else if (arr20.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 50, "3", 2);
+      dataArr = randomNum(cart.dataSource, 50, '3', 2)
     } else if (arr21.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 50, "2", 2);
+      dataArr = randomNum(cart.dataSource, 50, '2', 2)
     } else if (arr22.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 50, "4", 2);
+      dataArr = randomNum(cart.dataSource, 50, '4', 2)
     }
   } else if (k3Arr.includes(cart.gameid)) {
     const arr1 = [1], // 1 max20
       arr2 = [14], // 1 4|4|4|4
       arr3 = [5, 10], // 1|2 max6
       arr4 = [15], // 1 1|6
-      arr5 = [7]; // 1 max6
+      arr5 = [7] // 1 max6
     if (arr1.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 20, "1", 1);
+      dataArr = randomNum(cart.dataSource, 20, '1', 1)
     } else if (arr2.includes(cart.playid)) {
-      const a = assemStr("4|4|4|4");
-      dataArr = randomNum(cart.dataSource, a.max, a.str, 1);
+      const a = assemStr('4|4|4|4')
+      dataArr = randomNum(cart.dataSource, a.max, a.str, 1)
     } else if (arr3.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 6, "1|2", 2);
+      dataArr = randomNum(cart.dataSource, 6, '1|2', 2)
     } else if (arr4.includes(cart.playid)) {
-      const a = assemStr("1|6");
-      dataArr = randomNum(cart.dataSource, a.max, a.str, 1);
+      const a = assemStr('1|6')
+      dataArr = randomNum(cart.dataSource, a.max, a.str, 1)
     } else if (arr5.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 6, "1", 1);
+      dataArr = randomNum(cart.dataSource, 6, '1', 1)
     }
   } else if (syxwArr.includes(cart.gameid)) {
     const arr1 = [1, 6, 11], // 1|1|1
@@ -314,67 +348,67 @@ function randomBet(betData) {
       arr26 = [41], // 11任选4
       arr27 = [42], // 11任选5
       arr28 = [43], // 11任选6
-      arr29 = [44] // 11任选7
+      arr29 = [44]; // 11任选7
     if (arr1.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 11, "1|1|1", 2);
+      dataArr = randomNum(cart.dataSource, 11, '1|1|1', 2)
     } else if (arr2.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 11, "3", 2);
+      dataArr = randomNum(cart.dataSource, 11, '3', 2)
     } else if (arr3.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 11, "1|2", 2);
+      dataArr = randomNum(cart.dataSource, 11, '1|2', 2)
     } else if (arr4.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 11, "1|1", 2);
+      dataArr = randomNum(cart.dataSource, 11, '1|1', 2)
     } else if (arr5.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 11, "2", 2);
+      dataArr = randomNum(cart.dataSource, 11, '2', 2)
     } else if (arr7.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 11, "1", 1);
+      dataArr = randomNum(cart.dataSource, 11, '1', 1)
     } else if (arr8.includes(cart.playid)) {
-      const str = assemStr("11|11|11|11|11");
-      dataArr = randomNum(cart.dataSource, str.max, str.str, 1);
+      const str = assemStr('11|11|11|11|11')
+      dataArr = randomNum(cart.dataSource, str.max, str.str, 1)
     } else if (arr9.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 11, "4", 2);
+      dataArr = randomNum(cart.dataSource, 11, '4', 2)
     } else if (arr10.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 11, "5", 2);
+      dataArr = randomNum(cart.dataSource, 11, '5', 2)
     } else if (arr11.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 11, "6", 2);
+      dataArr = randomNum(cart.dataSource, 11, '6', 2)
     } else if (arr12.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 11, "7", 2);
+      dataArr = randomNum(cart.dataSource, 11, '7', 2)
     } else if (arr13.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 11, "8", 2);
+      dataArr = randomNum(cart.dataSource, 11, '8', 2)
     } else if (arr14.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 11, "1|3", 2);
+      dataArr = randomNum(cart.dataSource, 11, '1|3', 2)
     } else if (arr15.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 11, "1|4", 2);
+      dataArr = randomNum(cart.dataSource, 11, '1|4', 2)
     } else if (arr16.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 11, "1|5", 2);
+      dataArr = randomNum(cart.dataSource, 11, '1|5', 2)
     } else if (arr17.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 11, "1|6", 2);
+      dataArr = randomNum(cart.dataSource, 11, '1|6', 2)
     } else if (arr18.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 11, "1|7", 2);
+      dataArr = randomNum(cart.dataSource, 11, '1|7', 2)
     } else if (arr19.includes(cart.playid)) {
       //  理解错了，并不蛋疼
-      const str = assemStr("6|4|4|4|4|4");
-      dataArr = randomNum(cart.dataSource, str.max, str.str, 1);
+      const str = assemStr('6|4|4|4|4|4')
+      dataArr = randomNum(cart.dataSource, str.max, str.str, 1)
     } else if (arr20.includes(cart.playid)) {
-      const str = assemStr("2|2|2|2|2|2|2|2|2|2");
-      dataArr = randomNum(cart.dataSource, str.max, str.str, 1);
+      const str = assemStr('2|2|2|2|2|2|2|2|2|2')
+      dataArr = randomNum(cart.dataSource, str.max, str.str, 1)
     } else if (arr21.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 16, "1", 1);
+      dataArr = randomNum(cart.dataSource, 16, '1', 1)
     } else if (arr22.includes(cart.playid)) {
-      dataArr = singleCalc(cart.dataSource, 2);
+      dataArr = singleCalc(cart.dataSource, 2)
     } else if (arr23.includes(cart.playid)) {
-      dataArr = singleCalc(cart.dataSource, 2, 3);
+      dataArr = singleCalc(cart.dataSource, 2, 3)
     } else if (arr24.includes(cart.playid)) {
-      dataArr = singleCalc(cart.dataSource, 2, 2);
+      dataArr = singleCalc(cart.dataSource, 2, 2)
     } else if (arr25.includes(cart.playid)) {
-      dataArr = singleCalc(cart.dataSource, 2, 1)
+      dataArr = singleCalc(cart.dataSource, 2, 1);
     } else if (arr26.includes(cart.playid)) {
-      dataArr = singleCalc(cart.dataSource, 2, 4)
+      dataArr = singleCalc(cart.dataSource, 2, 4);
     } else if (arr27.includes(cart.playid)) {
-      dataArr = singleCalc(cart.dataSource, 2, 5)
+      dataArr = singleCalc(cart.dataSource, 2, 5);
     } else if (arr28.includes(cart.playid)) {
-      dataArr = singleCalc(cart.dataSource, 2, 6)
+      dataArr = singleCalc(cart.dataSource, 2, 6);
     } else if (arr29.includes(cart.playid)) {
-      dataArr = singleCalc(cart.dataSource, 2, 7)
+      dataArr = singleCalc(cart.dataSource, 2, 7);
     }
   } else if (pk10Arr.includes(cart.gameid)) {
     const arr1 = [1], // 1
@@ -383,23 +417,23 @@ function randomBet(betData) {
       arr4 = [6, 15], // 10|10|10|10|10|10|10|10|10|10 任选1
       arr5 = [7], // 1 max23
       arr6 = [14], // 6|6|6|6|6|4|4|4|4|4
-      arr7 = [3, 5]; // 不重复，2
+      arr7 = [3, 5] // 不重复，2
     if (arr1.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 10, "1", 1);
+      dataArr = randomNum(cart.dataSource, 10, '1', 1)
     } else if (arr2.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 10, "1|1", 2);
+      dataArr = randomNum(cart.dataSource, 10, '1|1', 2)
     } else if (arr3.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 10, "1|1|1", 2);
+      dataArr = randomNum(cart.dataSource, 10, '1|1|1', 2)
     } else if (arr4.includes(cart.playid)) {
-      const str = assemStr("10|10|10|10|10|10|10|10|10|10");
-      dataArr = randomNum(cart.dataSource, str.max, str.str, 1);
+      const str = assemStr('10|10|10|10|10|10|10|10|10|10')
+      dataArr = randomNum(cart.dataSource, str.max, str.str, 1)
     } else if (arr5.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 23, "1", 1);
+      dataArr = randomNum(cart.dataSource, 23, '1', 1)
     } else if (arr6.includes(cart.playid)) {
-      const str = assemStr("6|6|6|6|6|4|4|4|4|4");
-      dataArr = randomNum(cart.dataSource, str.max, str.str, 1);
+      const str = assemStr('6|6|6|6|6|4|4|4|4|4')
+      dataArr = randomNum(cart.dataSource, str.max, str.str, 1)
     } else if (arr7.includes(cart.playid)) {
-      dataArr = singleCalc(cart.dataSource, 2);
+      dataArr = singleCalc(cart.dataSource, 2)
     }
   } else if (sandiArr.includes(cart.gameid)) {
     const arr1 = [1], // 1|1|1
@@ -413,54 +447,153 @@ function randomBet(betData) {
       arr9 = [26], // 6|5|4|4|4 任选1
       arr10 = [27], // 3|3|3 任选1
       arr11 = [12], // 10|10|10 任选1
-      arr12 = [2]; // 单式
+      arr12 = [2] // 单式
     if (arr1.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 10, "1|1|1", 1);
+      dataArr = randomNum(cart.dataSource, 10, '1|1|1', 1)
     } else if (arr2.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 28, "1", 1);
+      dataArr = randomNum(cart.dataSource, 28, '1', 1)
     } else if (arr3.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 10, "2", 2);
+      dataArr = randomNum(cart.dataSource, 10, '2', 2)
     } else if (arr4.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 10, "3", 2);
+      dataArr = randomNum(cart.dataSource, 10, '3', 2)
     } else if (arr5.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 26, "1", 1);
+      dataArr = randomNum(cart.dataSource, 26, '1', 1)
     } else if (arr6.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 22, "1", 1);
+      dataArr = randomNum(cart.dataSource, 22, '1', 1)
     } else if (arr7.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 10, "1|1", 1);
+      dataArr = randomNum(cart.dataSource, 10, '1|1', 1)
     } else if (arr8.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 10, "1", 1);
+      dataArr = randomNum(cart.dataSource, 10, '1', 1)
     } else if (arr9.includes(cart.playid)) {
-      const str = assemStr("6|5|4|4|4");
-      dataArr = randomNum(cart.dataSource, str.max, str.str, 1);
+      const str = assemStr('6|5|4|4|4')
+      dataArr = randomNum(cart.dataSource, str.max, str.str, 1)
     } else if (arr10.includes(cart.playid)) {
-      const str = assemStr("3|3|3");
-      dataArr = randomNum(cart.dataSource, str.max, str.str, 1);
+      const str = assemStr('3|3|3')
+      dataArr = randomNum(cart.dataSource, str.max, str.str, 1)
     } else if (arr11.includes(cart.playid)) {
-      const str = assemStr("10|10|10");
-      dataArr = randomNum(cart.dataSource, str.max, str.str, 1);
+      const str = assemStr('10|10|10')
+      dataArr = randomNum(cart.dataSource, str.max, str.str, 1)
     } else if (arr12.includes(cart.playid)) {
-      dataArr = singleCalc(cart.dataSource, 2);
+      dataArr = singleCalc(cart.dataSource, 2)
     }
   } else if (pcddArr.includes(cart.gameid)) {
-    // ;
+    // const arr1 = [3], // 1, max14
+    //   arr2 = [1], // 1 max28
+    //   arr3 = [2] // 3 max28
+    // if (arr1.includes(cart.playid)) {
+    //   const str = assemStr('10|4')
+    //   dataArr = randomNum(cart.dataSource, str.max, str.str, 1)
+    // } else if (arr2.includes(cart.playid)) {
+    //   dataArr = randomNum(cart.dataSource, 28, '1', 1)
+    // } else if (arr3.includes(cart.playid)) {
+    //   dataArr = randomNum(cart.dataSource, 28, '3', 2)
+    // }
     const arr1 = [3], // 混合
       arr2 = [1], // 特码
-      arr3 = [2]; // 包三
+      arr3 = [2] // 包三
     if (arr1.includes(cart.playid)) {
       // const str = assemStr("10|4");
       dataArr = randomNum(
         cart.dataSource,
         cart.dataSource[0].option.length,
-        "1",
+        '1',
         1
-      );
+      )
     } else if (arr2.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 28, "1", 1);
+      dataArr = randomNum(cart.dataSource, 28, '1', 1)
     } else if (arr3.includes(cart.playid)) {
-      dataArr = randomNum(cart.dataSource, 28, "3", 2);
+      dataArr = randomNum(cart.dataSource, 28, '3', 2)
+    }
+  } else if (xyqxArr.includes(cart.gameid)) {
+    const arr1 = [1], // 10|10|10|10
+      arr2 = [2], // 四行任选两行
+      arr3 = [3], // 四行任选三行
+      arr4 = [4], // 1|1|1|1
+      arr5 = [5], // 2
+      arr6 = [6], // 3
+      arr7 = [7], // 4|4
+      arr8 = [8], // 4|4|4|4
+      arr9 = [10, 12], // 4|4|4
+      arr10 = [9, 11] // 1|1
+    if (arr1.includes(cart.playid)) {
+      const str = assemStr('10|10|10|10')
+      dataArr = randomNum(cart.dataSource, str.max, str.str, 1)
+    } else if (arr2.includes(cart.playid)) {
+      const str = assemStr('10|10|10|10'),
+        randomPos = parseInt(Math.random() * 3, 10),
+        temp = str.str.split('|'),
+        pos = str.str.split('|').indexOf('1')
+      temp.splice(pos, '1')
+      const newStr = temp.map((item, index) => {
+        if (item !== 1 && randomPos === index) {
+          return 1
+        } else {
+          return item
+        }
+      })
+      newStr.splice(pos, 0, 1)
+      dataArr = randomNum(cart.dataSource, str.max, newStr.join('|'), 1)
+    } else if (arr3.includes(cart.playid)) {
+      const str = assemStr('10|10|10|10'),
+        newArr = str.str.split('|').map(item => Number(item === '0'))
+      dataArr = randomNum(cart.dataSource, str.max, newArr.join('|'), 1)
+    } else if (arr4.includes(cart.playid)) {
+      dataArr = randomNum(cart.dataSource, 10, '1|1|1|1', 1)
+    } else if (arr5.includes(cart.playid)) {
+      dataArr = randomNum(cart.dataSource, 10, '2', 2)
+    } else if (arr6.includes(cart.playid)) {
+      dataArr = randomNum(cart.dataSource, 10, '3', 2)
+    } else if (arr7.includes(cart.playid)) {
+      const str = assemStr('4|4')
+      dataArr = randomNum(cart.dataSource, str.max, str.str, 1)
+    } else if (arr8.includes(cart.playid)) {
+      const str = assemStr('4|4|4|4')
+      dataArr = randomNum(cart.dataSource, str.max, str.str, 1)
+    } else if (arr9.includes(cart.playid)) {
+      dataArr = randomNum(cart.dataSource, 4, '1|1|1', 1)
+    } else if (arr10.includes(cart.playid)) {
+      dataArr = randomNum(cart.dataSource, 4, '1|1', 1)
+    }
+  } else if (xypkArr.includes(cart.gameid)) {
+    const arr1 = [1],
+      arr2 = [2, 3, 7],
+      arr3 = [4],
+      arr4 = [5, 6],
+      arr5 = [8],
+      arr6 = [9],
+      arr7 = [10],
+      arr8 = [11],
+      arr9 = [12]
+    if (arr1.includes(cart.playid)) {
+      dataArr = randomNum(cart.dataSource, 5, '1', 1, cart.playid)
+    } else if (arr2.includes(cart.playid)) {
+      dataArr = randomNum(cart.dataSource, 12, '1', 1, cart.playid)
+    } else if (arr3.includes(cart.playid)) {
+      dataArr = randomNum(cart.dataSource, 11, '1', 1, cart.playid)
+    } else if (arr4.includes(cart.playid)) {
+      dataArr = randomNum(cart.dataSource, 4, '1', 1, cart.playid)
+    } else if (arr5.includes(cart.playid)) {
+      dataArr = randomNum(cart.dataSource, 13, '2', 2, cart.playid)
+    } else if (arr6.includes(cart.playid)) {
+      dataArr = randomNum(cart.dataSource, 13, '3', 2, cart.playid)
+    } else if (arr7.includes(cart.playid)) {
+      dataArr = randomNum(cart.dataSource, 13, '4', 2, cart.playid)
+    } else if (arr8.includes(cart.playid)) {
+      dataArr = randomNum(cart.dataSource, 13, '5', 2, cart.playid)
+    } else if (arr9.includes(cart.playid)) {
+      dataArr = randomNum(cart.dataSource, 13, '6', 2, cart.playid)
+    }
+  } else if (xyncArr.includes(cart.gameid)) {
+    const arr1 = [1]
+    if(arr1.includes(cart.playid)) {
+      const a = assemStr('8|8|8|8|8|8|8|8|8')
+      dataArr = randomNum(cart.dataSource, a.max, a.str, 1)
+    } else {
+      dataArr = randomNum(cart.dataSource, 35, '1', 1)
     }
   }
-  return dataArr;
+  // console.log(dataArr)
+  return dataArr
 }
-export default randomBet;
+export default randomBet
+// export { randomBet }

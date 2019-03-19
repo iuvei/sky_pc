@@ -9,7 +9,7 @@
  */
 function getBrokenLine(el, data, widths, hei, color, startWithZero) {
   clearRect(el);
-  let ctx = el.getContext("2d");
+  let ctx = el.getContext('2d');
   ctx.lineWidth = 2;
   // var maxNum = Math.max.apply(null, data); //求数组中的最大值
   // console.log(maxNum);
@@ -53,7 +53,7 @@ function getBrokenLine(el, data, widths, hei, color, startWithZero) {
 
 function drawLine(el, canvasList, start, cell, color) {
   clearRect(el);
-  let ctx = el.getContext("2d");
+  let ctx = el.getContext('2d');
   // ctx.scale(2, 2); // 放大画布消除模糊
   ctx.lineWidth = 2;
   getBrokenLine(
@@ -68,7 +68,7 @@ function drawLine(el, canvasList, start, cell, color) {
   );
 }
 function clearRect(el) {
-  let ctx = el.getContext("2d");
+  let ctx = el.getContext('2d');
   // ;
   el.height = el.height;
   ctx.clearRect(0, 0, el.width, el.height);

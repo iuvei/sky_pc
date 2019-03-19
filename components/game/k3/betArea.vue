@@ -1,13 +1,34 @@
 <template>
   <div class="bet-main">
-    <div v-for="(group,idx) in betSelectSet" :key='idx' class="group">
+    <div
+      v-for="(group,idx) in betSelectSet"
+      :key='idx'
+      class="group"
+    >
       <div class="title">
-        <div class="title-txt" v-if="group.name">{{group.name}}</div>
+        <div
+          class="title-txt"
+          v-if="group.name"
+        >{{group.name}}</div>
       </div>
-      <div class="option" :class="{sum:playObj.playid==1}">
-        <div v-for="(item,key) in group.option" :key="key" class="item">
-          <div class="item-value" :class="[group.class,{'active':item.selected}]" @click="selectItem(item,idx)">{{item.label}}</div>
-          <div class="item-odd" :style="{visibility:item.odds?'visible':'hidden'}">{{item.odds}}</div>
+      <div
+        class="option"
+        :class="{sum:playObj.playid==1}"
+      >
+        <div
+          v-for="(item,key) in group.option"
+          :key="key"
+          class="item"
+        >
+          <div
+            class="item-value"
+            :class="[group.class,{'active':item.selected}]"
+            @click="selectItem(item,idx)"
+          >{{item.label}}</div>
+          <div
+            class="item-odd"
+            :style="{visibility:item.odds?'visible':'hidden'}"
+          >{{item.odds}}</div>
         </div>
       </div>
     </div>
@@ -15,163 +36,166 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from "vuex";
-import mixinMutex from "../mixinMutex";
-import getField from "./field.js";
-import calcK3 from "./calc.js";
+import { mapState, mapActions, mapMutations } from 'vuex'
+import mixinMutex from '../mixinMutex'
+import getField from './field.js'
+import calcK3 from './calc.js'
 
 export default {
-  name: "betArea",
+  name: 'betArea',
   data() {
     return {
       betSelectSet: [],
-      selsetedArr: [],
-    };
+      selsetedArr: []
+    }
   },
   mixins: [mixinMutex],
   computed: {
-    ...mapState("gameBet", ["playObj", "stateOdds"]),
+    ...mapState('gameBet', ['playObj', 'stateOdds'])
   },
   methods: {
-    ...mapActions("game", ["getPeilv"]),
-    ...mapMutations("gameBet", ["setBetting", "changeField"]),
+    ...mapActions('game', ['getPeilv']),
+    ...mapMutations('gameBet', ['setBetting', 'changeField']),
     // 下注数据组装 结构+赔率
     async togetPeilv(v) {
-      if (!this.playObj.playid) return;
+      // console.log(this.$route.params.id || this.$route.query.id)
+      if (!this.playObj.playid) return
       // 获取模板数据
-      this.betSelectSet = getField(this.playObj.playid);
+      this.betSelectSet = getField(this.playObj.playid)
       // this.$set(this.betSelectSet, getField(this.playObj.playid));
       // 请求赔率
-      let ret = await this.getPeilv();
+      let ret = await this.getPeilv()
       if (!ret.length) {
-        return;
+        return
       }
-      let item;
+      let item
       // 和值数据处理
       if (this.playObj.playid == 1) {
         let arr = ret
           .filter(val => val.playid == this.playObj.playid)[0]
-          .peilv.split("|");
-        let pre = arr.splice(0, 4);
-        item = [...arr, ...pre];
+          .peilv.split('|')
+        let pre = arr.splice(0, 4)
+        item = [...arr, ...pre]
       } else {
         item = ret
           .filter(val => val.playid == this.playObj.playid)[0]
-          .peilv.split("|");
+          .peilv.split('|')
       }
       // 单一赔率
       if (item.length === 1) {
-        this.changeField({ stateOdds: item[0] });
+        this.changeField({ stateOdds: item[0] })
       } else {
-        this.changeField({ stateOdds: false });
+        this.changeField({ stateOdds: false })
         this.betSelectSet.forEach((group, idx) => {
           let odds = item.splice(0, group.option.length),
-            opt = [];
+            opt = []
           this.betSelectSet[idx].option = group.option.map((val, key) => {
-            this.$set(val, "odds", odds[key]);
+            this.$set(val, 'odds', odds[key])
             // this.$set(val, "selected", false);
-            return val;
-          });
-        });
+            return val
+          })
+        })
       }
       this.changeField({
-        betSetSource: JSON.parse(JSON.stringify(this.betSelectSet)),
-      });
+        betSetSource: JSON.parse(JSON.stringify(this.betSelectSet))
+      })
     },
     // 清空选择
     clearSelect() {
       this.betSelectSet.forEach((group, idx) => {
         this.betSelectSet[idx].option = group.option.map((val, key) => {
-          val.selected = false;
-          return val;
-        });
-      });
+          val.selected = false
+          return val
+        })
+      })
     },
     // 注数计算
     getBetNum(value) {
-      let arr = [];
+      let arr = []
       switch (this.playObj.playid) {
         case 1:
         case 7:
         case 14:
         case 15:
           value.forEach(v => {
-            arr = [...arr, ...v.split("|")].filter(h => h);
-          });
-          break;
+            arr = [...arr, ...v.split('|')].filter(h => h)
+          })
+          break
         case 5:
         case 10:
-          arr = value;
-          break;
+          arr = value
+          break
         default:
-          break;
+          break
       }
-      return calcK3.calcBetNum(this.playObj.playid, arr);
+      return calcK3.calcBetNum(this.playObj.playid, arr)
     },
     // 选球互斥
     // 选择号码
     selectItem(item, idx) {
       // 互斥
-      this.mutexK3(item, idx);
-      item.selected = !item.selected;
-      this.addData();
+      this.mutexK3(item, idx)
+      item.selected = !item.selected
+      this.addData()
     },
     addData(betSelectSet = this.betSelectSet, callback) {
       let arr = [],
         name = [],
         label = [],
-        value = [];
+        value = []
       betSelectSet.forEach((g, i) => {
         let tr = g.option
           .filter(obj => obj.selected)
-          .map(v => Object.assign(v, { name: g.name }));
-        arr = [...arr, ...tr];
-        name[i] = g.name;
-        label[i] = tr.map(td => td.label).join("|");
+          .map(v => Object.assign(v, { name: g.name }))
+        arr = [...arr, ...tr]
+        name[i] = g.name
+        label[i] = tr.map(td => td.label).join('|')
         // 二同号判断
         if (this.playObj.playid == 7) {
           value[i] = tr
             .map(td => td.value)
             .sort()
-            .join("+");
+            .join('+')
         } else {
           value[i] = tr
             .map(td => td.value)
             .sort()
-            .join("|");
+            .join('|')
         }
-      });
+      })
       if (callback) {
         callback({
           selected: JSON.parse(JSON.stringify(arr)),
-          oneBetDate: { name, label, value },
-        });
+          oneBetDate: { name, label, value }
+        })
       } else {
         this.setBetting({
           selected: JSON.parse(JSON.stringify(arr)),
           oneBetDate: { name, label, value },
-          betNum: this.getBetNum(label),
-        });
+          betNum: this.getBetNum(label)
+        })
       }
-    },
+    }
   },
   mounted() {
-    this.$bus.$on("resetBetArea", this.clearSelect);
-    this.$bus.$on("randomBet", this.addData);
-    this.setBetting();
-    // 后期删除 开发热更新 兼容
-    this.togetPeilv();
+    this.$bus.$on('resetBetArea', this.clearSelect)
+    this.$bus.$on('randomBet', this.addData)
+    this.setBetting()
+    // todo 后期删除 开发热更新兼容 开发时开启 上线时关闭
+    // this.togetPeilv()
   },
   destroyed() {
-    this.$bus.$off("randomBet");
+    this.$bus.$off('randomBet')
+    // console.log('destroyed')
   },
   watch: {
-    "playObj"(val) {
-      this.setBetting();
-      this.togetPeilv(2);
-    },
-  },
-};
+    playObj(val) {
+      // console.log('k3 watch')
+      this.setBetting()
+      this.togetPeilv()
+    }
+  }
+}
 </script>
 <style lang='scss' scoped>
 @mixin normal() {

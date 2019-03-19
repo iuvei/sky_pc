@@ -11,50 +11,50 @@
   </div>
 </template>
 <script>
-  export default {
-    data() {
-      return {
-        isShow: false,
-        showContent: '',
-        header: [
-          {
-            "title": '系统消息',
-            "key": 'action',
-            'align': 'left',
-            'width': 660,
-            render: (h, params) => {
-              return h('div', [
-                h('p', {
-                  on: {
-                    click: () => {
-                      this.isShow = true
-                      this.showContent = params.row.content
-                    }
+export default {
+  data() {
+    return {
+      isShow: false,
+      showContent: '',
+      header: [
+        {
+          'title': '系统消息',
+          'key': 'action',
+          'align': 'left',
+          'width': 660,
+          render: (h, params) => {
+            return h('div', [
+              h('p', {
+                on: {
+                  click: () => {
+                    this.isShow = true
+                    this.showContent = params.row.content
                   }
-                }, params.row.content),
-              ])
-            }
-          },
-          {
-            "title": '时间',
-            "key": 'time',
-            'align': 'left',
-            'width': 160,
-            'sortable': true
+                }
+              }, params.row.content),
+            ])
           }
-        ],
-        basicData: [
-          {
-            content: '网站并没有申请可信网站认证',
-            time: '2018-05-03 14:31:08'
-          }
-        ]
-      }
-    },
-    methods: {
-      selectRows() {
-      }
+        },
+        {
+          'title': '时间',
+          'key': 'time',
+          'align': 'left',
+          'width': 160,
+          'sortable': true
+        }
+      ],
+      basicData: [
+        {
+          content: '网站并没有申请可信网站认证',
+          time: '2018-05-03 14:31:08'
+        }
+      ]
+    }
+  },
+  methods: {
+    selectRows() {
     }
   }
+}
 </script>
 <style lang="scss"></style>

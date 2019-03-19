@@ -1,8 +1,8 @@
 export default {
-  name: "gameHeadTimer",
-  props: ["str"],
+  name: 'gameHeadTimer',
+  props: ['str'],
   render() {
-    let str = this.str.split(":");
+    let str = this.str.split(':');
     return (
       <div>
         <div>str[0]</div>
@@ -10,5 +10,6 @@ export default {
         <div>str[2]</div>
       </div>
     );
-  },
+  }
 };
+ 

@@ -54,6 +54,11 @@
         <InputNumber :max="rateSetting.fp_lhc" :min="0" :step="0.1" v-model="rateSetting.vlhc"></InputNumber>
         <div class="desc">自身返点{{rateSetting.fp_lhc}},可为下级设置返点范围:0-{{rateSetting.fp_lhc}}</div>
         </Col>
+        <Col span="3">其他</Col>
+        <Col span="9">
+        <InputNumber :max="rateSetting.fp_other" :min="0" :step="0.1" v-model="rateSetting.vother"></InputNumber>
+        <div class="desc">自身返点{{rateSetting.fp_other}},可为下级设置返点范围:0-{{rateSetting.fp_other}}</div>
+        </Col>
         <!-- <Col span="3">使用域名: </Col>
         <Col span="9">
         <Select v-model="selectedDomain" style="width:200px">
@@ -70,17 +75,17 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from "vuex";
+import { mapState, mapGetters, mapActions } from 'vuex';
 export default {
-  name: "rebateSetting",
+  name: 'rebateSetting',
   data() {
     return {};
   },
   mounted() {
   },
   computed: {
-    ...mapGetters("agent", ["rateSetting"]),
-    ...mapState("agent", ["lowerLevelAccount"]),
+    ...mapGetters('agent', ['rateSetting']),
+    ...mapState('agent', ['lowerLevelAccount']),
     selectedAccountType() {
       return this.lowerLevelAccount.selectedAccountType;
     },
@@ -93,7 +98,7 @@ export default {
       },
       set(v) {
         let obj = {
-          prefix: "lowerLevelAccount",
+          prefix: 'lowerLevelAccount',
           params: { selectedDomain: v }
         };
         this.modifyField(obj);
@@ -101,17 +106,17 @@ export default {
     }
   },
   methods: {
-    ...mapActions("agent", ["modifyField", "createJoinCode"]),
+    ...mapActions('agent', ['modifyField', 'createJoinCode']),
     changeSelectedAccountType(n) {
       let obj = {
-        prefix: "lowerLevelAccount",
+        prefix: 'lowerLevelAccount',
         params: { selectedAccountType: n }
       };
       this.modifyField(obj);
     },
     async generateCode() {
 
-      let { vssc, vk3, v11x5, v3d, vpk10, vpcdd, vlhc } = this.rateSetting;
+      let { vssc, vk3, v11x5, v3d, vpk10, vpcdd, vlhc, vother } = this.rateSetting;
       let data = await this.createJoinCode({
         vssc,
         vk3,
@@ -119,17 +124,18 @@ export default {
         v3d,
         vpk10,
         vpcdd,
-        vlhc
+        vlhc,
+        vother
       });
       // console.error(data);
       if (data) {
         this.$Modal.success({
-          title: "温馨提示",
-          content: "创建成功!",
+          title: '温馨提示',
+          content: '创建成功!',
           onOk: () => {
             let obj = {
-              prefix: "lowerLevelAccount",
-              params: { view: "codeManage" }
+              prefix: 'lowerLevelAccount',
+              params: { view: 'codeManage' }
             };
             this.modifyField(obj);
           }
@@ -137,7 +143,7 @@ export default {
       }
     },
     viewPl(){
-      window.open('/returnRateTable','_blank','width=1500,height=800,left=200,top=100')
+      window.open('/returnRateTable','_blank','width=1800,height=800,left=200,top=100')
     }
   },
   mounted() {}

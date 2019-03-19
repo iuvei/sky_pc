@@ -8,32 +8,24 @@
 
 </template>
 <script>
-import components from "~/components/index/";
-import gameModal from "~/components/game/gameModal";
+import components from '~/components/index/';
+import gameModal from '~/components/game/gameModal';
+import mixin from './setTitle.mixin';
 export default {
-  name: "user",
+  name: 'user',
   components: { ...components, gameModal },
   data(){
     return {
       showFooter: true
-      }
+    }
   },
+  mixins:[mixin],
   created() {
     if (process.browser) {
       this.$Message.config({
         top: window.screen.availHeight / 3
       });
     }
-
-    if (process.browser) {
-      let web_title =
-        this.$store.state.sysinfo.sysinfo.web_title ||
-        window.localStorage.getItem("web_title") ||
-        " ";
-      web_title && window.localStorage.setItem("web_title", web_title);
-      window.document.title = web_title;
-    }
-    // console.log(object);
   },
   mounted() {
     this.showFooter = !(this.$route.name==='game');
@@ -41,7 +33,7 @@ export default {
   watch:{
     '$route'(val){
       //  console.log(this.$route.name,this.$route.name==='game',this.$route);
-       this.showFooter = !(this.$route.name==='game');
+      this.showFooter = !(this.$route.name==='game');
     },
   }
 

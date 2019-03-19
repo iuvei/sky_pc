@@ -5,24 +5,38 @@
         <span class="_title">{{game.game_name}}开奖公告</span>
         <span class="_title_time">[每
           <strong>{{info && info.pinlv}}</strong>钟开奖]</span>
-        <span class="_title_icon_red" data-link="17" data-name="北京28" @click="goTrend">
+        <span class="_title_icon_red"
+              data-link="17"
+              data-name="北京28"
+              @click="goTrend">
           <i class="icon_zoushi_red"></i> 号码走势</span>
-        <span class="_title_icon_greed" data-tag="bj28" @click="toRule(game)">
+        <span class="_title_icon_greed"
+              data-tag="bj28"
+              @click="toRule(game)">
           <i class="icon_zoushi_greed"></i> 玩法规则</span>
       </div>
-      <div style="width:425px;float:left">第
-        <select class="select-qishu" v-model="curQishu" @change="afterSelectQishu">
-          <option class="previeqishu" v-for="(item, index) in list" :key="index">{{item && item.qishu}}</option>
-        </select>
-        期
-        <span style="margin-left: 20px;">开奖日期 :
-          <strong class="this_kj" style="color:#f84d4d;font-weight:300;font-size: 14px; ">{{(lastInfo && lastInfo.opentime) | formatTime}}</strong>
-        </span>
-
-      </div>
-      <div class="_title_balls ball_container">
-
-        <AppLotteryNum v-if="game && lastInfo && lastInfo.balls" :class="{'big':game.js_tag === 'pk10'}" :number="lastInfo && lastInfo.balls" :type="game.js_tag" />
+      <div class="container">
+        <div style="width:425px;float:left">第
+          <select class="select-qishu"
+                  v-model="curQishu"
+                  @change="afterSelectQishu">
+            <option class="previeqishu"
+                    v-for="(item, index) in list"
+                    :key="index">{{item && item.qishu}}</option>
+          </select>
+          期
+          <span style="margin-left: 20px;">开奖日期 :
+            <strong class="this_kj">{{(lastInfo && lastInfo.opentime) | formatTime}}</strong>
+          </span>
+        </div>
+        <div class="_title_balls ball_container"
+             :class="{'qxc-head':isQxc,'pk10-head':isPk10 || isNiu,'elex5-head':is11x5,'ssc-head':isSSC,'xync-head':isNC}">
+          <AppLotteryNum v-if="game && lastInfo && lastInfo.balls"
+                         :class="{'big':isPk10 || isNiu}"
+                         :number="lastInfo && lastInfo.balls"
+                         :type="game.js_tag"
+                         :qishu="lastInfo.qishu" />
+        </div>
       </div>
     </div>
   </div>
@@ -59,6 +73,24 @@ export default {
         );
       }
       return {};
+    },
+    isPk10() {
+      return this.game && this.game.js_tag === "pk10";
+    },
+    isQxc() {
+      return this.game && this.game.js_tag === "qxc";
+    },
+    is11x5() {
+      return this.game && this.game.js_tag === "11x5";
+    },
+    isSSC() {
+      return this.game && this.game.js_tag === "ssc";
+    },
+    isNiu() {
+      return this.game && this.game.js_tag === "pkniuniu";
+    },
+    isNC() {
+      return this.game && this.game.js_tag === "xync";
     }
   },
   methods: {
@@ -70,7 +102,7 @@ export default {
     },
     // 获取单个开奖时间
     async togetKjCpLogOne(tag, date, pcount = 0) {
-      let ret = await this.getKjCpLog({ tag, date, pcount});
+      let ret = await this.getKjCpLog({ tag, date, pcount });
       this.$emit("getDetail", ret);
       if (ret.length) {
         let c = Object.assign([], ret);
@@ -85,7 +117,7 @@ export default {
       await this.togetKjCpLogOne(this.game.tag, 0);
     },
     goTrend() {
-      this.$router.push("/trend");
+      this.$router.push({ name: "trend", params: this.game });
     },
     toRule(game) {
       this.$router.push(`/gamehelp/tag/ssc?game_name=${game.game_name}`);
@@ -109,17 +141,52 @@ export default {
     }
   },
   async created() {
+    if (!process.browser) return;
     await this.getData();
   }
 };
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .ball_container {
   max-width: 800px;
 }
+.qxc-head /deep/ .th,
+.ssc-head /deep/ .th,
+.elex5-head /deep/ .th,
+.xync-head /deep/ .th {
+  width: 200px;
+  display: flex;
+  justify-content: space-around;
+  .td {
+    width: 40px;
+    > span {
+      width: 40px;
+      height: 40px;
+      background-size: 40px 40px;
+      font-size: 20px;
+      line-height: 38px;
+    }
+  }
+}
+
+.xync-head /deep/ .th {
+  width: auto;
+}
+.pk10-head {
+  width: 400px;
+}
+.container {
+  display: flex;
+  align-items: center;
+}
+.this_kj {
+  color: #f84d4d;
+  font-weight: 300;
+  font-size: 14px;
+}
 </style>
 
-<style>
+<style lang="scss">
 .select-qishu {
   border: 1px solid #e93248;
   border-radius: 4px;
@@ -131,7 +198,7 @@ export default {
 .only_header {
   background: rgb(255, 247, 240);
   border: 1px solid #ffe3c7;
-  height: 100px;
+  // height: 100px;
   color: #333;
   padding: 5px 14px;
 }

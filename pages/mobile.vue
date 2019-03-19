@@ -8,35 +8,47 @@
           </div>
           <img :src="sysinfo && sysinfo.ios_qrcode" alt="">
         </div>
-        <div class="android">
-          <div class="title">
-            Android 版
+          <div class="android">
+            <div class="title">
+              Android 版
+            </div>
+            <img :src="sysinfo && sysinfo.android_qrcode" alt="">
+        </div>
           </div>
-          <img :src="sysinfo && sysinfo.android_qrcode" alt="">
         </div>
       </div>
-    </div>
-  </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState , mapGetters} from 'vuex';
+;
 export default {
-  name: "lottery-mobile",
+  name: 'lottery-mobile',
+
   serverCacheKey() {
     return Math.floor(Date.now() / 1000 * 60 * 60 * 24);
   },
   asyncData({ store }) {
-    return store.dispatch("sysinfo/getMobileBackground");
+    if(process.env.static) return
+    return store.dispatch('sysinfo/getMobileBackground');
+  },
+  created(){
+    if(!process.browser) return
+    if(process.env.static){
+      this.$store.dispatch('sysinfo/getMobileBackground');
+    }
   },
   computed: {
-    ...mapState("sysinfo", ["sysinfo", "mobileBackground"]),
+    ...mapState('sysinfo', ['mobileBackground']),
+    sysinfo(){
+      return this.$store.getters['sysinfo/sysInfo']
+    },
     img() {
-      if (this.mobileBackground && Array.isArray(this.mobileBackground) 
+      if (this.mobileBackground && Array.isArray(this.mobileBackground)
       && this.mobileBackground.length) {
         return this.mobileBackground[0].banner;
       }
-      return "";
+      return '';
     }
   }
 };
@@ -50,7 +62,7 @@ export default {
   // width: 1900px;
   min-width: 1200px;
   margin: 0 auto;
-  min-height: 800px;
+  min-height: 600px;
   height: auto;
   // background-attachment: fixed;
   overflow: hidden;
@@ -58,22 +70,23 @@ export default {
   justify-content: flex-end;
   align-items: flex-end;
   .wapper {
-    width: 1200px;
+    width: 1000px;
+    height: 300px;
     margin: 0 auto;
     display: flex;
     justify-content: flex-end;
   }
   .content {
-    height: 320px;
-    width: 600px;
+    height: 230px;
+    width: 500px;
     display: flex;
     justify-content: space-between;
     text-align: center;
     > div {
-      width: 280px;
+      width: 230px;
       .title {
-        width: 280px;
-        height: 60px;
+        width: 230px;
+        height: 50px;
         border-radius: 10px;
         background-size: 36px;
         padding-left: 35px;
@@ -96,14 +109,14 @@ export default {
         .title {
           background: rgb(248, 73, 80) url(~/assets/img/iPhone_wite.png)
             NO-REPEAT;
-          background-position: 35px 10px;
+          background-position: 30px 5px;
         }
       }
       &.android {
         .title {
           background: rgb(184, 28, 250) url(~/assets/img/Andriod_wite.png)
             NO-REPEAT;
-          background-position: 35px 14px;
+          background-position: 30px 9px;
         }
       }
     }

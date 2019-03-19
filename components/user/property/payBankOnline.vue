@@ -1,32 +1,96 @@
 <template>
   <Row class="payBankOnline_main_body">
-    <Steps :current="current" class="online_steps">
-      <Step :title="current==0 ? txt[1] : txt[2]" content="请选择您欲转入的银行卡号"></Step>
-      <Step :title="current==1 ? txt[1] : current > 1 ? txt[2] : txt[0]" content="请选择您使用的银行"></Step>
-      <Step :title="current==2 ? txt[1] : current > 2 ? txt[2] : txt[0]" content="填写您的转账资料"></Step>
-      <Step :title="current==3 ? txt[1] : current > 3 ? txt[2] : txt[0]" content="提交完成"></Step>
+    <Steps
+      :current="current"
+      class="online_steps"
+    >
+      <Step
+        :title="current==0 ? txt[1] : txt[2]"
+        content="请选择您欲转入的银行卡号"
+      ></Step>
+      <Step
+        :title="current==1 ? txt[1] : current > 1 ? txt[2] : txt[0]"
+        content="请选择您使用的银行"
+      ></Step>
+      <Step
+        :title="current==2 ? txt[1] : current > 2 ? txt[2] : txt[0]"
+        content="填写您的转账资料"
+      ></Step>
+      <Step
+        :title="current==3 ? txt[1] : current > 3 ? txt[2] : txt[0]"
+        content="提交完成"
+      ></Step>
     </Steps>
     <Row class="payBankOnline_main_content">
-      <Row class="step_one" v-show="current==0">
-        <Row>
-          <Col :span="11" v-for="(item, index) in basicData" :key="index" :offset="index%2 !== 0 ? 2 : 0" style="margin-bottom: 20px">
-          <Card @click.native="choosedOne(item, index)" :class="{active: acIndex==index}">
+      <Row
+        class="step_one"
+        v-show="current==0"
+      >
+        <Row
+          v-for="(obj, idx) in computedData"
+          :key="idx"
+          data-val2="333"
+        >
+          <Col
+            :span="11"
+            v-for="(item, index) in obj"
+            :key="index"
+            :offset="index%2 !== 0 ? 2 : 0"
+            style="margin-bottom: 20px"
+          >
+          <Card
+            @click.native="choosedOne(item, index)"
+            :class="{active: acIndex==item.id}"
+          >
             <Row>
-              <Col :span="8">开户行网点：</Col>
-              <Col :span="14" :offset="2" class="open-place" :title="item.bank_home">{{item.bank_home}}</Col>
-              <Col :span="8">收款人：</Col>
-              <Col :span="14" :offset="2">{{item.real_name}}</Col>
-              <Col :span="8">银行：</Col>
-              <Col :span="14" :offset="2">{{item.bank_type}}</Col>
-              <Col :span="8">账号：</Col>
-              <Col :span="14" :offset="2">{{item.bank_card}}</Col>
+              <Col
+                :span="8"
+                style="text-align:right"
+              >开户行网点：</Col>
+              <Col
+                :span="14"
+                :offset="2"
+                class="open-place"
+                :title="item.bank_home"
+              >{{item.bank_home}}</Col>
+              <Col
+                :span="8"
+                style="text-align:right"
+              >收款人：</Col>
+              <Col
+                :span="14"
+                :offset="2"
+              >{{item.real_name}}</Col>
+              <Col
+                :span="8"
+                style="text-align:right"
+              >银行：</Col>
+              <Col
+                :span="14"
+                :offset="2"
+              >{{item.bank_type}}</Col>
+              <Col
+                :span="8"
+                style="text-align:right"
+              >账号：</Col>
+              <Col
+                :span="14"
+                :offset="2"
+              >{{item.bank_card}}</Col>
             </Row>
           </Card>
           </Col>
         </Row>
+
         <Row class="tips">
           <p>{{choosedData.pc_tip}}</p>
-          <Button size="large" type="primary" @click.native="oneToNext" :disabled="acIndex<0" :loading="loadingOne">下一步
+          <Button
+            size="large"
+            type="primary"
+            @click.native="oneToNext"
+            :disabled="acIndex<0"
+            :loading="loadingOne"
+          >下一步
             <Icon type="chevron-right"></Icon>
           </Button>
         </Row>
@@ -34,53 +98,132 @@
           <div v-html="PayPCtips"></div>
         </Row>
       </Row>
-      <Row class="step_two" v-show="current==1">
-        <Form ref="formOne" :model="thisForm" :rules="ruleValidate" :label-width="80" class="this_form">
-          <FormItem label="入款姓名" prop="name">
-            <Input v-model="thisForm.name" placeholder="请输入真实姓名"></Input>
+      <Row
+        class="step_two"
+        v-show="current==1"
+      >
+        <Form
+          ref="formOne"
+          :model="thisForm"
+          :rules="ruleValidate"
+          :label-width="80"
+          class="this_form"
+        >
+          <FormItem
+            label="入款姓名"
+            prop="name"
+          >
+            <Input
+              v-model="thisForm.name"
+              placeholder="请输入真实姓名"
+            ></Input>
           </FormItem>
-          <FormItem label="开户银行" prop="bank">
-            <Select v-model="thisForm.bank" placeholder="请选择开户银行">
-              <Option v-for="(item ,index) in bankList" :key="index" :value="item.id">{{item.name}}</Option>
+          <FormItem
+            label="开户银行"
+            prop="bank"
+          >
+            <Select
+              v-model="thisForm.bank"
+              placeholder="请选择开户银行"
+            >
+              <Option
+                v-for="(item ,index) in bankList"
+                :key="index"
+                :value="item.id"
+              >{{item.name}}</Option>
             </Select>
           </FormItem>
-          <FormItem label="其他银行" prop="else" v-if="thisForm.bank=='else'">
-            <Input v-model="thisForm.else" placeholder="请输入银行名称"></Input>
+          <FormItem
+            label="其他银行"
+            prop="else"
+            v-if="thisForm.bank=='else'"
+          >
+            <Input
+              v-model="thisForm.else"
+              placeholder="请输入银行名称"
+            ></Input>
           </FormItem>
-          <FormItem label="充值金额" prop="price">
-            <Input v-model="thisForm.price" placeholder="请输入充值金额" number></Input>
+          <FormItem
+            label="充值金额"
+            prop="price"
+          >
+            <Input
+              v-model="thisForm.price"
+              placeholder="请输入充值金额"
+              number
+            ></Input>
           </FormItem>
           <Row class="tips">
             <p>{{choosedData.pc_tip}}</p>
             <Row class="bottom_button">
-              <Button type="primary" @click.native="current-=1" style="margin-right:40px;" size="large">
-                <Icon type="chevron-left"></Icon>上一步</Button>
-              <Button type="primary" @click.native="twoToNext">下一步
-                <Icon type="chevron-right" size="large"></Icon>
+              <Button
+                type="primary"
+                @click.native="current-=1"
+                style="margin-right:40px;"
+                size="large"
+              >
+                <Icon type="chevron-left"></Icon>上一步
+              </Button>
+              <Button
+                type="primary"
+                @click.native="twoToNext"
+              >下一步
+                <Icon
+                  type="chevron-right"
+                  size="large"
+                ></Icon>
               </Button>
             </Row>
           </Row>
         </Form>
       </Row>
-      <Row class="step_three" v-show="current==2">
+      <Row
+        class="step_three"
+        v-show="current==2"
+      >
         <p>
           <i style="color:#e33939;">*</i>以下是您欲转账的银行账户信息</p>
         <Row class="up_table">
           <Col :span="12">
           <span>开户行网点：</span>
-          <span>{{choosedData.bank_home}}</span>
+          <span class="copy_info">{{choosedData.bank_home}}</span>
+          <Button
+            type="info"
+            v-clipboard:copy="choosedData.bank_home"
+            v-clipboard:success="onCopy"
+            v-clipboard:error="onError"
+          >复制</Button>
           </Col>
           <Col :span="12">
           <span>收款人：</span>
-          <span>{{choosedData.real_name}}</span>
+          <span class="copy_info">{{choosedData.real_name}}</span>
+          <Button
+            type="info"
+            v-clipboard:copy="choosedData.real_name"
+            v-clipboard:success="onCopy"
+            v-clipboard:error="onError"
+          >复制</Button>
           </Col>
           <Col :span="12">
           <span>银行：</span>
-          <span>{{choosedData.bank_type}}</span>
+          <span class="copy_info">{{choosedData.bank_type}}</span>
+          <Button
+            type="info"
+            v-clipboard:copy="choosedData.bank_card"
+            v-clipboard:success="onCopy"
+            v-clipboard:error="onError"
+            class="special_button"
+          >复制</Button>
           </Col>
           <Col :span="12">
           <span>账号：</span>
           <span>{{choosedData.bank_card}}</span>
+          <Button
+            type="info"
+            v-clipboard:copy="choosedData.bank_card"
+            v-clipboard:success="onCopy"
+            v-clipboard:error="onError"
+          >复制</Button>
           </Col>
           <Col :span="24">
           <span>有效时间：</span>
@@ -91,32 +234,72 @@
           <p>
             <i style="color:#e33939;">*</i>接下来您可以通过以下方式完成转帐...</p>
           <Row class="down_title">
-            <Col :span="4" :offset="4">请选择开户银行：</Col>
+            <Col
+              :span="4"
+              :offset="4"
+            >请选择开户银行：</Col>
             <Col :span="6">
             <Select v-model="choosedStepThreeBank">
-              <Option v-for="(item, index) in stepThreeBank" :value="item.value" :key="index">{{ item.label }}</Option>
+              <Option
+                v-for="(item, index) in stepThreeBank"
+                :value="item.value"
+                :key="index"
+              >{{ item.label }}</Option>
             </Select>
             </Col>
-            <Col :span="6" :offset="1">
-            <Button type="primary" class="jump_button">
-              <a :href="choosedStepThreeBank" target="_blank">前往官网</a>
+            <Col
+              :span="6"
+              :offset="1"
+            >
+            <Button
+              type="primary"
+              class="jump_button"
+            >
+              <a
+                :href="choosedStepThreeBank"
+                target="_blank"
+              >前往官网</a>
             </Button>
             </Col>
           </Row>
           <Row class="down_form">
             <Col :span="24">
-            <Form :model="thatForm" :rules="thatFormRule" :label-width="120" ref="formTwo">
+            <Form
+              :model="thatForm"
+              :rules="thatFormRule"
+              :label-width="120"
+              ref="formTwo"
+            >
               <FormItem label="入款姓名">
-                <Input v-model="thatForm.name" disabled></Input>
+                <Input
+                  v-model="thatForm.name"
+                  disabled
+                ></Input>
               </FormItem>
               <FormItem label="开户银行">
-                <Input v-model="thatForm.bank" disabled></Input>
+                <Input
+                  v-model="thatForm.bank"
+                  disabled
+                ></Input>
               </FormItem>
               <FormItem label="存入金额">
-                <Input v-model="thatForm.price" disabled></Input>
+                <Input
+                  v-model="thatForm.price"
+                  disabled
+                ></Input>
               </FormItem>
-              <FormItem label="存入时间" prop="date">
-                <DatePicker type="datetime" placeholder="请选择日期" @on-change="setDate" :value="thatForm.date" format="yyyy-MM-dd HH:mm:ss" :options="disableOptions"></DatePicker>
+              <FormItem
+                label="存入时间"
+                prop="date"
+              >
+                <DatePicker
+                  type="datetime"
+                  placeholder="请选择日期"
+                  @on-change="setDate"
+                  :value="thatForm.date"
+                  format="yyyy-MM-dd HH:mm:ss"
+                  :options="disableOptions"
+                ></DatePicker>
               </FormItem>
             </Form>
             </Col>
@@ -126,14 +309,30 @@
           <p>※3.若您使用ATM存款，请填写ATM所属分行，会加快您的款项到帐时间。</p>
         </Row>
         <Row class="bottom_button">
-          <Button size="large" type="primary" @click="current-=1">
-            <Icon type="chevron-left"></Icon>上一步</Button>
-          <Button size="large" type="primary" @click.native="havePaied" :loading="loadingTwo">我已付款
-            <Icon type="chevron-right" size="large"></Icon>
+          <Button
+            size="large"
+            type="primary"
+            @click="current-=1"
+          >
+            <Icon type="chevron-left"></Icon>上一步
+          </Button>
+          <Button
+            size="large"
+            type="primary"
+            @click.native="havePaied"
+            :loading="loadingTwo"
+          >我已付款
+            <Icon
+              type="chevron-right"
+              size="large"
+            ></Icon>
           </Button>
         </Row>
       </Row>
-      <Row class="step_four" v-show="current==3">
+      <Row
+        class="step_four"
+        v-show="current==3"
+      >
         <p>
           <i style="color: #e33939">*</i>您的存款申请已成功提交!以下是您的存款资料，请妥善保存。</p>
         <Row class="order_info">
@@ -153,7 +352,11 @@
         <p>※1.同行转帐:完成转帐后请于30分钟内查收您的会员账号余额，如未加上请联系在线客服。</p>
         <p>※2.跨行转帐:银行不承诺跨行汇款到帐时间， 如您的款项在24小时内未加上， 烦请您联系在线客服为您提供帮助。</p>
         <Row class="bottom_button">
-          <Button size="large" type="primary" @click="current=0">离开此页
+          <Button
+            size="large"
+            type="primary"
+            @click="current=0"
+          >离开此页
             <Icon type="log-out"></Icon>
           </Button>
         </Row>
@@ -164,7 +367,7 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import to from "../../../api/await-to";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 export default {
   props: ["basicData"],
   filters: {
@@ -172,7 +375,7 @@ export default {
       if (val === 0) {
         return "支付信息已过期";
       }
-      let s = val % 60 > 9 ? val % 60 : "0" + val % 60,
+      let s = val % 60 > 9 ? val % 60 : "0" + (val % 60),
         m = Math.floor(val / 60);
       return `${m}:${s}`;
     }
@@ -180,10 +383,14 @@ export default {
   data() {
     return {
       disableOptions: {
-        disabledDate (date) {
-          let nowTime = dayjs(Date.now()).format('YYYY-MM-DD 00:00')
+        disabledDate(date) {
+          let nowTime = dayjs(Date.now()).format("YYYY-MM-DD 00:00");
           // console.log(nowTime)
-          return date && date.valueOf() < (dayjs(nowTime) - 1000 * 60 * 60 * 24 * 2) || (date.valueOf() > dayjs(nowTime) + 1000 * 60 * 60 * 24 - 1000);
+          return (
+            (date &&
+              date.valueOf() < dayjs(nowTime) - 1000 * 60 * 60 * 24 * 2) ||
+            date.valueOf() > dayjs(nowTime) + 1000 * 60 * 60 * 24 - 1000
+          );
         }
       },
       current: 0,
@@ -242,13 +449,20 @@ export default {
       },
       validTime: 1800,
       timer: Function,
-      result: {}
+      result: {},
+      computedData: []
     };
   },
   methods: {
     ...mapActions("property", ["getBankList", "submitPayCompany"]),
+    onCopy() {
+      this.$Message.success("复制成功");
+    },
+    onError() {
+      this.$Message.warning("复制失败");
+    },
     choosedOne(n, i) {
-      this.acIndex = i;
+      this.acIndex = n.id;
       this.choosedData = n;
     },
     async oneToNext() {
@@ -297,12 +511,25 @@ export default {
           }
           this.loadingTwo = false;
         } else {
-          this.loadingTwo = false
+          this.loadingTwo = false;
         }
       });
     },
     setDate(val, type) {
       this.thatForm.date = val;
+    },
+
+    // 将传入数组拆分为一个二维数组
+    getComputedData(basicData) {
+      const len =
+        (basicData.length % 2 === 0 ? basicData.length : basicData.length + 1) /
+        2;
+      let arr = new Array(len);
+      for (let i = 0; i < arr.length; i++) {
+        arr[i] = [basicData[i * 2]];
+        if (basicData[i * 2 + 1]) arr[i].push(basicData[i * 2 + 1]);
+      }
+      return arr;
     }
   },
   computed: {
@@ -314,10 +541,20 @@ export default {
       temp = null;
       return output;
     }
+  },
+
+  watch:{
+    basicData(val){
+      if(Array.isArray(val) && val.length)
+        this.computedData = this.getComputedData(val);
+    }
   }
 };
 </script>
 <style lang="scss">
+.ivu-card:hover {
+  cursor: pointer;
+}
 .open-place {
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -371,13 +608,22 @@ export default {
         .ivu-col {
           padding: 10px;
           border-bottom: 1px solid #ddd;
+          overflow: hidden;
           &:nth-child(even) {
             border-left: 1px solid #ddd;
           }
           span {
             &:nth-child(2) {
               color: #e33939;
+              // margin-right: 50px;
             }
+          }
+          .special_button {
+            visibility: hidden;
+          }
+          .button,
+          .ivu-btn-info {
+            float: right;
           }
         }
       }
